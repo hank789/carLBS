@@ -25,6 +25,7 @@
         "spatie/laravel-html": "^2.4",
         "spatie/laravel-permission": "^2.5",
         "torann/geoip": "^1.0",
+        "tymon/jwt-auth": "1.0.0-rc.3",
         "webpatser/laravel-uuid": "^3.0"
     },
     "require-dev": {
@@ -68,6 +69,15 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packagist.laravel-china.org"
+        },
+        {
+            "packagist": false
+        }
+    ],
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
