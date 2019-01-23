@@ -162,3 +162,27 @@ if (! function_exists('camelcase_to_word')) {
         /x', $str));
     }
 }
+
+/*数据库setting表操作*/
+if (! function_exists('Setting')) {
+
+    function Setting(){
+        return app('App\Models\System\Setting');
+    }
+}
+
+//生成验证码
+if( !function_exists('makeVerifyCode') ){
+    function makeVerifyCode(int $min = 1000, int $max = 9999)
+    {
+        if(config('app.env') != 'production') return 6666;
+        $min = min($min, $max);
+        $max = max($min, $max);
+
+        if (function_exists('mt_rand')) {
+            return mt_rand($min, $max);
+        }
+
+        return rand($min, $max);
+    }
+}

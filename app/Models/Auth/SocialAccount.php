@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class SocialAccount.
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\SocialAccount newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\SocialAccount newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\SocialAccount query()
+ * @mixin \Eloquent
  */
 class SocialAccount extends Model
 {

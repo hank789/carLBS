@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class Session
  * package App.
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\System\Session newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\System\Session newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\System\Session query()
+ * @mixin \Eloquent
  */
 class Session extends Model
 {

@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class PasswordHistory.
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\PasswordHistory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\PasswordHistory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\PasswordHistory query()
+ * @mixin \Eloquent
  */
 class PasswordHistory extends Model
 {
