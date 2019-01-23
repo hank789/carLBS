@@ -1,18 +1,17 @@
 <?php namespace App\Http\Controllers\Api;
 
-use App\Events\Frontend\Auth\UserLoggedIn;
-use App\Events\Frontend\Auth\UserLoggedOut;
-use App\Events\Frontend\Auth\UserRegistered;
+use App\Events\Api\Auth\UserLoggedIn;
+use App\Events\Api\Auth\UserLoggedOut;
+use App\Events\Api\Auth\UserRegistered;
+use App\Events\Api\ExceptionNotify;
 use App\Exceptions\ApiException;
 use App\Jobs\SendPhoneMessage;
 use App\Models\Auth\ApiUser;
 use App\Models\Auth\UserDevice;
 use App\Services\RateLimiter;
 use App\Services\Registrar;
-use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\JWTAuth;
@@ -78,15 +77,14 @@ class AuthController extends Controller
     public function login(Request $request,JWTAuth $JWTAuth){
 
         $validateRules = [
-            'mobile' => 'required',
-            'password' => 'required_without:phoneCode',
-            'phoneCode' => 'required_without:password'
+            'mobile' => 'required|cn_phone',
+            'phoneCode' => 'required'
         ];
 
         $this->validate($request,$validateRules);
 
-        /*只接收mobile和password的值*/
-        $credentials = $request->only('mobile', 'password', 'phoneCode');
+        /*只接收mobile和phoneCode的值*/
+        $credentials = $request->only('mobile', 'phoneCode');
         $isNewUser = 0;
         if(RateLimiter::instance()->increase('userLogin',$credentials['mobile'],3,1)){
             throw new ApiException(ApiException::VISIT_LIMIT);
@@ -95,52 +93,33 @@ class AuthController extends Controller
             event(new ExceptionNotify('用户登录['.$credentials['mobile'].']60秒内尝试了30次以上'));
             throw new ApiException(ApiException::VISIT_LIMIT);
         }
-        if (isset($credentials['phoneCode']) && $credentials['phoneCode']) {
-            //验证手机验证码
-            $code_cache = Cache::get(SendPhoneMessage::getCacheKey('login',$credentials['mobile']));
-            if($code_cache != $credentials['phoneCode']){
-                throw new ApiException(ApiException::ARGS_YZM_ERROR);
-            }
-            $user = User::where('mobile',$credentials['mobile'])->first();
-            if (!$user) {
-                //密码登陆如果用户不存在自动创建用户
-                $registrar = new Registrar();
-                $user = $registrar->create([
-                    'name' => '手机用户'.rand(100000,999999),
-                    'email' => null,
-                    'mobile' => $credentials['mobile'],
-                    'rc_uid' => 0,
-                    'title'  => '',
-                    'company' => '',
-                    'gender' => 0,
-                    'password' => time(),
-                    'status' => 1,
-                    'visit_ip' => $request->getClientIp(),
-                    'source' => User::USER_SOURCE_APP,
-                ]);
-                $user->attachRole(2); //默认注册为普通用户角色
-                $user->userData->email_status = 1;
-                $user->userData->save();
-                $user->save();
-                $isNewUser = 1;
-                //注册事件通知
-                event(new UserRegistered($user,'','APP'));
-            }
-            $token = $JWTAuth->fromUser($user);
-            $loginFrom = '短信验证码';
-        } else {
-            $token = $JWTAuth->attempt($credentials);
-            $user = $request->user();
-            $loginFrom = '网站';
+        //验证手机验证码
+        $code_cache = Cache::get(SendPhoneMessage::getCacheKey('login',$credentials['mobile']));
+        if($code_cache != $credentials['phoneCode']){
+            throw new ApiException(ApiException::ARGS_YZM_ERROR);
         }
+        $user = ApiUser::where('mobile',$credentials['mobile'])->first();
+        if (!$user) {
+            //密码登陆如果用户不存在自动创建用户
+            $registrar = new Registrar();
+            $user = $registrar->create([
+                'name' => '手机用户'.rand(100000,999999),
+                'mobile' => $credentials['mobile'],
+                'gender' => 0,
+                'status' => 1,
+                'visit_ip' => $request->getClientIp()
+            ]);
+            $isNewUser = 1;
+            //注册事件通知
+            event(new UserRegistered($user));
+        }
+        $token = $JWTAuth->fromUser($user);
 
         /*根据邮箱地址和密码进行认证*/
         if ($token)
         {
             $device_code = $request->input('deviceCode');
-            if ($device_code) {
-                $loginFrom = 'App';
-            }
+
             if($user->last_login_token && $device_code){
                 try {
                     $JWTAuth->refresh($user->last_login_token);
@@ -154,11 +133,8 @@ class AuthController extends Controller
                 throw new ApiException(ApiException::USER_SUSPEND);
             }
             //登陆事件通知
-            event(new UserLoggedIn($user, $loginFrom));
+            event(new UserLoggedIn($user));
             $message = 'ok';
-            if($this->credit($user->id,Credit::KEY_LOGIN)){
-                $message = '登陆成功! ';
-            }
 
             $info = [];
             $info['token'] = $token;
@@ -166,23 +142,11 @@ class AuthController extends Controller
             $info['id'] = $user->id;
             $info['name'] = $user->name;
             $info['mobile'] = $user->mobile;
-            $info['email'] = $user->email;
-            $info['avatar_url'] = $user->getAvatarUrl();
             $info['gender'] = $user->gender;
-            $info['birthday'] = $user->birthday;
-            $info['province'] = $user->province;
-            $info['city'] = $user->city;
-            $info['company'] = $user->company;
-            $info['title'] = $user->title;
-            $info['description'] = $user->description;
             $info['status'] = $user->status;
-            $info['address_detail'] = $user->address_detail;
-            $info['industry_tags'] = array_column($user->industryTags(),'name');
-            $info['tags'] = Tag::whereIn('id',$user->userTag()->pluck('tag_id'))->pluck('name');
 
             /*认证成功*/
             return static::createJsonData(true,$info,ApiException::SUCCESS,$message);
-
         }
 
         return static::createJsonData(false,[],ApiException::USER_PASSWORD_ERROR,'用户名或密码错误');
@@ -198,29 +162,12 @@ class AuthController extends Controller
             return static::createJsonData(false,[],403,'管理员已关闭了网站的注册功能!');
         }
 
-        /*防灌水检查*/
-        if( Setting()->get('register_limit_num') > 0 ){
-            $registerCount = $this->counter('register_number_'.md5($request->ip()));
-            if( $registerCount > Setting()->get('register_limit_num')){
-                return static::createJsonData(false,[],500,'您的当前的IP已经超过当日最大注册数目，如有疑问请联系管理员');
-            }
-        }
-
         /*表单数据校验*/
         $validateRules = [
-            'name' => 'required|min:2|max:100',
             'mobile' => 'required|cn_phone',
             'code'   => 'required',
-            'password' => 'required|min:6|max:64',
         ];
-        //是否开启了邀请码注册
-        if(Setting()->get('registration_code_open',1)){
-            $validateRules['registration_code'] = 'required';
-        }
 
-        /*if( Setting()->get('code_register') == 1){
-            $validateRules['captcha'] = 'required|captcha';
-        }*/
 
         $this->validate($request,$validateRules);
         $mobile = $request->input('mobile');
@@ -234,54 +181,20 @@ class AuthController extends Controller
             throw new ApiException(ApiException::ARGS_YZM_ERROR);
         }
 
-        $user = User::where('mobile',$mobile)->first();
+        $user = ApiUser::where('mobile',$mobile)->first();
         if($user){
             throw new ApiException(ApiException::USER_PHONE_EXIST);
         }
-        if(Setting()->get('registration_code_open',1)){
-            $rcode = UserRegistrationCode::where('code',$request->input('registration_code'))->where('status',UserRegistrationCode::CODE_STATUS_PENDING)->first();
-            if(empty($rcode)){
-                throw new ApiException(ApiException::USER_REGISTRATION_CODE_INVALID);
-            }
-            if($rcode->expired_at && strtotime($rcode->expired_at) < time()){
-                throw new ApiException(ApiException::USER_REGISTRATION_CODE_OVERTIME);
-            }
-        }
 
         $formData = $request->all();
-        if (isset($formData['company_email'])) {
-            $formData['email'] = $formData['company_email'];
-        } else {
-            $formData['email'] = null;
-        }
+        $formData['status'] = 1;
 
-        if(Setting()->get('register_need_confirm', 0)){
-            //注册完成后需要审核
-            $formData['status'] = 0;
-        }else{
-            $formData['status'] = 1;
-        }
         $formData['visit_ip'] = $request->getClientIp();
 
-        if (isset($formData['rc_code']) && $formData['rc_code']) {
-            $rcUser = User::where('rc_code',$formData['rc_code'])->first();
-            if ($rcUser) {
-                $formData['rc_uid'] = $rcUser->id;
-            }
-        }
-
         $user = $registrar->create($formData);
-        $user->attachRole(2); //默认注册为普通用户角色
-        $user->userData->email_status = 1;
-        $user->userData->save();
-        if(isset($rcode)){
-            $rcode->status = UserRegistrationCode::CODE_STATUS_USED;
-            $rcode->register_uid = $user->id;
-            $rcode->save();
-        }
         $message = '注册成功!';
         //注册事件通知
-        event(new UserRegistered($user,'',isset($formData['title'])?'官网':'App'));
+        event(new UserRegistered($user));
 
         $token = $JWTAuth->fromUser($user);
         return static::createJsonData(true,['token'=>$token],ApiException::SUCCESS,$message);
@@ -309,84 +222,26 @@ class AuthController extends Controller
             throw new ApiException(ApiException::ARGS_YZM_ERROR);
         }
         $type = $request->input('type',1);
-        $user = User::where('mobile',$mobile)->first();
+        $user = ApiUser::where('mobile',$mobile)->first();
         if($user){
-            //当前登录用户已绑定手机号，提示已存在手机号
-            if ($loginUser->mobile) {
-                throw new ApiException(ApiException::USER_PHONE_EXIST);
-            }
-            $oauthData = UserOauth::where('user_id',$user->id)
-                ->where('status',1)->first();
-            if ($type == 1) {
-                return self::createJsonData(true,['token'=>'','mobile'=>$mobile,'avatar'=>$user->avatar,'name'=>$user->name,'is_expert'=>$user->is_expert],$oauthData?ApiException::USER_PHONE_EXIST_BIND_WECHAT:ApiException::USER_PHONE_EXIST_NOT_BIND_WECHAT);
-            }
-            if ($type == 2 && !$oauthData) {
-                $user->mergeUser($loginUser);
-                //现token实现
-                $JWTAuth->setRequest($request)->parseToken()->refresh();
-                $newToken = $JWTAuth->fromUser($user);
-                event(new SystemNotify('用户通过手机号完成了账户合并: '.$loginUser->id.'['.$loginUser->name.']=>'.$user->id.'['.$user->name.']'));
-                return self::createJsonData(true,['token'=>$newToken]);
-            }
+            throw new ApiException(ApiException::USER_PHONE_EXIST);
         }
-        if (!$user) {
-            $loginUser->mobile = $mobile;
-            $loginUser->save();
-            event(new SystemNotify('用户完成手机认证: '.$loginUser->id.'['.$loginUser->name.']'));
-        }
+        $loginUser->mobile = $mobile;
+        $loginUser->save();
         $newToken = $JWTAuth->fromUser($loginUser);
 
-        return self::createJsonData(true,['token'=>$newToken,'mobile'=>$mobile,'avatar'=>$loginUser->avatar,'name'=>$loginUser->name,'is_expert'=>$loginUser->is_expert]);
+        return self::createJsonData(true,['token'=>$newToken,'mobile'=>$mobile,'name'=>$loginUser->name]);
     }
-
-        /*忘记密码*/
-    public function forgetPassword(Request $request)
-    {
-
-        /*表单数据校验*/
-        $this->validate($request, [
-            'mobile' => 'required|cn_phone',
-            'code' => 'required',
-            'password' => 'required|min:6|max:64',
-        ]);
-        $mobile = $request->input('mobile');
-        if(RateLimiter::instance()->increase('userForgetPassword',$mobile,3,1)){
-            throw new ApiException(ApiException::VISIT_LIMIT);
-        }
-        if(RateLimiter::instance()->increase('userForgetPasswordCount',$mobile,60,30)){
-            event(new ExceptionNotify('忘记密码['.$mobile.']60秒内尝试了30次以上'));
-            throw new ApiException(ApiException::VISIT_LIMIT);
-        }
-
-        //验证手机验证码
-        $code_cache = Cache::get(SendPhoneMessage::getCacheKey('change',$mobile));
-        $code = $request->input('code');
-        if($code_cache != $code){
-            throw new ApiException(ApiException::ARGS_YZM_ERROR);
-        }
-
-        $user = User::where('mobile',$mobile)->first();
-        if(!$user){
-            throw new ApiException(ApiException::USER_NOT_FOUND);
-        }
-
-        $user->password = Hash::make($request->input('password'));
-        $user->save();
-
-        return self::createJsonData(true);
-
-    }
-
-
 
     /**
      * 用户登出
      */
-    public function logout(Request $request,Guard $auth){
+    public function logout(Request $request){
         //通知
-        event(new UserLoggedOut($auth->user()));
+        $user = $request->user();
+        event(new UserLoggedOut($user));
         $data = $request->all();
-        UserDevice::where('user_id',$auth->user()->id)->where('client_id',$data['client_id'])->where('device_type',$data['device_type'])->update(['status'=>0]);
+        UserDevice::where('api_user_id',$user->id)->where('client_id',$data['client_id'])->where('device_type',$data['device_type'])->update(['status'=>0]);
         return self::createJsonData(true);
     }
 

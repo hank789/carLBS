@@ -5,6 +5,7 @@ namespace App\Providers;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Class AppServiceProvider.
@@ -33,6 +34,11 @@ class AppServiceProvider extends ServiceProvider
          * setLocale to use Carbon source locales. Enables diffForHumans() localized
          */
         Carbon::setLocale(config('app.locale'));
+
+        // 添加验证手机号码规则
+        Validator::extend('cn_phone', function ($attribute, $value,$parameters, $validator) {
+            return preg_match('/^(\+?0?86\-?)?((13\d|14[57]|15[^4,\D]|17[35678]|18\d)\d{8}|170[059]\d{7})$/', $value);
+        });
 
         /*
          * Set the session variable for whether or not the app is using RTL support

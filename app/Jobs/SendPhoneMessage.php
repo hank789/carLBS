@@ -7,18 +7,16 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Flc\Alidayu\App;
-use Flc\Alidayu\Client;
-use Flc\Alidayu\Requests\AlibabaAliqinFcSmsNumSend;
 use Illuminate\Support\Facades\Log;
+use AlibabaCloud\Client\AlibabaCloud;
+use AlibabaCloud\Client\Exception\ClientException;
+use AlibabaCloud\Client\Exception\ServerException;
 
 
 class SendPhoneMessage implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-
-    protected $alidayu;
 
     /**
      * 任务最大尝试次数
@@ -39,8 +37,6 @@ class SendPhoneMessage implements ShouldQueue
      */
     public function __construct($phone,array $params,$type='register')
     {
-        $app = new App(config('alidayu'));
-        $this->alidayu = new Client($app);
         $this->phone = $phone;
         $this->params = $params;
         $this->type = $type;
@@ -75,23 +71,36 @@ class SendPhoneMessage implements ShouldQueue
                 $templateId = config('alidayu.verify_template_id');
                 break;
         }
+        AlibabaCloud::accessKeyClient(config('aliyun.accessKeyId'), config('aliyun.accessSecret'))
+            ->regionId(config('aliyun.region')) // replace regionId as you need
+            ->asGlobalClient();
 
-        $request = new AlibabaAliqinFcSmsNumSend();
-        $request->setSmsParam($this->params)
-            ->setSmsFreeSignName($freeSignName)
-            ->setSmsTemplateCode($templateId)
-            ->setRecNum($this->phone);
-
-        $response = $this->alidayu->execute($request);
-
-        $result = isset($response->result) ? $response->result : null;
-        $sub_code = isset($response->sub_code) ? $response->sub_code : null;
-        $sub_msg = isset($response->sub_msg) ? $response->sub_msg : null;
+        try {
+            $result = AlibabaCloud::rpcRequest()
+                ->product('Dysmsapi')
+                ->version('2017-05-25')
+                ->action('SendSms')
+                ->method('POST')
+                ->options([
+                    'query' => [
+                        'PhoneNumbers' => $this->phone,
+                        'SignName' => '',//短信签名
+                        'TemplateCode' => '',//模板id
+                        'TemplateParam' => '',//模板变量替换
+                    ],
+                ])
+                ->request();
+            print_r($result->toArray());
+        } catch (ClientException $e) {
+            echo $e->getErrorMessage() . PHP_EOL;
+        } catch (ServerException $e) {
+            echo $e->getErrorMessage() . PHP_EOL;
+        }
 
         if ($result && $result->success == true) {
             // 发送成功～
         }else{
-            Log::error('短信验证码发送失败',[$this->type,$result, $sub_code, $sub_msg]);
+            //Log::error('短信验证码发送失败',[$this->type,$result, $sub_code, $sub_msg]);
         }
     }
 
