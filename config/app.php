@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => '车辆管理系统',
+    'name' => 'carLBS',
 
     /*
     |--------------------------------------------------------------------------
@@ -175,7 +175,7 @@ return [
         /*
          * Package Service Providers that aren't auto-discover...
          */
-
+        App\Third\Push\Getui\GetuiServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -243,6 +243,7 @@ return [
         'Active' => HieuLe\Active\Facades\Active::class,
         'Gravatar' => Creativeorange\Gravatar\Facades\Gravatar::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'Getui' => App\Third\Push\Getui\Facades\Getui::class,
 
     ],
 
