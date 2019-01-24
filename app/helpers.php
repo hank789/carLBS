@@ -186,3 +186,9 @@ if( !function_exists('makeVerifyCode') ){
         return rand($min, $max);
     }
 }
+
+if (!function_exists('formatSlackUser')) {
+    function formatSlackUser($user){
+        return $user->id.'['.$user->name.']';
+    }
+}
