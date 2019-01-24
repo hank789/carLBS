@@ -1,10 +1,11 @@
-<?php namespace App\Http\Controllers\Api;
+<?php namespace App\Http\Controllers\Api\Account;
 
 use App\Events\Api\Auth\UserLoggedIn;
 use App\Events\Api\Auth\UserLoggedOut;
 use App\Events\Api\Auth\UserRegistered;
 use App\Events\Api\ExceptionNotify;
 use App\Exceptions\ApiException;
+use App\Http\Controllers\Api\Controller;
 use App\Jobs\SendPhoneMessage;
 use App\Models\Auth\ApiUser;
 use App\Models\Auth\UserDevice;
