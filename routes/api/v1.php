@@ -13,14 +13,15 @@ Route::group(['prefix' => 'auth','namespace'=>'Account'], function() {
     Route::post('login', 'AuthController@login');
     Route::post('refresh', ['uses'=>'AuthController@refreshToken']);
 
-    Route::post('forgot', 'AuthController@forgetPassword');
     Route::post('sendPhoneCode', 'AuthController@sendPhoneCode');
 
-    Route::post('logout', 'AuthController@logout')->middleware('jwt.auth');
+    Route::post('logout', 'AuthController@logout')->middleware('auth:api');
 
     //更换手机号
-    Route::post('changePhone', 'AuthController@changePhone')->middleware('jwt.auth');
+    Route::post('changePhone', 'AuthController@changePhone')->middleware('auth:api');
+});
 
-    //等级权限判断
-    Route::post('checkUserLevel','AuthController@checkUserLevel')->middleware('jwt.auth');
+Route::group(['prefix' => 'profile','namespace'=>'Account','middleware' => ['auth:api','ban.user']], function() {
+    //用户信息
+    Route::get('info','ProfileController@info');
 });

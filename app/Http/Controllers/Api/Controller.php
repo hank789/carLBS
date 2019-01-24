@@ -13,7 +13,6 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Traits\BaseController;
 
 
-
 class Controller extends AppController
 {
     use AuthorizesRequests, DispatchesJobs, ApiValidatesRequests, CreateJsonResponseData, BaseController;

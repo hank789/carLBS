@@ -74,7 +74,6 @@ class AuthController extends Controller
         return static::createJsonData(true,['token'=>$newToken],ApiException::SUCCESS,'ok')->header('Authorization', 'Bearer '.$newToken);
     }
 
-
     public function login(Request $request,JWTAuth $JWTAuth){
 
         $validateRules = [
@@ -200,8 +199,6 @@ class AuthController extends Controller
         $token = $JWTAuth->fromUser($user);
         return static::createJsonData(true,['token'=>$token],ApiException::SUCCESS,$message);
     }
-
-
 
     //更换手机号码
     public function changePhone(Request $request,JWTAuth $JWTAuth) {

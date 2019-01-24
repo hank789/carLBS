@@ -19,7 +19,7 @@ class CreateAppUserTable extends Migration
             $table->string('mobile',24)->unique()->nullable();  //登录手机
             $table->tinyInteger('gender')->nullable();          //性别: 1-男，2-女，0-保密
             $table->tinyInteger('status')->default(1);          //用户状态0-待审核，1已审核
-            $table->string('last_login_token')->comment('上次登录token')->nullable();
+            $table->string('last_login_token', 1024)->comment('上次登录token')->nullable();
             $table->timestamp('last_login_at')->nullable();
             $table->string('last_login_ip')->nullable();
             $table->timestamps();

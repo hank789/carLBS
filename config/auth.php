@@ -72,7 +72,7 @@ return [
 
         'apiUsers' => [
              'driver' => 'eloquent',
-             'table' => App\Models\Auth\ApiUser::class,
+             'model' => App\Models\Auth\ApiUser::class,
         ],
     ],
 

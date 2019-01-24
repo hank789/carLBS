@@ -2,18 +2,11 @@
 
 namespace App\Models\Auth;
 
-use App\Models\Traits\Uuid;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
-use App\Models\Auth\Traits\Scope\UserScope;
-use App\Models\Auth\Traits\Method\UserMethod;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Auth\Traits\SendUserPasswordReset;
-use App\Models\Auth\Traits\Attribute\UserAttribute;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Models\Auth\Traits\Relationship\UserRelationship;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Database\Eloquent\Model;
 /**
  * Class User.
  *
@@ -32,7 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Auth\ApiUser withoutTrashed()
  * @mixin \Eloquent
  */
-class ApiUser extends Model implements JWTSubject
+class ApiUser extends Authenticatable implements JWTSubject
 {
     use HasRoles,
         Notifiable,
@@ -82,6 +75,11 @@ class ApiUser extends Model implements JWTSubject
         'active' => 'boolean',
         'confirmed' => 'boolean',
     ];
+
+    public function getFullNameAttribute()
+    {
+        return $this->name;
+    }
 
     // Rest omitted for brevity
 

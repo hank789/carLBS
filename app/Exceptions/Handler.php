@@ -89,11 +89,15 @@ class Handler extends ExceptionHandler
             $err_msg = trim($err_msg,"\n");
             return CreateJsonResponseData::createJsonData(false,$res_data,$exception->getCode(), $err_msg);
         }
-        if($exception instanceof HttpException){
-            return CreateJsonResponseData::createJsonData(false,[],$exception->getStatusCode(),$exception->getMessage());
+
+        if ($exception instanceof AuthenticationException) {
+            return CreateJsonResponseData::createJsonData(false,[],ApiException::TOKEN_INVALID,'需登录后才能操作');
         }
 
-        if($request->is('api/*')){
+        if($request->expectsJson()){
+            if($exception instanceof HttpException){
+                return CreateJsonResponseData::createJsonData(false,[],$exception->getStatusCode(),$exception->getMessage());
+            }
             return CreateJsonResponseData::createJsonData(false,[],$exception->getCode(),'出错了,请稍后再试~');
         }
 
