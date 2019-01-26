@@ -24,6 +24,18 @@
                 <div class="row mt-4 mb-4">
                     <div class="col">
                         <div class="form-group row">
+                        {{ html()->label(__('validation.attributes.backend.access.users.last_name'))->class('col-md-2 form-control-label')->for('last_name') }}
+
+                            <div class="col-md-10">
+                                {{ html()->text('last_name')
+                                    ->class('form-control')
+                                    ->placeholder(__('validation.attributes.backend.access.users.last_name'))
+                                    ->attribute('maxlength', 191)
+                                    ->required() }}
+                            </div><!--col-->
+                        </div><!--form-group-->
+
+                        <div class="form-group row">
                             {{ html()->label(__('validation.attributes.backend.access.users.first_name'))->class('col-md-2 form-control-label')->for('first_name') }}
 
                             <div class="col-md-10">
@@ -33,18 +45,6 @@
                                     ->attribute('maxlength', 191)
                                     ->required()
                                     ->autofocus() }}
-                            </div><!--col-->
-                        </div><!--form-group-->
-
-                        <div class="form-group row">
-                        {{ html()->label(__('validation.attributes.backend.access.users.last_name'))->class('col-md-2 form-control-label')->for('last_name') }}
-
-                            <div class="col-md-10">
-                                {{ html()->text('last_name')
-                                    ->class('form-control')
-                                    ->placeholder(__('validation.attributes.backend.access.users.last_name'))
-                                    ->attribute('maxlength', 191)
-                                    ->required() }}
                             </div><!--col-->
                         </div><!--form-group-->
 
@@ -88,7 +88,7 @@
                             <div class="col-md-10">
                                 <label class="switch switch-label switch-pill switch-primary">
                                     {{ html()->checkbox('active', true, '1')->class('switch-input') }}
-                                    <span class="switch-slider" data-checked="yes" data-unchecked="no"></span>
+                                    <span class="switch-slider" data-checked="是" data-unchecked="否"></span>
                                 </label>
                             </div><!--col-->
                         </div><!--form-group-->
@@ -99,7 +99,7 @@
                             <div class="col-md-10">
                                 <label class="switch switch-label switch-pill switch-primary">
                                     {{ html()->checkbox('confirmed', true, '1')->class('switch-input') }}
-                                    <span class="switch-slider" data-checked="yes" data-unchecked="no"></span>
+                                    <span class="switch-slider" data-checked="是" data-unchecked="否"></span>
                                 </label>
                             </div><!--col-->
                         </div><!--form-group-->
@@ -111,7 +111,7 @@
                                 <div class="col-md-10">
                                     <label class="switch switch-label switch-pill switch-primary">
                                         {{ html()->checkbox('confirmation_email', true, '1')->class('switch-input') }}
-                                        <span class="switch-slider" data-checked="yes" data-unchecked="no"></span>
+                                        <span class="switch-slider" data-checked="是" data-unchecked="否"></span>
                                     </label>
                                 </div><!--col-->
                             </div><!--form-group-->
@@ -141,7 +141,7 @@
                                                                             html()->checkbox('roles[]', old('roles') && in_array($role->name, old('roles')) ? true : false, $role->name)
                                                                                   ->class('switch-input')
                                                                                   ->id('role-'.$role->id)
-                                                                            . '<span class="switch-slider" data-checked="on" data-unchecked="off"></span>')
+                                                                            . '<span class="switch-slider" data-checked="是" data-unchecked="否"></span>')
                                                                         ->class('switch switch-label switch-pill switch-primary mr-2')
                                                                         ->for('role-'.$role->id) }}
                                                                     {{ html()->label(ucwords($role->name))->for('role-'.$role->id) }}
@@ -172,7 +172,7 @@
                                                                     html()->checkbox('permissions[]', old('permissions') && in_array($permission->name, old('permissions')) ? true : false, $permission->name)
                                                                           ->class('switch-input')
                                                                           ->id('permission-'.$permission->id)
-                                                                        . '<span class="switch-slider" data-checked="on" data-unchecked="off"></span>')
+                                                                        . '<span class="switch-slider" data-checked="是" data-unchecked="否"></span>')
                                                                     ->class('switch switch-label switch-pill switch-primary mr-2')
                                                                 ->for('permission-'.$permission->id) }}
                                                             {{ html()->label(ucwords($permission->name))->for('permission-'.$permission->id) }}

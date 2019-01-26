@@ -154,7 +154,6 @@ return [
                     'display_name'     => '显示名称',
                     'group'            => '群组',
                     'group_sort'       => '组排序',
-
                     'groups' => [
                         'name' => '组名称',
                     ],
@@ -179,6 +178,8 @@ return [
                     'password'                => '密码',
                     'password_confirmation'   => '确认密码',
                     'send_confirmation_email' => '发送确认电子邮件',
+                    'first_name' => '名',
+                    'last_name' => '姓'
                 ],
             ],
         ],

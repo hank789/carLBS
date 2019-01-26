@@ -29,6 +29,9 @@ return [
         'none'              => '空',
         'show'              => '显示',
         'toggle_navigation' => '切换导航',
+        'more' => '更多操作',
+        'first_name' => '名',
+        'last_name' => '姓'
     ],
 
     'backend' => [
@@ -73,6 +76,10 @@ return [
                     'roles'          => '角色',
                     'social' => 'Social',
                     'total'          => '用户总计',
+                    'full_name' => '姓名',
+                    'other_permissions' => '其它权限',
+                    'abilities' => '能力',
+                    'permissions' => '权限'
                 ],
 
                 'tabs' => [
