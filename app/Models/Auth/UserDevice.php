@@ -30,6 +30,17 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\UserDevice newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\UserDevice newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\UserDevice query()
+ * @property int $api_user_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\UserDevice whereApiUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\UserDevice whereAppid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\UserDevice whereAppkey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\UserDevice whereClientId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\UserDevice whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\UserDevice whereDeviceToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\UserDevice whereDeviceType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\UserDevice whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\UserDevice whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\UserDevice whereUpdatedAt($value)
  */
 class UserDevice extends Model {
     use BelongsToApiUserTrait;

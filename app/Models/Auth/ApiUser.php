@@ -24,6 +24,29 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Auth\ApiUser withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Auth\ApiUser withoutTrashed()
  * @mixin \Eloquent
+ * @property-read mixed $full_name
+ * @property int $id
+ * @property string $name
+ * @property string|null $mobile
+ * @property int|null $gender
+ * @property int $status
+ * @property string|null $last_login_token 上次登录token
+ * @property \Illuminate\Support\Carbon|null $last_login_at
+ * @property string|null $last_login_ip
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\ApiUser whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\ApiUser whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\ApiUser whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\ApiUser whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\ApiUser whereLastLoginAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\ApiUser whereLastLoginIp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\ApiUser whereLastLoginToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\ApiUser whereMobile($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\ApiUser whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\ApiUser whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\ApiUser whereUpdatedAt($value)
  */
 class ApiUser extends Authenticatable implements JWTSubject
 {
@@ -58,23 +81,7 @@ class ApiUser extends Authenticatable implements JWTSubject
      */
     protected $dates = ['last_login_at', 'deleted_at'];
 
-    /**
-     * The dynamic attributes from mutators that should be returned with the user object.
-     * @var array
-     */
-    protected $appends = ['full_name'];
-
     protected $table = 'api_users';
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'active' => 'boolean',
-        'confirmed' => 'boolean',
-    ];
 
     public function getFullNameAttribute()
     {

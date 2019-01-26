@@ -13,6 +13,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property string $value
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\System\Setting newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\System\Setting newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\System\Setting query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\System\Setting whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\System\Setting whereValue($value)
  */
 class Setting extends Model
 {

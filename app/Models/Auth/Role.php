@@ -18,6 +18,16 @@ use App\Models\Auth\Traits\Attribute\RoleAttribute;
  * @method static \Illuminate\Database\Eloquent\Builder|\Spatie\Permission\Models\Role permission($permissions)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\Role query()
  * @mixin \Eloquent
+ * @property int $id
+ * @property string $name
+ * @property string $guard_name
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\Role whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\Role whereGuardName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\Role whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\Role whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\Role whereUpdatedAt($value)
  */
 class Role extends \Spatie\Permission\Models\Role
 {
