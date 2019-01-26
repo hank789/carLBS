@@ -25,4 +25,5 @@ return [
      * 1. '.footer-fixed'					- Fixed footer
      */
     'body_classes' => 'app header-fixed sidebar-fixed aside-menu-off-canvas sidebar-lg-show',
+    'page_size' => 25
 ];

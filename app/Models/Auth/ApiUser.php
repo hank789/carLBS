@@ -64,6 +64,7 @@ class ApiUser extends Authenticatable implements JWTSubject
         'mobile',
         'gender',
         'status',
+        'trip_number',
         'last_login_token',
         'last_login_at',
         'last_login_ip',
@@ -111,5 +112,77 @@ class ApiUser extends Authenticatable implements JWTSubject
             'exp' => strtotime('+10 years', time()),
             'auth_type' => 'apiUser'
         ];
+    }
+
+    public function isActive()
+    {
+        return $this->status == 1;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusLabelAttribute()
+    {
+        if ($this->isActive()) {
+            return "<span class='badge badge-success'>".__('labels.general.active').'</span>';
+        }
+
+        return "<span class='badge badge-danger'>".__('labels.general.inactive').'</span>';
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusButtonAttribute()
+    {
+        if ($this->id != auth()->id()) {
+            switch ($this->isActive()) {
+                case 0:
+                    return '<a href="'.route('admin.transport.user.mark', [
+                            $this,
+                            1,
+                        ]).'" class="dropdown-item">'.__('buttons.backend.access.users.activate').'</a> ';
+
+                case 1:
+                    return '<a href="'.route('admin.transport.user.mark', [
+                            $this,
+                            0,
+                        ]).'" class="dropdown-item">'.__('buttons.backend.access.users.deactivate').'</a> ';
+
+                default:
+                    return '';
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * @return string
+     */
+    public function getShowButtonAttribute()
+    {
+        return '<a href="'.route('admin.transport.user.show', $this).'" data-toggle="tooltip" data-placement="top" title="'.__('buttons.general.crud.view').'" class="btn btn-info"><i class="fas fa-eye"></i></a>';
+    }
+
+    /**
+     * @return string
+     */
+    public function getActionButtonsAttribute()
+    {
+        return '
+    	<div class="btn-group" role="group" aria-label="'.__('labels.backend.access.users.user_actions').'">
+		  '.$this->show_button.'
+
+		  <div class="btn-group btn-group-sm" role="group">
+			<button id="userActions" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  '.__('labels.general.more').'
+			</button>
+			<div class="dropdown-menu" aria-labelledby="userActions">
+			  '.$this->status_button.'
+			</div>
+		  </div>
+		</div>';
     }
 }

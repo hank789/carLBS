@@ -11,6 +11,26 @@
             </li>
 
             <li class="nav-title">
+                车队管理
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ active_class(Active::checkUriPattern('admin/transport')) }}" href="{{ route('admin.transport.user.index') }}">
+                    <i class="nav-icon icon-people"></i> 司机管理
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ active_class(Active::checkUriPattern('admin/transport')) }}" href="{{ route('admin.dashboard') }}">
+                    <i class="nav-icon fa fa-car"></i> 行程管理
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ active_class(Active::checkUriPattern('admin/transport')) }}" href="{{ route('admin.dashboard') }}">
+                    <i class="nav-icon icon-location-pin"></i> 在线车辆
+                </a>
+            </li>
+
+
+            <li class="nav-title">
                 @lang('menus.backend.sidebar.system')
             </li>
 
