@@ -62,17 +62,6 @@ class UserController extends Controller
             ->withUser($user);
     }
 
-    /**
-     * @param ManageUserRequest $request
-     *
-     * @return mixed
-     */
-    public function getDeactivated(ManageUserRequest $request)
-    {
-        return view('backend.transport.user.deactivated')
-            ->withUsers($this->userRepository->getInactivePaginated(25, 'id', 'asc'));
-    }
-
 
     public function mark(ManageUserRequest $request, $id, $status)
     {

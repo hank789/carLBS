@@ -17,11 +17,6 @@ Route::group([
     Route::group(['namespace' => 'User'], function () {
 
         /*
-         * User Status'
-         */
-        Route::get('user/deactivated', [UserController::class, 'getDeactivated'])->name('user.deactivated');
-
-        /*
          * User CRUD
          */
         Route::get('user', [UserController::class, 'index'])->name('user.index');
