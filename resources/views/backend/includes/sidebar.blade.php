@@ -14,12 +14,12 @@
                 车队管理
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ active_class(Active::checkUriPattern('admin/transport')) }}" href="{{ route('admin.transport.user.index') }}">
+                <a class="nav-link {{ active_class(Active::checkUriPattern('admin/transport/user*')) }}" href="{{ route('admin.transport.user.index') }}">
                     <i class="nav-icon icon-people"></i> 司机管理
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ active_class(Active::checkUriPattern('admin/transport')) }}" href="{{ route('admin.dashboard') }}">
+                <a class="nav-link {{ active_class(Active::checkUriPattern('admin/transport/main*')) }}" href="{{ route('admin.transport.main.index') }}">
                     <i class="nav-icon fa fa-car"></i> 行程管理
                 </a>
             </li>

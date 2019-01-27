@@ -12,7 +12,7 @@
         <div class="row">
             <div class="col-sm-5">
                 <h4 class="card-title mb-0">
-                    司机管理 <small class="text-muted">所有司机</small>
+                    司机管理 <small class="text-muted">管理司机信息</small>
                 </h4>
             </div><!--col-->
 

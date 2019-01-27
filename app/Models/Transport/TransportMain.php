@@ -56,7 +56,7 @@ class TransportMain extends Model {
     protected $fillable = ['user_id', 'transport_number','transport_start_place','transport_end_place',
         'transport_contact_people','transport_contact_phone','transport_start_time','transport_goods','transport_status'];
 
-    const TRANSPORT_STATUS_CANCLE = -1;
+    const TRANSPORT_STATUS_CANCEL = -1;
     const TRANSPORT_STATUS_PENDING = 0;
     const TRANSPORT_STATUS_PROCESSING = 1;
     const TRANSPORT_STATUS_FINISH = 2;
