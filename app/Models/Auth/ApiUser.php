@@ -140,13 +140,13 @@ class ApiUser extends Authenticatable implements JWTSubject
             switch ($this->isActive()) {
                 case 0:
                     return '<a href="'.route('admin.transport.user.mark', [
-                            $this,
+                            $this->id,
                             1,
                         ]).'" class="dropdown-item">'.__('buttons.backend.access.users.activate').'</a> ';
 
                 case 1:
                     return '<a href="'.route('admin.transport.user.mark', [
-                            $this,
+                            $this->id,
                             0,
                         ]).'" class="dropdown-item">'.__('buttons.backend.access.users.deactivate').'</a> ';
 

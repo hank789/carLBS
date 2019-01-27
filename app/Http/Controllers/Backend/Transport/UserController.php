@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Backend\Transport;
 
+use App\Events\Backend\Transport\User\UserDeactivated;
+use App\Events\Backend\Transport\User\UserReactivated;
 use App\Exceptions\GeneralException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Backend\Transport\ManageUserRequest;
@@ -20,10 +22,32 @@ class UserController extends Controller
      */
     public function index(ManageUserRequest $request)
     {
+        $filter =  $request->all();
         $query = ApiUser::query();
-        $users = $query->where('status',1)->orderBy('id','desc')->paginate(config('backend.page_size'));
+        if (isset($filter['filter'])) {
+            switch ($filter['filter']) {
+                case 'active':
+                    $query = $query->where('status',1);
+                    break;
+                case 'deactivated':
+                    $query = $query->where('status',0);
+                    break;
+                case 'all':
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (isset($filter['nameOrMobile']) && $filter['nameOrMobile']) {
+            if (is_numeric($filter['nameOrMobile'])) {
+                $query = $query->where('mobile','like','%'.$filter['nameOrMobile'].'%');
+            } else {
+                $query = $query->where('name','like','%'.$filter['nameOrMobile'].'%');
+            }
+        }
+        $users = $query->orderBy('id','desc')->paginate(config('backend.page_size'));
         return view('backend.transport.user.index')
-            ->withUsers($users);
+            ->withUsers($users)->with('filter',$filter);
     }
 
     /**
@@ -49,16 +73,10 @@ class UserController extends Controller
             ->withUsers($this->userRepository->getInactivePaginated(25, 'id', 'asc'));
     }
 
-    /**
-     * @param ManageUserRequest $request
-     * @param User              $user
-     * @param                   $status
-     *
-     * @return mixed
-     * @throws \App\Exceptions\GeneralException
-     */
-    public function mark(ManageUserRequest $request, ApiUser $user, $status)
+
+    public function mark(ManageUserRequest $request, $id, $status)
     {
+        $user = ApiUser::find($id);
         if (auth()->id() == $user->id && $status == 0) {
             throw new GeneralException(__('exceptions.backend.access.users.cant_deactivate_self'));
         }
@@ -79,10 +97,6 @@ class UserController extends Controller
             return $user;
         }
 
-        return redirect()->route(
-            $status == 1 ?
-                'admin.transport.user.index' :
-                'admin.transport.user.deactivated'
-        )->withFlashSuccess(__('alerts.backend.users.updated'));
+        return redirect()->route(url()->previous())->withFlashSuccess(__('alerts.backend.users.updated'));
     }
 }

@@ -5480,11 +5480,6 @@ input[type="button"].btn-block {
   border-bottom-left-radius: 0.25rem;
 }
 
-.page-item:last-child .page-link {
-  border-top-right-radius: 0.25rem;
-  border-bottom-right-radius: 0.25rem;
-}
-
 .page-item.active .page-link {
   z-index: 1;
   color: #fff;
@@ -17068,3 +17063,13 @@ body {
   padding-bottom: 1rem;
 }
 
+
+.total-num{
+  position: relative;
+  float: right;
+  padding: 6px 12px;
+  margin-left: -1px;
+  text-decoration: none;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}

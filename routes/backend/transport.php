@@ -29,7 +29,7 @@ Route::group([
         /*
          * Specific User
          */
-        Route::group(['prefix' => 'user/{user}'], function () {
+        Route::group(['prefix' => 'user/{id}'], function () {
             // User
             Route::get('/', [UserController::class, 'show'])->name('user.show');
 

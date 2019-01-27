@@ -12,12 +12,23 @@
         <div class="row">
             <div class="col-sm-5">
                 <h4 class="card-title mb-0">
-                    司机管理 <small class="text-muted">{{ __('labels.backend.access.users.active') }}</small>
+                    司机管理 <small class="text-muted">所有司机</small>
                 </h4>
             </div><!--col-->
 
             <div class="col-sm-7">
-
+                <form name="searchForm" class="form-horizontal" action="{{ route('admin.transport.user.index') }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="filter" value="{{ $filter['filter']??'' }}">
+                    <div class="form-group row">
+                        <div class="col-6">
+                            <input type="text" class="form-control" name="nameOrMobile" placeholder="姓名或手机号" value="{{ $filter['nameOrMobile']??'' }}"/>
+                        </div>
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary">搜索</button>
+                        </div>
+                    </div>
+                </form>
             </div><!--col-->
         </div><!--row-->
 
@@ -27,6 +38,7 @@
                     <table class="table">
                         <thead>
                         <tr>
+                            <th>ID</th>
                             <th>@lang('labels.backend.access.users.table.full_name')</th>
                             <th>手机号</th>
                             <th>状态</th>
@@ -39,6 +51,7 @@
                         <tbody>
                         @foreach($users as $user)
                             <tr>
+                                <td>{{ $user->id }}</td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->mobile }}</td>
                                 <td>{!! $user->status_label !!}</td>
@@ -54,15 +67,16 @@
             </div><!--col-->
         </div><!--row-->
         <div class="row">
-            <div class="col-7">
+            <div class="col-4">
                 <div class="float-left">
-                    {!! $users->total() !!} 司机总计
+
                 </div>
             </div><!--col-->
 
-            <div class="col-5">
+            <div class="col-8">
                 <div class="float-right">
-                    {!! $users->render() !!}
+                    <span class="total-num">共 {{ $users->total() }} 条数据</span>
+                    {!! str_replace('/?', '?', $users->appends($filter)->render()) !!}
                 </div>
             </div><!--col-->
         </div><!--row-->
