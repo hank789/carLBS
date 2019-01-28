@@ -13634,7 +13634,7 @@ canvas {
 .sidebar .nav-link {
   display: block;
   padding: 0.75rem 1rem;
-  color: #fff;
+  color: #8aa4af;
   text-decoration: none;
   background: transparent;
 }
@@ -13860,7 +13860,7 @@ canvas {
 }
 
 .sidebar .nav-dropdown.open .nav-link {
-  color: #fff;
+  color: none;
   border-left: 0;
 }
 
