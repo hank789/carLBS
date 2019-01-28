@@ -10,24 +10,24 @@
 <div class="card">
     <div class="card-body">
         <div class="row">
-            <div class="col-sm-5">
+            <div class="col-sm-4">
                 <h4 class="card-title mb-0">
                     行程管理 <small class="text-muted">车队出发前，必须新建行程，并将行程ID告诉司机</small>
                 </h4>
             </div><!--col-->
 
-            <div class="col-sm-7">
+            <div class="col-sm-8">
                 <form name="searchForm" class="form-horizontal" action="{{ route('admin.transport.main.index') }}">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="filter" value="{{ $filter['filter']??'' }}">
                     <div class="form-group row">
-                        <div class="col-3">
+                        <div class="col-2">
                             <input type="text" class="form-control" name="transport_number" placeholder="行程ID" value="{{ $filter['transport_number']??'' }}"/>
                         </div>
                         <div class="col-3">
                             <input type="text" class="form-control" name="transport_end_place" placeholder="目的地" value="{{ $filter['transport_end_place']??'' }}"/>
                         </div>
-                        <div class="col-3">
+                        <div class="col-4">
                             <input type="text" class="form-control" id="date_range" name="transport_start_time" placeholder="出发时间" value="{{ $filter['transport_start_time']??'' }}"/>
                         </div>
                         <div class="col-3">
@@ -95,4 +95,24 @@
         </div><!--row-->
     </div><!--card-body-->
 </div><!--card-->
+@endsection
+
+@section('script')
+    <script type="text/javascript">
+        /*daterange控件*/
+        $('#date_range').daterangepicker({
+            format: 'YYYY-MM-DD',
+            locale: {
+                applyLabel: '确认',
+                cancelLabel: '取消',
+                fromLabel: '从',
+                toLabel: '到',
+                weekLabel: '星期',
+                customRangeLabel: '自定义范围',
+                daysOfWeek: '日_一_二_三_四_五_六'.split('_'),
+                monthNames: '1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月'.split('_'),
+                firstDay: 1
+            }
+        });
+    </script>
 @endsection

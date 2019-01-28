@@ -1,4 +1,23 @@
+const webpack = require('webpack');
 const mix = require('laravel-mix');
+
+/*
+ |--------------------------------------------------------------------------
+ | Custom Mix setup
+ |--------------------------------------------------------------------------
+ |
+ */
+
+mix.webpackConfig({
+
+    plugins: [
+        new webpack.ContextReplacementPlugin(
+            /moment[\/\\]locale/,
+            // A regular expression matching files that should be included
+            /(zh-cn)\.js/
+        )
+    ]
+});
 
 /*
  |--------------------------------------------------------------------------
@@ -28,6 +47,7 @@ mix.sass('resources/sass/frontend/app.scss', 'css/frontend.css')
         'axios',
         'sweetalert2',
         'lodash',
+        'bootstrap-daterangepicker',
         '@fortawesome/fontawesome-svg-core',
         '@fortawesome/free-brands-svg-icons',
         '@fortawesome/free-regular-svg-icons',
