@@ -61,4 +61,72 @@ class TransportMain extends Model {
     const TRANSPORT_STATUS_PROCESSING = 1;
     const TRANSPORT_STATUS_FINISH = 2;
 
+
+    /**
+     * @return string
+     */
+    public function getStatusLabelAttribute()
+    {
+        switch ($this->transport_status) {
+            case self::TRANSPORT_STATUS_PENDING:
+                return "<span class='badge badge-secondary'>未发布</span>";
+                break;
+            case self::TRANSPORT_STATUS_PROCESSING:
+                return "<span class='badge badge-info'>运输中</span>";
+                break;
+            case self::TRANSPORT_STATUS_FINISH:
+                return "<span class='badge badge-success'>已完成</span>";
+                break;
+            case self::TRANSPORT_STATUS_CANCEL:
+                return "<span class='badge badge-warning'>已取消</span>";
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusButtonAttribute()
+    {
+        switch ($this->transport_status) {
+            case self::TRANSPORT_STATUS_PENDING:
+                return '<a data-source_id="'.$this->id.'" data-source_msg="确认发布此行程？" data-source_status="'.self::TRANSPORT_STATUS_PROCESSING.'" class="dropdown-item btn-confirm">发布行程</a> '.'<a data-source_id="'.$this->id.'" data-source_msg="确认取消此行程？" data-source_status="'.self::TRANSPORT_STATUS_CANCEL.'" class="dropdown-item btn-confirm">取消行程</a> ';
+
+            case self::TRANSPORT_STATUS_PROCESSING:
+                return '<a data-source_id="'.$this->id.'" data-source_msg="确认结束此行程？" data-source_status="'.self::TRANSPORT_STATUS_FINISH.'" class="dropdown-item btn-confirm">结束行程</a> '.'<a data-source_id="'.$this->id.'" data-source_msg="确认将此行程调整为待发布？" data-source_status="'.self::TRANSPORT_STATUS_PENDING.'" class="dropdown-item btn-confirm">调整为待发布</a> ';
+
+            default:
+                return '';
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getShowButtonAttribute()
+    {
+        return '<a href="'.route('admin.transport.main.show', $this->id).'" data-toggle="tooltip" data-placement="top" title="'.__('buttons.general.crud.view').'" class="btn btn-info"><i class="fas fa-eye"></i></a>';
+    }
+
+    /**
+     * @return string
+     */
+    public function getActionButtonsAttribute()
+    {
+        return '
+    	<div class="btn-group" role="group" aria-label="'.__('labels.backend.access.users.user_actions').'">
+		  '.$this->show_button.'
+
+		  <div class="btn-group btn-group-sm" role="group">
+			<button id="userActions" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  '.__('labels.general.more').'
+			</button>
+			<div class="dropdown-menu" aria-labelledby="userActions">
+			  '.$this->status_button.'
+			</div>
+		  </div>
+		</div>';
+    }
 }

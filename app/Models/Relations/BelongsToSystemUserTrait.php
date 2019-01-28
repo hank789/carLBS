@@ -14,6 +14,6 @@ trait BelongsToSystemUserTrait
      */
     public function systemUser()
     {
-        return $this->belongsTo('App\Models\Auth\User');
+        return $this->belongsTo('App\Models\Auth\User','user_id','id');
     }
 }

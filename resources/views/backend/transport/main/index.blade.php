@@ -122,5 +122,19 @@
         $('#date_range').on('cancel.daterangepicker', function(ev, picker) {
             $(this).val('');
         });
+        $(".btn-confirm").click(function(){
+            var msg = $(this).data('source_msg');
+            if(!confirm(msg)){
+                return false;
+            }
+            $(this).button('loading');
+            var follow_btn = $(this);
+            var source_id = $(this).data('source_id');
+            var status = $(this).data('source_status');
+
+            $.get('/admin/transport/main/' + source_id + '/mark/' + status,{},function(msg){
+                window.location.reload();
+            });
+        });
     </script>
 @endsection

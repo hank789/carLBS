@@ -75,28 +75,20 @@ class MainController extends Controller
 
     public function mark(ManageMainRequest $request, $id, $status)
     {
-        $user = ApiUser::find($id);
-        if (auth()->id() == $user->id && $status == 0) {
-            throw new GeneralException(__('exceptions.backend.access.users.cant_deactivate_self'));
-        }
+        $main = TransportMain::find($id);
 
-        $user->status = $status;
+        \Log::info('test',[$id,$status]);
+        $main->transport_status = $status;
 
         switch ($status) {
             case 0:
-                event(new UserDeactivated($user));
                 break;
-
             case 1:
-                event(new UserReactivated($user));
                 break;
         }
+        $main->save();
 
-        if ($user->save()) {
-            return $user;
-        }
-
-        return redirect()->route(url()->previous())->withFlashSuccess(__('alerts.backend.users.updated'));
+        return response('success');
     }
 
     /**
@@ -129,7 +121,7 @@ class MainController extends Controller
             'transport_goods' => $request->input('transport_goods'),
             'transport_status' => $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING)
         ]);
-        return redirect()->route('admin.auth.user.index')->withFlashSuccess('行程添加成功');
+        return redirect()->route('admin.transport.main.index')->withFlashSuccess('行程添加成功');
     }
 
     /**

@@ -43,10 +43,10 @@ Route::group([
          */
     Route::group(['prefix' => 'main/{id}'], function () {
         // User
-        Route::get('/', [MainController::class, 'show'])->name('user.show');
+        Route::get('/', [MainController::class, 'show'])->name('main.show');
 
         // Status
-        Route::get('mark/{status}', [MainController::class, 'mark'])->name('user.mark')->where(['status' => '[0,1]']);
+        Route::get('mark/{status}', [MainController::class, 'mark'])->name('main.mark')->where(['status' => '[-1,0,1,2]']);
 
         Route::get('edit', [MainController::class, 'edit'])->name('main.edit');
         Route::patch('/', [MainController::class, 'update'])->name('main.update');
