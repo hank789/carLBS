@@ -28,11 +28,11 @@
                             <input type="text" class="form-control" name="transport_end_place" placeholder="目的地" value="{{ $filter['transport_end_place']??'' }}"/>
                         </div>
                         <div class="col-4">
-                            <input type="text" class="form-control" id="date_range" name="transport_start_time" placeholder="出发时间" value="{{ $filter['transport_start_time']??'' }}"/>
+                            <input type="text" class="form-control" id="date_range" name="transport_start_time" placeholder="出发时间" value="{{ $filter['transport_start_time']??null }}"/>
                         </div>
                         <div class="col-3">
                             <button type="submit" class="btn btn-primary">搜索</button>
-                            <a href="{{ route('admin.auth.user.create') }}" class="btn btn-success ml-1" data-toggle="tooltip" title="@lang('labels.general.create_new')"><i class="fas fa-plus-circle"></i></a>
+                            <a href="{{ route('admin.transport.main.create') }}" class="btn btn-success ml-1" data-toggle="tooltip" title="@lang('labels.general.create_new')"><i class="fas fa-plus-circle"></i></a>
                         </div>
                     </div>
                 </form>
@@ -102,6 +102,7 @@
         /*daterange控件*/
         $('#date_range').daterangepicker({
             format: 'YYYY-MM-DD',
+            autoUpdateInput: false,
             locale: {
                 applyLabel: '确认',
                 cancelLabel: '取消',
@@ -113,6 +114,13 @@
                 monthNames: '1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月'.split('_'),
                 firstDay: 1
             }
+        });
+        $('#date_range').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
+        });
+
+        $('#date_range').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
         });
     </script>
 @endsection

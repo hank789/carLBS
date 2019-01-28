@@ -227,4 +227,5 @@ class RateLimiter extends Singleton
         }
         return self::$instance;
     }
+
 }

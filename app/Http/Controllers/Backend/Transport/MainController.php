@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Backend\Transport;
 
 use App\Exceptions\GeneralException;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Backend\Transport\ManageUserRequest;
+use App\Http\Requests\Backend\Transport\ManageMainRequest;
+use App\Http\Requests\Backend\Transport\StoreMainRequest;
 use App\Models\Auth\ApiUser;
 use App\Models\Transport\TransportMain;
+use App\Services\NumberUuid;
 
 /**
  * Class UserController.
@@ -15,11 +17,11 @@ class MainController extends Controller
 {
 
     /**
-     * @param ManageUserRequest $request
+     * @param ManageMainRequest $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(ManageUserRequest $request)
+    public function index(ManageMainRequest $request)
     {
         $filter =  $request->all();
         $query = TransportMain::query();
@@ -49,25 +51,29 @@ class MainController extends Controller
         if (isset($filter['transport_end_place']) && $filter['transport_end_place']) {
             $query = $query->where('transport_end_place','like','%'.$filter['transport_end_place'].'%');
         }
+        /*时间过滤*/
+        if( isset($filter['transport_start_time']) && $filter['transport_start_time'] ){
+            $query->whereBetween('transport_start_time',explode(" - ",$filter['transport_start_time']));
+        }
         $list = $query->orderBy('id','desc')->paginate(config('backend.page_size'));
         return view('backend.transport.main.index')
             ->with('list',$list)->with('filter',$filter);
     }
 
     /**
-     * @param ManageUserRequest $request
+     * @param ManageMainRequest $request
      * @param User              $user
      *
      * @return mixed
      */
-    public function show(ManageUserRequest $request, ApiUser $user)
+    public function show(ManageMainRequest $request, ApiUser $user)
     {
         return view('backend.transport.user.show')
             ->withUser($user);
     }
 
 
-    public function mark(ManageUserRequest $request, $id, $status)
+    public function mark(ManageMainRequest $request, $id, $status)
     {
         $user = ApiUser::find($id);
         if (auth()->id() == $user->id && $status == 0) {
@@ -94,40 +100,36 @@ class MainController extends Controller
     }
 
     /**
-     * @param ManageUserRequest    $request
-     * @param RoleRepository       $roleRepository
-     * @param PermissionRepository $permissionRepository
+     * @param ManageMainRequest    $request
      *
      * @return mixed
      */
-    public function create(ManageUserRequest $request, RoleRepository $roleRepository, PermissionRepository $permissionRepository)
+    public function create(ManageMainRequest $request)
     {
-        return view('backend.auth.user.create')
-            ->withRoles($roleRepository->with('permissions')->get(['id', 'name']))
-            ->withPermissions($permissionRepository->get(['id', 'name']));
+        return view('backend.transport.main.create');
     }
 
     /**
-     * @param StoreUserRequest $request
+     * @param StoreMainRequest $request
      *
      * @return mixed
      * @throws \Throwable
      */
-    public function store(StoreUserRequest $request)
+    public function store(StoreMainRequest $request)
     {
-        $this->userRepository->create($request->only(
-            'first_name',
-            'last_name',
-            'email',
-            'password',
-            'active',
-            'confirmed',
-            'confirmation_email',
-            'roles',
-            'permissions'
-        ));
-
-        return redirect()->route('admin.auth.user.index')->withFlashSuccess(__('alerts.backend.users.created'));
+        $transportNumber = NumberUuid::instance()->get_uuid_number();
+        TransportMain::create([
+            'user_id' => $request->user()->id,
+            'transport_number' => $transportNumber,
+            'transport_start_place' => $request->input('transport_start_place'),
+            'transport_end_place' => $request->input('transport_end_place'),
+            'transport_contact_people' => $request->input('transport_contact_people'),
+            'transport_contact_phone' => $request->input('transport_contact_phone'),
+            'transport_start_time' => $request->input('transport_start_time'),
+            'transport_goods' => $request->input('transport_goods'),
+            'transport_status' => $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING)
+        ]);
+        return redirect()->route('admin.auth.user.index')->withFlashSuccess('行程添加成功');
     }
 
     /**

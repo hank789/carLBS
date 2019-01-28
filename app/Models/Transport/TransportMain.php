@@ -60,4 +60,5 @@ class TransportMain extends Model {
     const TRANSPORT_STATUS_PENDING = 0;
     const TRANSPORT_STATUS_PROCESSING = 1;
     const TRANSPORT_STATUS_FINISH = 2;
+
 }
