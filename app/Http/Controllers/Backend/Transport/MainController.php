@@ -80,6 +80,7 @@ class MainController extends Controller
         \Log::info('test',[$id,$status]);
         $main->transport_status = $status;
 
+        //todo 进行中的行程如果要取消，需要判断是否有在途的司机
         switch ($status) {
             case 0:
                 break;

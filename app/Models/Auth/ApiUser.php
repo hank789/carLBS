@@ -177,7 +177,7 @@ class ApiUser extends Authenticatable implements JWTSubject
 
 		  <div class="btn-group btn-group-sm" role="group">
 			<button id="userActions" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			  '.__('labels.general.more').'
+			  操作
 			</button>
 			<div class="dropdown-menu" aria-labelledby="userActions">
 			  '.$this->status_button.'

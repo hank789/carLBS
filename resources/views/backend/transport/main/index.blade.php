@@ -50,6 +50,7 @@
                             <th>目的地</th>
                             <th>联系人</th>
                             <th>联系电话</th>
+                            <th>车辆数</th>
                             <th>开始时间</th>
                             <th>货物</th>
                             <th>创建者</th>
@@ -66,6 +67,7 @@
                                 <td>{{ $item->transport_end_place }}</td>
                                 <td>{{ $item->transport_contact_people }}</td>
                                 <td>{{ $item->transport_contact_phone }}</td>
+                                <td>0</td>
                                 <td>{{ $item->transport_start_time }}</td>
                                 <td>{{ str_limit($item->transport_goods,50) }}</td>
                                 <td>{{ $item->systemUser->fullname }}</td>
