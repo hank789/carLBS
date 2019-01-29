@@ -1,4 +1,7 @@
 <?php namespace App\Models\Transport;
+
+use App\Models\Relations\BelongsToApiUserTrait;
+use Illuminate\Database\Eloquent\Model;
 /**
  * App\Models\Transport\TransportXiehuo
  *
@@ -35,11 +38,6 @@
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Transport\TransportXiehuo whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Transport\TransportXiehuo whereXiehuoType($value)
  */
-
-
-use App\Models\Relations\BelongsToApiUserTrait;
-use Illuminate\Database\Eloquent\Model;
-
 class TransportXiehuo extends Model {
     use BelongsToApiUserTrait;
 

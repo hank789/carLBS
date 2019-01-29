@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\Car;
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Api\Controller;
+use App\Jobs\StartTransportSub;
 use App\Models\Transport\TransportMain;
 use App\Models\Transport\TransportSub;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 
 class TransportController extends Controller {
 
+    //新建行程
     public function add(Request $request) {
         $user = $request->user();
         if ($user->status <= 0) {
@@ -43,6 +45,29 @@ class TransportController extends Controller {
         ]);
 
         return self::createJsonData(true,$sub->toArray());
+    }
+
+    //开始行程
+    public function start(Request $request) {
+        $user = $request->user();
+        if ($user->status <= 0) {
+            throw new ApiException(ApiException::USER_SUSPEND);
+        }
+        $this->validate($request, [
+            'transport_sub_id' => 'required',
+            'position' => 'required'
+        ]);
+        $sub = TransportSub::find($request->input('transport_sub_id',''));
+        if (!$sub) {
+            throw new ApiException(ApiException::TRANSPORT_SUB_NOT_EXIST);
+        }
+        if ($sub->api_user_id != $user->id) {
+            throw new ApiException(ApiException::BAD_REQUEST);
+        }
+        $sub->transport_status = TransportSub::TRANSPORT_STATUS_PROCESSING;
+        $sub->save();
+        $this->dispatch(new StartTransportSub($sub->id, $request->input('position')));
+        return self::createJsonData(true);
     }
 
 }

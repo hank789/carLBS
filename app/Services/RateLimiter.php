@@ -15,7 +15,7 @@ class RateLimiter extends Singleton
 
     const STATUS_BAD = 1;
 
-    private $prefix = 'rate-limit';
+    private $prefix = '';
 
     protected static $instance = null;
 
@@ -27,6 +27,7 @@ class RateLimiter extends Singleton
     public function __construct($client)
     {
         $this->client = $client;
+        $this->prefix = env('cache.prefix');
     }
 
     public function disconnect() {
@@ -40,6 +41,7 @@ class RateLimiter extends Singleton
             ':',
             array(
                 $this->prefix,
+                'rate-limit',
                 $event,
                 $target
             )
@@ -54,7 +56,7 @@ class RateLimiter extends Singleton
     }
 
     public function del($key) {
-        $this->client->del('app:'.$key);
+        $this->client->del($this->prefix.$key);
     }
 
     public function increase($event, $target, $expire = 60, $times = 1)
@@ -83,53 +85,53 @@ class RateLimiter extends Singleton
     }
 
     public function hIncrBy($event,$key,$value){
-        return $this->client->hIncrBy('app:'.$event,$key,$value);
+        return $this->client->hIncrBy($this->prefix.$event,$key,$value);
     }
 
     public function hSet($event,$key,$value) {
-        return $this->client->hSet('app:'.$event,$key,$value);
+        return $this->client->hSet($this->prefix.$event,$key,$value);
     }
 
     public function hGet($event,$key) {
-        return $this->client->hGet('app:'.$event,$key);
+        return $this->client->hGet($this->prefix.$event,$key);
     }
 
     public function hGetAll($event){
-        return $this->client->hGetAll('app:'.$event);
+        return $this->client->hGetAll($this->prefix.$event);
     }
 
     public function hDel($event,$key) {
-        return $this->client->hDel('app:'.$event,$key);
+        return $this->client->hDel($this->prefix.$event,$key);
     }
 
     public function hClear($event) {
         $keys = $this->hGetAll($event);
         foreach ($keys as $key=>$val) {
-            $this->client->hDel('app:'.$event,$key);
+            $this->client->hDel($this->prefix.$event,$key);
         }
     }
 
     public function sAdd($key,$value,$expire = 60) {
-        $this->client->sAdd('app:'.$key,$value);
+        $this->client->sAdd($this->prefix.$key,$value);
         if ($expire) {
-            $this->client->expire('app:'.$key,$expire);
+            $this->client->expire($this->prefix.$key,$expire);
         }
         return true;
     }
 
-    public function sMembers($key, $keyPrefix = 'app:') {
-        return $this->client->sMembers($keyPrefix.$key);
+    public function sMembers($key, $keyPrefix = '') {
+        return $this->client->sMembers(($keyPrefix?:$this->prefix).$key);
     }
 
-    public function sRem($key,$value,$keyPrefix = 'app:') {
-        return $this->client->sRem($keyPrefix.$key,$value);
+    public function sRem($key,$value,$keyPrefix = '') {
+        return $this->client->sRem(($keyPrefix?:$this->prefix).$key,$value);
     }
 
     public function sIsMember($key,$value){
-        return $this->client->sIsMember('app:'.$key,$value);
+        return $this->client->sIsMember($this->prefix.$key,$value);
     }
 
-    public function sClear($key, $keyPrefix = 'app:'){
+    public function sClear($key, $keyPrefix = ''){
         $members = $this->sMembers($key,$keyPrefix);
         foreach ($members as $member) {
             $this->sRem($key,$member,$keyPrefix);
@@ -137,7 +139,7 @@ class RateLimiter extends Singleton
     }
 
     public function zAdd($key,$score,$value){
-        return $this->client->zAdd('app:'.$key,$score,$value);
+        return $this->client->zAdd($this->prefix.$key,$score,$value);
     }
 
     /**
@@ -165,20 +167,20 @@ class RateLimiter extends Singleton
      * $redis->zRevRange('key', 0, -1, true); // array('val10' => 10, 'val2' => 2, 'val0' => 0)
      * </pre>
      */
-    public function zRevrange($key,$start,$end,$keyPrefix = 'app:'){
-        return $this->client->zRevRange($keyPrefix.$key,$start,$end,'WITHSCORES');
+    public function zRevrange($key,$start,$end,$keyPrefix = ''){
+        return $this->client->zRevRange(($keyPrefix?:$this->prefix).$key,$start,$end,'WITHSCORES');
     }
 
-    public function zRevrangeByScore($key,$start,$end,$withscores=true,$keyPrefix = 'app:') {
-        return $this->client->zRevRangeByScore($keyPrefix.$key,$start,$end,['withscores' => $withscores]);
+    public function zRevrangeByScore($key,$start,$end,$withscores=true,$keyPrefix = '') {
+        return $this->client->zRevRangeByScore(($keyPrefix?:$this->prefix).$key,$start,$end,['withscores' => $withscores]);
     }
 
-    public function zRangeByScore($key,$start,$end,$withscores=true,$keyPrefix = 'app:') {
-        return $this->client->zRangeByScore($keyPrefix.$key,$start,$end,['withscores' => $withscores]);
+    public function zRangeByScore($key,$start,$end,$withscores=true,$keyPrefix = '') {
+        return $this->client->zRangeByScore(($keyPrefix?:$this->prefix).$key,$start,$end,['withscores' => $withscores]);
     }
 
-    public function zRem($key,$value,$keyPrefix = 'app:') {
-        return $this->client->zRem($keyPrefix.$key,$value);
+    public function zRem($key,$value,$keyPrefix = '') {
+        return $this->client->zRem(($keyPrefix?:$this->prefix).$key,$value);
     }
 
 
@@ -202,7 +204,7 @@ class RateLimiter extends Singleton
      * @return bool
      */
     function lock_acquire($key,$max=1,$timeout=5){
-        $key = 'app:'.$key;
+        $key = $this->prefix.$key;
         $count = $this->client->incr($key);
         $this->client->expire($key,$timeout);
         $max = $max + 1;
@@ -218,7 +220,7 @@ class RateLimiter extends Singleton
      * @param $key
      */
     function lock_release($key){
-        $this->client->del('app:'.$key);
+        $this->client->del($this->prefix.$key);
     }
 
     public static function instance(){

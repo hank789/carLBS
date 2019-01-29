@@ -55,8 +55,13 @@ class Slack {
     }
 
     public function send($msg) {
-        $this->client->send($msg);
-        return $this;
+        try {
+            $this->client->send($msg);
+            return $this;
+        } catch (\Exception $e) {
+            app('sentry')->captureException($e);
+            return false;
+        }
     }
 
 }

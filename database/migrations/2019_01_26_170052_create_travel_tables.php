@@ -34,7 +34,7 @@ class CreateTravelTables extends Migration
             $table->integer('transport_main_id')->unsigned()->index('transport_sub_transport_main_id');
             $table->integer('api_user_id')->unsigned()->index('transport_sub_api_user_id')->comment('司机id');
             $table->tinyInteger('transport_status')->default(0)->comment('状态');
-            $table->string('car_number',32)->nullable()->comment('车牌号');
+            $table->string('car_number',32)->index('transport_sub_car_number')->nullable()->comment('车牌号');
             $table->dateTime('transport_start_time')->nullable()->comment('行程出发时间');
             $table->string('transport_start_place')->nullable()->comment('行程出发地');
             $table->string('transport_end_place')->nullable()->comment('行程目的地');

@@ -1,4 +1,8 @@
 <?php namespace App\Models\Transport;
+
+use App\Models\Relations\BelongsToSystemUserTrait;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * App\Models\Transport\TransportMain
  *
@@ -42,13 +46,6 @@
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Transport\TransportMain whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Transport\TransportMain whereUserId($value)
  */
-
-
-use App\Models\Relations\BelongsToSystemUserTrait;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-
 class TransportMain extends Model {
     use BelongsToSystemUserTrait, SoftDeletes;
 

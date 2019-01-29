@@ -8,6 +8,8 @@
 namespace App\Services;
 
 
+use App\Events\Api\ExceptionNotify;
+
 class BaiduTrace
 {
     protected static $instance = null;
@@ -33,7 +35,46 @@ class BaiduTrace
         return self::$instance;
     }
 
-    public function trackSingle($entity_name, array $position) {
+    //注册设备
+    public function addEntity($entity_name,$entity_desc, array $customerFields = []) {
+        $this->method = 'post';
+        $params = [];
+        $params['ak'] = $this->ak;
+        $params['service_id'] = $this->serviceId;
+        $params['entity_name'] = $entity_name;//string(128),同一service服务中entity_name不可重复。一旦创建，entity_name 不可更新。命名规则：仅支持中文、英文大小字母、英文下划线"_"、英文横线"-"和数字。 entity_name 和 entity_desc 支持联合模糊检索。
+        $params['entity_desc'] = $entity_desc;//string(128),命名规则：仅支持中文、英文大小字母、英文下划线"_"、英文横线"-"和数字。entity_name 和 entity_desc 支持联合模糊检索。
+        if ($customerFields) {
+            $params = array_merge($params, $customerFields);
+        }
+        $res = $this->_sendHttp('entity/add',$params);
+        if ($res['status'] != 0) {
+            event(new ExceptionNotify('设备注册失败:'.$res['message']));
+            return false;
+        }
+        return true;
+    }
+
+    //更新设备
+    public function updateEntity($entity_name,$entity_desc, array $customerFields = []) {
+        $this->method = 'post';
+        $params = [];
+        $params['ak'] = $this->ak;
+        $params['service_id'] = $this->serviceId;
+        $params['entity_name'] = $entity_name;//string(128),同一service服务中entity_name不可重复。一旦创建，entity_name 不可更新。命名规则：仅支持中文、英文大小字母、英文下划线"_"、英文横线"-"和数字。 entity_name 和 entity_desc 支持联合模糊检索。
+        $params['entity_desc'] = $entity_desc;//string(128),命名规则：仅支持中文、英文大小字母、英文下划线"_"、英文横线"-"和数字。entity_name 和 entity_desc 支持联合模糊检索。
+        if ($customerFields) {
+            $params = array_merge($params, $customerFields);
+        }
+        $res = $this->_sendHttp('entity/update',$params);
+        if ($res['status'] != 0) {
+            event(new ExceptionNotify('设备注册失败:'.$res['message']));
+            return false;
+        }
+        return true;
+    }
+
+    //上报一条位置信息
+    public function trackSingle($entity_name, array $position, array $customerFields = []) {
         $this->method = 'post';
         $params = [];
         $params['ak'] = $this->ak;
@@ -47,10 +88,19 @@ class BaiduTrace
         $params['direction'] = $position['coords']['heading'];//方向
         $params['height'] = $position['coords']['altitude'];//高度,单位：米
         $params['radius'] = $position['coords']['accuracy'];//定位精度，GPS或定位SDK返回的值,单位：米
-        return $this->_sendHttp('track/addpoint',$params);
+        if ($customerFields) {
+            $params = array_merge($params, $customerFields);
+        }
+        $res = $this->_sendHttp('track/addpoint',$params);
+        if ($res['status'] != 0) {
+            event(new ExceptionNotify('单条轨迹上传失败:'.$res['message']));
+            return false;
+        }
+        return true;
     }
 
-    public function trackBatch($entity_name, array $positionList) {
+    //上报多条位置信息
+    public function trackBatch($entity_name, array $positionList, array $customerFields = []) {
         $this->method = 'post';
         $params = [];
         $params['ak'] = $this->ak;
@@ -66,10 +116,17 @@ class BaiduTrace
             $item['direction'] = $position['coords']['heading'];//方向
             $item['height'] = $position['coords']['altitude'];//高度,单位：米
             $item['radius'] = $position['coords']['accuracy'];//定位精度，GPS或定位SDK返回的值,单位：米
-            $item['point_list'][] = $item;
+            if ($customerFields) {
+                $item = array_merge($item, $customerFields);
+            }
+            $params['point_list'][] = $item;
         }
-
-        return $this->_sendHttp('track/addpoints',$params);
+        $res = $this->_sendHttp('track/addpoints',$params);
+        if ($res['status'] != 0) {
+            event(new ExceptionNotify('批量轨迹上传失败:'.$res['message']));
+            return false;
+        }
+        return true;
     }
 
     /**

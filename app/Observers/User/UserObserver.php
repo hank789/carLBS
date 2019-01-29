@@ -3,11 +3,11 @@
 namespace App\Observers\User;
 
 use App\Models\Auth\User;
-
+use Illuminate\Contracts\Queue\ShouldQueue;
 /**
  * Class UserObserver.
  */
-class UserObserver
+class UserObserver implements ShouldQueue
 {
     /**
      * Listen to the User created event.

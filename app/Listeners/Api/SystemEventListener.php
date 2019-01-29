@@ -31,34 +31,26 @@ class SystemEventListener implements ShouldQueue
      * @param systemNotify $event
      */
     public function systemNotify($event){
-        try {
-            Slack::instance()->to(config('slack.activity_channel'))
-                ->attach(
-                    [
-                        'fields' => $event->fields
-                    ]
-                )
-                ->send($event->message);
-        } catch (\Exception $e) {
-            app('sentry')->captureException($e);
-        }
+        Slack::instance()->to(config('slack.activity_channel'))
+            ->attach(
+                [
+                    'fields' => $event->fields
+                ]
+            )
+            ->send($event->message);
     }
 
     /**
      * @param ExceptionNotify $event
      */
     public function exceptionNotify($event) {
-        try {
-            Slack::instance()->to(config('slack.exception_channel'))
-                ->attach(
-                    [
-                        'fields' => $event->fields
-                    ]
-                )
-                ->send($event->message);
-        } catch (\Exception $e) {
-            app('sentry')->captureException($e);
-        }
+        Slack::instance()->to(config('slack.exception_channel'))
+            ->attach(
+                [
+                    'fields' => $event->fields
+                ]
+            )
+            ->send($event->message);
     }
 
     /**
