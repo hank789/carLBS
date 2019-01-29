@@ -7,6 +7,7 @@
 
 use App\Exceptions\ApiException;
 
+use App\Models\Transport\TransportLbs;
 use Illuminate\Support\Facades\Storage;
 
 trait BaseController {
@@ -64,6 +65,22 @@ trait BaseController {
         return $list;
     }
 
-
+    /**
+     * @param $user_id
+     * @param $transport_main_id
+     * @param $transport_sub_id
+     * @param array $position
+     */
+    protected function saveLocation($user_id,$transport_main_id,$transport_sub_id,array $position) {
+        TransportLbs::create([
+            'api_user_id' => $user_id,
+            'transport_main_id' => $transport_main_id,
+            'transport_sub_id' => $transport_sub_id,
+            'longitude' => $position['coords']['longitude'],
+            'latitude' => $position['coords']['latitude'],
+            'address_province' => $position['address']['city'].' '.$position['address']['district'],
+            'address_detail' => $position['address']['city'].' '.$position['address']['district'].' '.$position['address']['street'].' '.$position['address']['streetNum']
+        ]);
+    }
 
 }

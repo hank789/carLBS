@@ -1,0 +1,48 @@
+<?php namespace App\Http\Controllers\Api\Car;
+use App\Exceptions\ApiException;
+use App\Http\Controllers\Api\Controller;
+use App\Models\Transport\TransportMain;
+use App\Models\Transport\TransportSub;
+use Illuminate\Http\Request;
+/**
+ * @author: wanghui
+ * @date: 2019/1/24 4:46 PM
+ * @email:    hank.HuiWang@gmail.com
+ */
+
+class TransportController extends Controller {
+
+    public function add(Request $request) {
+        $user = $request->user();
+        if ($user->status <= 0) {
+            throw new ApiException(ApiException::USER_SUSPEND);
+        }
+        $this->validate($request, [
+            'transport_number' => 'required',
+            'car_number' => 'required',
+            'transport_start_time' => 'required',
+            'transport_goods' => 'required',
+            'transport_end_place' => 'required'
+        ]);
+        $main = TransportMain::where('transport_number',$request->input('transport_number',''))->first();
+        if (!$main || $main->transport_status == TransportMain::TRANSPORT_STATUS_CANCEL) {
+            throw new ApiException(ApiException::TRANSPORT_NUMBER_NOT_EXIST);
+        }
+        if ($main->transport_status == TransportMain::TRANSPORT_STATUS_FINISH) {
+            throw new ApiException(ApiException::TRANSPORT_MAIN_FINISH);
+        }
+        $sub = TransportSub::create([
+            'api_user_id' => $user->id,
+            'transport_main_id' => $main->id,
+            'car_number' => $request->input('car_number'),
+            'transport_start_place' => $request->input('transport_start_place'),
+            'transport_end_place' => $request->input('transport_end_place'),
+            'transport_start_time' => $request->input('transport_start_time'),
+            'transport_goods' => $request->input('transport_goods'),
+            'transport_status' => TransportSub::TRANSPORT_STATUS_PENDING
+        ]);
+
+        return self::createJsonData(true,$sub->toArray());
+    }
+
+}
