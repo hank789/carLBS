@@ -103,7 +103,7 @@ class AuthController extends Controller
             //密码登陆如果用户不存在自动创建用户
             $registrar = new Registrar();
             $user = $registrar->create([
-                'name' => '手机用户'.rand(100000,999999),
+                'name' => '',
                 'mobile' => $credentials['mobile'],
                 'gender' => 0,
                 'status' => 1,

@@ -1,9 +1,6 @@
 <?php namespace App\Services;
 
 use App\Models\Auth\ApiUser;
-use Carbon\Carbon;
-use Validator;
-use Ramsey\Uuid\Uuid;
 
 class Registrar {
 

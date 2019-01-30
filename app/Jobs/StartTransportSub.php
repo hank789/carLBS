@@ -6,6 +6,7 @@ use App\Events\Api\ExceptionNotify;
 use App\Models\Transport\TransportLbs;
 use App\Models\Transport\TransportSub;
 use App\Services\BaiduTrace;
+use App\Services\GeoHash;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -68,6 +69,7 @@ class StartTransportSub implements ShouldQueue
             'transport_sub_id' => $sub->id,
             'longitude' => $this->data['coords']['longitude'],
             'latitude' => $this->data['coords']['latitude'],
+            'geohash' => GeoHash::instance()->encode($this->data['coords']['latitude'],$this->data['coords']['longitude']),
             'address_province' => $this->data['address']['city'].' '.$this->data['address']['district'],
             'address_detail' => $this->data['address']['city'].' '.$this->data['address']['district'].' '.$this->data['address']['street'].' '.$this->data['address']['streetNum']
         ]);

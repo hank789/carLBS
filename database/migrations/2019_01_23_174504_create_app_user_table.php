@@ -15,7 +15,7 @@ class CreateAppUserTable extends Migration
     {
         Schema::create('api_users', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');                             //姓名
+            $table->string('name')->nullable();                             //姓名
             $table->string('mobile',24)->unique()->nullable();  //登录手机
             $table->tinyInteger('gender')->nullable();          //性别: 1-男，2-女，0-保密
             $table->tinyInteger('status')->default(1);          //用户状态0-待审核，1已审核

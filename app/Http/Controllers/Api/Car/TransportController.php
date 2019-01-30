@@ -117,7 +117,16 @@ class TransportController extends Controller {
 
     //行程突发事情上报
     public function eventReport(Request $request) {
-
+        $user = $request->user();
+        if ($user->status <= 0) {
+            throw new ApiException(ApiException::USER_SUSPEND);
+        }
+        $this->validate($request, [
+            'transport_sub_id' => 'required',
+            'event_type' => 'required',
+            'event_detail' => 'required',
+            'position' => 'required',
+        ]);
     }
 
 }
