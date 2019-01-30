@@ -44,5 +44,7 @@ Route::group(['prefix' => 'car','namespace'=>'Car','middleware' => ['auth:api','
     Route::post('transport/finish','TransportController@finish');
     //上报突发情况
     Route::post('transport/eventReport','TransportController@eventReport');
+    //上传验收单
+    Route::post('transport/uploadFile','TransportController@uploadFile');
 
 });

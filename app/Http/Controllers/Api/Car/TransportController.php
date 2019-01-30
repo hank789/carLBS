@@ -2,12 +2,16 @@
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Api\Controller;
 use App\Jobs\StartTransportSub;
+use App\Jobs\UploadFile;
 use App\Models\Transport\TransportEvent;
 use App\Models\Transport\TransportMain;
 use App\Models\Transport\TransportSub;
 use App\Models\Transport\TransportXiehuo;
 use App\Services\GeoHash;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+
 /**
  * @author: wanghui
  * @date: 2019/1/24 4:46 PM
@@ -196,6 +200,40 @@ class TransportController extends Controller {
             ]
         ]);
         return self::createJsonData(true);
+    }
+
+    //上传卸货时的验收单
+    public function uploadFile(Request $request) {
+        $user = $request->user();
+        if ($user->status <= 0) {
+            throw new ApiException(ApiException::USER_SUSPEND);
+        }
+        $this->validate($request, [
+            'transport_sub_id' => 'required',
+        ]);
+        $sub = TransportSub::find($request->input('transport_sub_id'));
+        if (!$sub) {
+            throw new ApiException(ApiException::TRANSPORT_SUB_NOT_EXIST);
+        }
+        if ($sub->api_user_id != $user->id) {
+            throw new ApiException(ApiException::BAD_REQUEST);
+        }
+        $image_file = 'file';
+        $img_url = '';
+        if($request->hasFile($image_file)){
+            $file_0 = $request->file($image_file);
+            $extension = strtolower($file_0->getClientOriginalExtension());
+            $extArray = array('png', 'gif', 'jpeg', 'jpg');
+            if(in_array($extension, $extArray)){
+                $file_name = 'transport/'.date('Y').'/'.date('m').'/'.time().str_random(7).'.'.$extension;
+                dispatch((new UploadFile($file_name,base64_encode(File::get($file_0)))));
+                //Storage::disk('oss')->put($file_name,File::get($file_0));
+                $img_url = Storage::disk('oss')->url($file_name);
+            }
+        } else {
+            throw new ApiException(ApiException::BAD_REQUEST);
+        }
+        return self::createJsonData(true,['image_url'=>$img_url]);
     }
 
 }
