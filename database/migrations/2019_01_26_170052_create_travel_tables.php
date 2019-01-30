@@ -61,7 +61,6 @@ class CreateTravelTables extends Migration
             $table->integer('transport_main_id')->unsigned()->index('transport_events_transport_main_id');
             $table->integer('transport_sub_id')->unsigned()->index('transport_events_transport_sub_id');
             $table->tinyInteger('event_type')->default(1)->comment('事件类型');
-            $table->string('address_province')->comment('省市地址');
             $table->string('geohash',32)->index('transport_events_geohash');
             $table->json('event_detail')->nullable()->comment('事件描述');
             $table->timestamps();
@@ -73,9 +72,7 @@ class CreateTravelTables extends Migration
             $table->integer('transport_main_id')->unsigned()->index('transport_xiehuo_transport_main_id');
             $table->integer('transport_sub_id')->unsigned()->index('transport_xiehuo_transport_sub_id');
             $table->tinyInteger('xiehuo_type')->default(1)->comment('卸货类型:1目的地卸货，2中途卸货');
-            $table->string('address_province')->comment('省市地址');
             $table->string('geohash',32)->index('transport_xiehuo_geohash');
-            $table->string('car_number',32)->nullable()->comment('车牌号');
             $table->json('transport_goods')->nullable()->comment('货物信息');
             $table->timestamps();
         });

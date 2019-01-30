@@ -27,10 +27,12 @@ class SaveBatchLocation implements ShouldQueue
 
     public $data;
 
+    public $user_id;
 
 
-    public function __construct($transport_sub_id, array $positionList)
+    public function __construct($user_id, $transport_sub_id, array $positionList)
     {
+        $this->user_id = $user_id;
         $this->transport_sub_id = $transport_sub_id;
         $this->data = $positionList;
     }
@@ -43,6 +45,7 @@ class SaveBatchLocation implements ShouldQueue
     public function handle()
     {
         $sub = TransportSub::find($this->transport_sub_id);
+        if ($sub->api_user_id != $this->user_id) return;
         $time = new \DateTime();
         foreach ($this->data as $item) {
             $time->setTimestamp($item['timestamp']/1000);
@@ -54,7 +57,7 @@ class SaveBatchLocation implements ShouldQueue
                 'latitude' => $item['coords']['latitude'],
                 'geohash' => GeoHash::instance()->encode($item['coords']['latitude'],$item['coords']['longitude']),
                 'address_province' => $item['address']['city'].' '.$item['address']['district'],
-                'address_detail' => $item['address']['city'].' '.$item['address']['district'].' '.$item['address']['street'].' '.$item['address']['streetNum'],
+                'address_detail' => $item['address']['street'].' '.$item['address']['streetNum'],
                 'created_at' => $time->format('Y-m-d H:i:s')
             ]);
         }

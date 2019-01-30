@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $transport_main_id
  * @property int $transport_sub_id
  * @property int $xiehuo_type 卸货类型:1目的地卸货，2中途卸货
- * @property string $address_province 省市地址
  * @property string $geohash
  * @property string|null $car_number 车牌号
  * @property array|null $transport_goods 货物信息
@@ -42,12 +41,16 @@ class TransportXiehuo extends Model {
     use BelongsToApiUserTrait;
 
     protected $table = 'transport_xiehuo';
-    protected $fillable = ['api_user_id', 'transport_main_id','transport_sub_id','address_province','xiehuo_type',
+    protected $fillable = ['api_user_id', 'transport_main_id','transport_sub_id','xiehuo_type',
         'geohash','car_number','transport_goods'];
 
     protected $casts = [
         'transport_goods' => 'json'
     ];
+
+    const XIEHUO_TYPE_END = 1;
+    const XIEHUO_TYPE_MIDWAY = 2;
+
 
     /**
      * Get the transportMain relation.

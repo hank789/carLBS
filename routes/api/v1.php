@@ -27,3 +27,22 @@ Route::group(['prefix' => 'profile','namespace'=>'Account','middleware' => ['aut
     Route::post('updateName','ProfileController@updateName');
 
 });
+
+Route::group(['prefix' => 'car','namespace'=>'Car','middleware' => ['auth:api','ban.user']], function() {
+    //上报单条位置信息
+    Route::post('location/saveSingle','LocationController@saveSingle');
+    //批量上传位置信息
+    Route::post('location/saveBatch','LocationController@saveBatch');
+
+    //添加行程
+    Route::post('transport/add','TransportController@add');
+    //修改行程
+    Route::post('transport/update','TransportController@update');
+    //开始行程
+    Route::post('transport/start','TransportController@start');
+    //卸货
+    Route::post('transport/finish','TransportController@finish');
+    //上报突发情况
+    Route::post('transport/eventReport','TransportController@eventReport');
+
+});

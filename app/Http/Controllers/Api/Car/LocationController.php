@@ -21,7 +21,7 @@ class LocationController extends Controller {
             'transport_sub_id' => 'required',
             'position' => 'required'
         ]);
-        $this->dispatch(new SaveSingleLocation($request->input('transport_sub_id'),$request->input('position')));
+        $this->dispatch(new SaveSingleLocation($request->user()->id,$request->input('transport_sub_id'),$request->input('position')));
         return self::createJsonData(true);
     }
 
@@ -31,7 +31,7 @@ class LocationController extends Controller {
             'transport_sub_id' => 'required',
             'position_list' => 'required'
         ]);
-        $this->dispatch(new SaveBatchLocation($request->input('transport_sub_id'),$request->input('position_list')));
+        $this->dispatch(new SaveBatchLocation($request->user()->id,$request->input('transport_sub_id'),$request->input('position_list')));
         return self::createJsonData(true);
     }
 

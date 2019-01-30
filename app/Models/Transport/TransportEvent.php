@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $transport_main_id
  * @property int $transport_sub_id
  * @property int $event_type 事件类型
- * @property string $address_province 省市地址
  * @property string $geohash
  * @property array|null $event_detail 事件描述
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -40,7 +39,7 @@ class TransportEvent extends Model {
     use BelongsToApiUserTrait;
 
     protected $table = 'transport_events';
-    protected $fillable = ['api_user_id', 'transport_main_id','transport_sub_id','address_province','event_type',
+    protected $fillable = ['api_user_id', 'transport_main_id','transport_sub_id','event_type',
         'geohash','event_detail'];
 
     protected $casts = [

@@ -2,8 +2,11 @@
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Api\Controller;
 use App\Jobs\StartTransportSub;
+use App\Models\Transport\TransportEvent;
 use App\Models\Transport\TransportMain;
 use App\Models\Transport\TransportSub;
+use App\Models\Transport\TransportXiehuo;
+use App\Services\GeoHash;
 use Illuminate\Http\Request;
 /**
  * @author: wanghui
@@ -112,7 +115,50 @@ class TransportController extends Controller {
 
     //结束行程，包括中途卸货
     public function finish(Request $request) {
-
+        $user = $request->user();
+        if ($user->status <= 0) {
+            throw new ApiException(ApiException::USER_SUSPEND);
+        }
+        $this->validate($request, [
+            'transport_sub_id' => 'required',
+            'xiehuo_type' => 'required|in:1,2',
+            'car_number' => 'required',
+            'transport_end_place' => 'required',
+            'transport_goods' => 'required',
+            'position' => 'required',
+        ]);
+        $sub = TransportSub::find($request->input('transport_sub_id'));
+        if (!$sub) {
+            throw new ApiException(ApiException::TRANSPORT_SUB_NOT_EXIST);
+        }
+        if ($sub->api_user_id != $user->id) {
+            throw new ApiException(ApiException::BAD_REQUEST);
+        }
+        $position = $request->input('position');
+        $xiehuo_type = $request->input('xiehuo_type',1);
+        $xiehuo = TransportXiehuo::create([
+            'api_user_id' => $user->id,
+            'transport_main_id' => $sub->transport_main_id,
+            'transport_sub_id' => $sub->id,
+            'xiehuo_type' => $xiehuo_type,
+            'geohash' => GeoHash::instance()->encode($position['coords']['latitude'],$position['coords']['longitude']),
+            'transport_goods' => [
+                'longitude' => $position['longitude'],
+                'latitude' => $position['latitude'],
+                'address_province' => $position['address']['city'].' '.$position['address']['district'],
+                'address_detail' => $position['address']['street'].' '.$position['address']['streetNum'],
+                'car_number' => $request->input('car_number'),
+                'transport_end_place' => $request->input('transport_end_place'),
+                'transport_goods' => $request->input('transport_goods'),
+                'shipping_documents' => $request->input('shipping_documents',''),
+                'description' => $request->input('event_detail')
+            ]
+        ]);
+        if ($xiehuo_type == TransportXiehuo::XIEHUO_TYPE_END) {
+            $sub->transport_status = TransportSub::TRANSPORT_STATUS_FINISH;
+            $sub->save();
+        }
+        return self::createJsonData(true);
     }
 
     //行程突发事情上报
@@ -127,6 +173,29 @@ class TransportController extends Controller {
             'event_detail' => 'required',
             'position' => 'required',
         ]);
+        $sub = TransportSub::find($request->input('transport_sub_id'));
+        if (!$sub) {
+            throw new ApiException(ApiException::TRANSPORT_SUB_NOT_EXIST);
+        }
+        if ($sub->api_user_id != $user->id) {
+            throw new ApiException(ApiException::BAD_REQUEST);
+        }
+        $position = $request->input('position');
+        TransportEvent::create([
+            'api_user_id' => $user->id,
+            'transport_main_id' => $sub->transport_main_id,
+            'transport_sub_id' => $sub->id,
+            'event_type' => $request->input('event_type'),
+            'geohash' => GeoHash::instance()->encode($position['coords']['latitude'],$position['coords']['longitude']),
+            'event_detail' => [
+                'longitude' => $position['longitude'],
+                'latitude' => $position['latitude'],
+                'address_province' => $position['address']['city'].' '.$position['address']['district'],
+                'address_detail' => $position['address']['street'].' '.$position['address']['streetNum'],
+                'description' => $request->input('event_detail')
+            ]
+        ]);
+        return self::createJsonData(true);
     }
 
 }

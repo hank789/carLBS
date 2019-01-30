@@ -27,10 +27,13 @@ class SaveSingleLocation implements ShouldQueue
 
     public $transport_sub_id;
 
+    public $user_id;
 
 
-    public function __construct($transport_sub_id, array $position)
+
+    public function __construct($user_id,$transport_sub_id, array $position)
     {
+        $this->user_id = $user_id;
         $this->transport_sub_id = $transport_sub_id;
         $this->data = $position;
     }
@@ -43,6 +46,7 @@ class SaveSingleLocation implements ShouldQueue
     public function handle()
     {
         $sub = TransportSub::find($this->transport_sub_id);
+        if ($sub->api_user_id != $this->user_id) return;
         $time = new \DateTime();
         $time->setTimestamp($this->data['timestamp']/1000);
         TransportLbs::create([
@@ -53,7 +57,7 @@ class SaveSingleLocation implements ShouldQueue
             'latitude' => $this->data['coords']['latitude'],
             'geohash' => GeoHash::instance()->encode($this->data['coords']['latitude'],$this->data['coords']['longitude']),
             'address_province' => $this->data['address']['city'].' '.$this->data['address']['district'],
-            'address_detail' => $this->data['address']['city'].' '.$this->data['address']['district'].' '.$this->data['address']['street'].' '.$this->data['address']['streetNum'],
+            'address_detail' => $this->data['address']['street'].' '.$this->data['address']['streetNum'],
             'created_at' => $time->format('Y-m-d H:i:s')
         ]);
         BaiduTrace::instance()->trackSingle($sub->getEntityName(),$this->data);
