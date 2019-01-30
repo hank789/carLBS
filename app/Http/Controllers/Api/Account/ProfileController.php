@@ -14,4 +14,17 @@ class ProfileController extends Controller {
         return self::createJsonData(true,$user->toArray());
     }
 
+    //更新姓名
+    public function updateName(Request $request) {
+        $validateRules = [
+            'name' => 'required'
+        ];
+        $this->validate($request,$validateRules);
+        $name = $request->input('name');
+        $user = $request->user();
+        $user->name = $name;
+        $user->save();
+        return self::createJsonData(true,$user->toArray());
+    }
+
 }

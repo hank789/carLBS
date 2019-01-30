@@ -148,9 +148,7 @@ class AuthController extends Controller
             /*认证成功*/
             return static::createJsonData(true,$info,ApiException::SUCCESS,$message);
         }
-
-        return static::createJsonData(false,[],ApiException::USER_PASSWORD_ERROR,'用户名或密码错误');
-
+        return static::createJsonData(false,[],ApiException::REQUEST_FAIL,'用户名或密码错误');
     }
 
     //app注册

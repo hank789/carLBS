@@ -60,4 +60,8 @@ class TransportSub extends Model {
         return $this->belongsTo('App\Models\Transport\TransportMain');
     }
 
+    public function getEntityName() {
+        return $this->car_number;
+    }
+
 }

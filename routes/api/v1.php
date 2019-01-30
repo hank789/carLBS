@@ -24,4 +24,6 @@ Route::group(['prefix' => 'auth','namespace'=>'Account'], function() {
 Route::group(['prefix' => 'profile','namespace'=>'Account','middleware' => ['auth:api','ban.user']], function() {
     //用户信息
     Route::get('info','ProfileController@info');
+    Route::post('updateName','ProfileController@updateName');
+
 });

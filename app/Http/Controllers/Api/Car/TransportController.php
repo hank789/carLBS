@@ -70,4 +70,54 @@ class TransportController extends Controller {
         return self::createJsonData(true);
     }
 
+    //修改行程
+    public function update(Request $request) {
+        $user = $request->user();
+        if ($user->status <= 0) {
+            throw new ApiException(ApiException::USER_SUSPEND);
+        }
+        $this->validate($request, [
+            'transport_sub_id' => 'required',
+            'transport_number' => 'required',
+            'car_number' => 'required',
+            'transport_start_time' => 'required',
+            'transport_goods' => 'required',
+            'transport_end_place' => 'required'
+        ]);
+        $main = TransportMain::where('transport_number',$request->input('transport_number',''))->first();
+        if (!$main || $main->transport_status == TransportMain::TRANSPORT_STATUS_CANCEL) {
+            throw new ApiException(ApiException::TRANSPORT_NUMBER_NOT_EXIST);
+        }
+        if ($main->transport_status == TransportMain::TRANSPORT_STATUS_FINISH) {
+            throw new ApiException(ApiException::TRANSPORT_MAIN_FINISH);
+        }
+        $sub = TransportSub::find($request->input('transport_sub_id',''));
+        if (!$sub) {
+            throw new ApiException(ApiException::TRANSPORT_SUB_NOT_EXIST);
+        }
+        if ($sub->api_user_id != $user->id) {
+            throw new ApiException(ApiException::BAD_REQUEST);
+        }
+        if ($sub->transport_status != TransportSub::TRANSPORT_STATUS_PENDING) {
+            throw new ApiException(ApiException::BAD_REQUEST);
+        }
+        $sub->car_number = $request->input('car_number');
+        $sub->transport_start_place = $request->input('transport_start_place');
+        $sub->transport_end_place = $request->input('transport_end_place');
+        $sub->transport_start_time = $request->input('transport_start_time');
+        $sub->transport_goods = $request->input('transport_goods');
+        $sub->save();
+        return self::createJsonData(true,$sub->toArray());
+    }
+
+    //结束行程，包括中途卸货
+    public function finish(Request $request) {
+
+    }
+
+    //行程突发事情上报
+    public function eventReport(Request $request) {
+
+    }
+
 }

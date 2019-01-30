@@ -47,7 +47,7 @@ class StartTransportSub implements ShouldQueue
             event(new ExceptionNotify('司机开始行程不存在：'.$this->sub_id));
             return;
         }
-        $entity_name = $sub->car_number;
+        $entity_name = $sub->getEntityName();
         $exist = TransportSub::where('car_number',$sub->car_number)
             ->where('transport_status','>=',TransportSub::TRANSPORT_STATUS_PROCESSING)
             ->where('id','!=',$sub->id)->first();
@@ -58,9 +58,9 @@ class StartTransportSub implements ShouldQueue
             'transport_goods' => str_limit($sub->transport_goods,125)
         ];
         if (!$exist) {
-            BaiduTrace::instance()->addEntity($sub->car_number,$sub->apiUser->name,$entity_custom_fields);
+            BaiduTrace::instance()->addEntity($entity_name,$sub->apiUser->name,$entity_custom_fields);
         } else {
-            BaiduTrace::instance()->updateEntity($sub->car_number,$sub->apiUser->name,$entity_custom_fields);
+            BaiduTrace::instance()->updateEntity($entity_name,$sub->apiUser->name,$entity_custom_fields);
         }
         TransportLbs::create([
             'api_user_id' => $sub->api_user_id,

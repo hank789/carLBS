@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Transport\TransportSub;
 use App\Services\BaiduTrace;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -22,13 +23,13 @@ class SaveSingleLocation implements ShouldQueue
 
     public $data;
 
-    public $entity_name;
+    public $transport_sub_id;
 
 
 
-    public function __construct($entity_name, array $position)
+    public function __construct($transport_sub_id, array $position)
     {
-        $this->entity_name = $entity_name;
+        $this->transport_sub_id = $transport_sub_id;
         $this->data = $position;
     }
 
@@ -39,6 +40,7 @@ class SaveSingleLocation implements ShouldQueue
      */
     public function handle()
     {
-        BaiduTrace::instance()->trackSingle($this->entity_name,$this->data);
+        $sub = TransportSub::find($this->transport_sub_id);
+        BaiduTrace::instance()->trackSingle($sub->getEntityName(),$this->data);
     }
 }
