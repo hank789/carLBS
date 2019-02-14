@@ -20,6 +20,27 @@ use Illuminate\Support\Facades\Storage;
 
 class TransportController extends Controller {
 
+    //根据行程号返回行程信息
+    public function detail(Request $request) {
+        $user = $request->user();
+        if ($user->status <= 0) {
+            throw new ApiException(ApiException::USER_SUSPEND);
+        }
+        $this->validate($request, [
+            'transport_number' => 'required'
+        ]);
+        $main = TransportMain::where('transport_number',$request->input('transport_number',''))->first();
+        if (!$main || $main->transport_status == TransportMain::TRANSPORT_STATUS_CANCEL) {
+            throw new ApiException(ApiException::TRANSPORT_NUMBER_NOT_EXIST);
+        }
+        if ($main->transport_status == TransportMain::TRANSPORT_STATUS_FINISH) {
+            throw new ApiException(ApiException::TRANSPORT_MAIN_FINISH);
+        }
+        $data = $main->toArray();
+        $data['transport_start_time'] = date('Y-m-d H:i',strtotime($data['transport_start_time']));
+        return self::createJsonData(true,$data);
+    }
+
     //新建行程
     public function add(Request $request) {
         $user = $request->user();

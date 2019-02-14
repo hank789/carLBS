@@ -32,7 +32,7 @@ class AuthController extends Controller
         $this->validate($request,$validateRules);
         $mobile = $request->input('mobile');
         $type   = $request->input('type');
-        if(RateLimiter::instance()->increase('sendPhoneCode:'.$type,$mobile,120,1)){
+        if(RateLimiter::instance()->increase('sendPhoneCode:'.$type,$mobile,60,1)){
             throw new ApiException(ApiException::VISIT_LIMIT);
         }
         $user = ApiUser::where('mobile',$mobile)->first();

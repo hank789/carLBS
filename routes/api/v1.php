@@ -34,6 +34,8 @@ Route::group(['prefix' => 'car','namespace'=>'Car','middleware' => ['auth:api','
     //批量上传位置信息
     Route::post('location/saveBatch','LocationController@saveBatch');
 
+    //行程信息
+    Route::post('transport/detail','TransportController@detail');
     //添加行程
     Route::post('transport/add','TransportController@add');
     //修改行程
