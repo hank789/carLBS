@@ -41,6 +41,27 @@ class TransportController extends Controller {
         return self::createJsonData(true,$data);
     }
 
+    //司机的行程信息
+    public function subDetail(Request $request,$id) {
+        $user = $request->user();
+        if ($user->status <= 0) {
+            throw new ApiException(ApiException::USER_SUSPEND);
+        }
+
+        $sub = TransportSub::find($id);
+        if (!$sub || $sub->api_user_id != $user->id) {
+            throw new ApiException(ApiException::TRANSPORT_SUB_NOT_EXIST);
+        }
+        $main = $sub->transportMain;
+        $data = $sub->toArray();
+        $data['transport_contact_people'] = $main->transport_contact_people;
+        $data['transport_contact_phone'] = $main->transport_contact_phone;
+        $data['transport_number'] = $main->transport_number;
+        $data['transport_start_time'] = date('Y-m-d H:i',strtotime($data['transport_start_time']));
+
+        return self::createJsonData(true,$data);
+    }
+
     //新建行程
     public function add(Request $request) {
         $user = $request->user();
@@ -61,11 +82,15 @@ class TransportController extends Controller {
         if ($main->transport_status == TransportMain::TRANSPORT_STATUS_FINISH) {
             throw new ApiException(ApiException::TRANSPORT_MAIN_FINISH);
         }
+        $transport_start_place = $main->transport_start_place;
+        if ($request->input('transport_start_place')) {
+            $transport_start_place = $request->input('transport_start_place');
+        }
         $sub = TransportSub::create([
             'api_user_id' => $user->id,
             'transport_main_id' => $main->id,
             'car_number' => $request->input('car_number'),
-            'transport_start_place' => $request->input('transport_start_place'),
+            'transport_start_place' => $transport_start_place,
             'transport_end_place' => $request->input('transport_end_place'),
             'transport_start_time' => $request->input('transport_start_time'),
             'transport_goods' => $request->input('transport_goods'),
@@ -92,9 +117,11 @@ class TransportController extends Controller {
         if ($sub->api_user_id != $user->id) {
             throw new ApiException(ApiException::BAD_REQUEST);
         }
+        $position = $request->input('position');
+        $sub->transport_start_place = $position['address']['city'].$position['address']['district'].$position['address']['street'].$position['address']['streetNum'];
         $sub->transport_status = TransportSub::TRANSPORT_STATUS_PROCESSING;
         $sub->save();
-        $this->dispatch(new StartTransportSub($sub->id, $request->input('position')));
+        $this->dispatch(new StartTransportSub($sub->id, $position));
         return self::createJsonData(true);
     }
 
@@ -130,7 +157,10 @@ class TransportController extends Controller {
             throw new ApiException(ApiException::BAD_REQUEST);
         }
         $sub->car_number = $request->input('car_number');
-        $sub->transport_start_place = $request->input('transport_start_place');
+        $transport_start_place = $request->input('transport_start_place');
+        if ($transport_start_place) {
+            $sub->transport_start_place = $transport_start_place;
+        }
         $sub->transport_end_place = $request->input('transport_end_place');
         $sub->transport_start_time = $request->input('transport_start_time');
         $sub->transport_goods = $request->input('transport_goods');

@@ -117,6 +117,7 @@
                         <div class="col-md-10">
                             {{ html()->textarea('transport_goods')
                                 ->class('form-control')
+                                ->attribute('rows',9)
                                 ->placeholder('货物信息')
                                 ->required()
                             }}

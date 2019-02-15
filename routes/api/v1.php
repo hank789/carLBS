@@ -36,6 +36,8 @@ Route::group(['prefix' => 'car','namespace'=>'Car','middleware' => ['auth:api','
 
     //行程信息
     Route::post('transport/detail','TransportController@detail');
+    //司机行程信息
+    Route::get('transport/subDetail/{id}','TransportController@subDetail');
     //添加行程
     Route::post('transport/add','TransportController@add');
     //修改行程
