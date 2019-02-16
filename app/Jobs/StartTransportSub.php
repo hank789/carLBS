@@ -56,22 +56,24 @@ class StartTransportSub implements ShouldQueue
             'transport_main_id' => $sub->transport_main_id,
             'transport_start_place' => $sub->transport_start_place,
             'transport_end_place' => $sub->transport_end_place,
-            'transport_goods' => str_limit($sub->transport_goods,125)
+            'transport_goods' => str_limit($sub->transport_goods['transport_goods'],125)
         ];
         if (!$exist) {
             BaiduTrace::instance()->addEntity($entity_name,$sub->apiUser->name,$entity_custom_fields);
         } else {
             BaiduTrace::instance()->updateEntity($entity_name,$sub->apiUser->name,$entity_custom_fields);
         }
+        if (!isset($this->data['address']['city'])) {
+            //$address_province = $this->data['address']['city'].' '.$this->data['address']['district'];
+        }
+        $time = new \DateTime();
+        $time->setTimestamp($this->data['timestamp']/1000);
         TransportLbs::create([
             'api_user_id' => $sub->api_user_id,
             'transport_main_id' => $sub->transport_main_id,
             'transport_sub_id' => $sub->id,
-            'longitude' => $this->data['coords']['longitude'],
-            'latitude' => $this->data['coords']['latitude'],
-            'geohash' => GeoHash::instance()->encode($this->data['coords']['latitude'],$this->data['coords']['longitude']),
-            'address_province' => $this->data['address']['city'].' '.$this->data['address']['district'],
-            'address_detail' => $this->data['address']['city'].' '.$this->data['address']['district'].' '.$this->data['address']['street'].' '.$this->data['address']['streetNum']
+            'address_detail' => $this->data,
+            'created_at' => $time->format('Y-m-d H:i:s')
         ]);
         BaiduTrace::instance()->trackSingle($entity_name,$this->data);
     }

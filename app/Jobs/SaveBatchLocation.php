@@ -53,11 +53,7 @@ class SaveBatchLocation implements ShouldQueue
                 'api_user_id' => $sub->api_user_id,
                 'transport_main_id' => $sub->transport_main_id,
                 'transport_sub_id' => $sub->id,
-                'longitude' => $item['coords']['longitude'],
-                'latitude' => $item['coords']['latitude'],
-                'geohash' => GeoHash::instance()->encode($item['coords']['latitude'],$item['coords']['longitude']),
-                'address_province' => $item['address']['city'].' '.$item['address']['district'],
-                'address_detail' => $item['address']['street'].' '.$item['address']['streetNum'],
+                'address_detail' => $item,
                 'created_at' => $time->format('Y-m-d H:i:s')
             ]);
         }

@@ -42,8 +42,7 @@ class TransportLbs extends Model {
     use BelongsToApiUserTrait;
 
     protected $table = 'transport_lbs';
-    protected $fillable = ['api_user_id', 'transport_main_id','transport_sub_id','address_province','address_detail',
-        'longitude','latitude','geohash','created_at', 'updated_at'];
+    protected $fillable = ['api_user_id', 'transport_main_id','transport_sub_id','address_detail','created_at', 'updated_at'];
 
     /**
      * Indicates if the model should be timestamped.

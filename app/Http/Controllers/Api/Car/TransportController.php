@@ -131,6 +131,7 @@ class TransportController extends Controller {
         $goodsInfo = $sub->transport_goods;
         $goodsInfo['transport_start_place_longitude'] = $position['coords']['longitude'];
         $goodsInfo['transport_start_place_latitude'] = $position['coords']['latitude'];
+        $goodsInfo['transport_start_real_time'] = date('Y-m-d H:i:s');
         $sub->transport_goods = $goodsInfo;
         $sub->save();
         $this->dispatch(new StartTransportSub($sub->id, $position));

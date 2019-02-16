@@ -24,7 +24,7 @@ class CreateTravelTables extends Migration
             $table->string('transport_contact_people')->nullable()->comment('本次行程的联系人');
             $table->string('transport_contact_phone',32)->nullable()->comment('本次行程的联系电话');
             $table->dateTime('transport_start_time')->nullable()->comment('行程出发时间');
-            $table->text('transport_goods')->nullable()->comment('货物信息');
+            $table->json('transport_goods')->nullable()->comment('货物信息');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -38,7 +38,7 @@ class CreateTravelTables extends Migration
             $table->dateTime('transport_start_time')->nullable()->comment('行程出发时间');
             $table->string('transport_start_place')->nullable()->comment('行程出发地');
             $table->string('transport_end_place')->nullable()->comment('行程目的地');
-            $table->text('transport_goods')->nullable()->comment('货物信息');
+            $table->json('transport_goods')->nullable()->comment('货物信息');
             $table->timestamps();
         });
         //司机行程lbs记录
@@ -47,11 +47,7 @@ class CreateTravelTables extends Migration
             $table->integer('api_user_id')->unsigned()->index('transport_lbs_api_user_id')->comment('司机id');
             $table->integer('transport_main_id')->unsigned()->index('transport_lbs_transport_main_id');
             $table->integer('transport_sub_id')->unsigned()->index('transport_lbs_transport_sub_id');
-            $table->string('address_province')->comment('省市地址');
-            $table->string('address_detail')->comment('详细地址');
-            $table->string('longitude',32)->comment('经度');
-            $table->string('latitude',32)->comment('纬度');
-            $table->string('geohash',32)->index('transport_lbs_geohash');
+            $table->json('address_detail')->comment('详细地址信息');
             $table->timestamps();
         });
         //司机行程事件记录

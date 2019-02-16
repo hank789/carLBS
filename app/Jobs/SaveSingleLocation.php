@@ -53,11 +53,7 @@ class SaveSingleLocation implements ShouldQueue
             'api_user_id' => $sub->api_user_id,
             'transport_main_id' => $sub->transport_main_id,
             'transport_sub_id' => $sub->id,
-            'longitude' => $this->data['coords']['longitude'],
-            'latitude' => $this->data['coords']['latitude'],
-            'geohash' => GeoHash::instance()->encode($this->data['coords']['latitude'],$this->data['coords']['longitude']),
-            'address_province' => $this->data['address']['city'].' '.$this->data['address']['district'],
-            'address_detail' => $this->data['address']['street'].' '.$this->data['address']['streetNum'],
+            'address_detail' => $this->data,
             'created_at' => $time->format('Y-m-d H:i:s')
         ]);
         BaiduTrace::instance()->trackSingle($sub->getEntityName(),$this->data);
