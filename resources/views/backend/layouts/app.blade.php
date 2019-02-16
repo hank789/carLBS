@@ -21,6 +21,7 @@
     {{ style(mix('css/backend.css')) }}
 
     @stack('after-styles')
+    @yield('head-script')
 </head>
 
 <body class="{{ config('backend.body_classes') }}">

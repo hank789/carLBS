@@ -192,3 +192,58 @@ if (!function_exists('formatSlackUser')) {
         return $user->id.'['.$user->name.']';
     }
 }
+
+//BD-09(百度) 坐标转换成  GCJ-02(火星，高德) 坐标//@param bd_lon 百度经度//@param bd_lat 百度纬度
+function coordinate_bd_decrypt($bd_lon,$bd_lat)
+{
+    $data = [];
+    $x_pi = 3.14159265358979324 * 3000.0 / 180.0;
+    $x = $bd_lon - 0.0065;
+    $y = $bd_lat - 0.006;
+    $z = sqrt($x * $x + $y * $y) - 0.00002 * sin($y * $x_pi);
+    $theta = atan2($y, $x) - 0.000003 * cos($x * $x_pi);
+    $data['gg_lon'] = $z * cos($theta);
+    $data['gg_lat'] = $z * sin($theta);
+    return$data;
+}
+
+//GCJ-02(火星，高德) 坐标转换成 BD-09(百度) 坐标//@param gg_lon 火星经度//@param gg_lat 火星纬度
+function coordinate_bd_encrypt($gg_lon,$gg_lat)
+{
+    $data = [];
+    $x_pi = 3.14159265358979324 * 3000.0 / 180.0;
+    $x = $gg_lon;
+    $y = $gg_lat;
+    $z = sqrt($x * $x + $y * $y) - 0.00002 * sin($y * $x_pi);
+    $theta = atan2($y, $x) - 0.000003 * cos($x * $x_pi);
+    $data['bd_lon'] = $z * cos($theta) + 0.0065;
+    $data['bd_lat'] = $z * sin($theta) + 0.006;
+    return$data;
+}
+
+if (!function_exists('getDistanceByLatLng')) {
+    function getDistanceByLatLng($lng1,$lat1,$lng2,$lat2){//根据经纬度计算距离 单位为米
+        //将角度转为狐度
+        $radLat1=deg2rad($lat1);
+        $radLat2=deg2rad($lat2);
+        $radLng1=deg2rad($lng1);
+        $radLng2=deg2rad($lng2);
+        $a=$radLat1-$radLat2;//两纬度之差,纬度<90
+        $b=$radLng1-$radLng2;//两经度之差纬度<180
+        $s=2*asin(sqrt(pow(sin($a/2),2)+cos($radLat1)*cos($radLat2)*pow(sin($b/2),2)))*6378.137*1000;
+        return $s;
+    }
+}
+
+if (!function_exists('distanceFormat')) {
+    function distanceFormat($distance) {
+        if (floatval($distance) <= 0) {
+            return '0.1m';
+        }
+        if ($distance < 1000) {
+            return $distance.'m';
+        } else {
+            return ($distance/1000).'km';
+        }
+    }
+}

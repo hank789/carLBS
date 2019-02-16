@@ -18,7 +18,7 @@ class BaiduMap
     private  $sk = 'KvUw3VwjD7xtIeFl15tKbciV2x2qqdiEj'; //请求校验方式 为 sn 校验方式时需填写
     private  $method = 'GET';
     private  $output = 'json'; //json or xml
-    private  $coord = 'bd09ll';//为空是百度墨卡托坐标,bd09ll 是百度经纬度坐标
+    private  $coord = 'gcj02';//为空是百度墨卡托坐标,bd09ll 是百度经纬度坐标,﻿gcj02是国标
     private  $coding = 'utf-8';//返回编码类型utf-8 or gbk
     private  $url = 'https://api.map.baidu.com/';
 

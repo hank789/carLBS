@@ -73,7 +73,9 @@ class TransportController extends Controller {
             'car_number' => 'required',
             'transport_start_time' => 'required',
             'transport_goods' => 'required',
-            'transport_end_place' => 'required'
+            'transport_end_place' => 'required',
+            'transport_end_place_longitude' => 'required',
+            'transport_end_place_latitude' => 'required'
         ]);
         $main = TransportMain::where('transport_number',$request->input('transport_number',''))->first();
         if (!$main || $main->transport_status == TransportMain::TRANSPORT_STATUS_CANCEL) {
@@ -93,7 +95,13 @@ class TransportController extends Controller {
             'transport_start_place' => $transport_start_place,
             'transport_end_place' => $request->input('transport_end_place'),
             'transport_start_time' => $request->input('transport_start_time'),
-            'transport_goods' => $request->input('transport_goods'),
+            'transport_goods' => [
+                'transport_goods'=>$request->input('transport_goods'),
+                'transport_start_place_longitude' => $request->input('transport_start_place_longitude'),
+                'transport_start_place_latitude' => $request->input('transport_start_place_latitude'),
+                'transport_end_place_longitude'=> $request->input('transport_end_place_longitude'),
+                'transport_end_place_latitude'=> $request->input('transport_end_place_latitude')
+            ],
             'transport_status' => TransportSub::TRANSPORT_STATUS_PENDING
         ]);
 
@@ -120,6 +128,10 @@ class TransportController extends Controller {
         $position = $request->input('position');
         $sub->transport_start_place = $position['address']['city'].$position['address']['district'].$position['address']['street'].$position['address']['streetNum'];
         $sub->transport_status = TransportSub::TRANSPORT_STATUS_PROCESSING;
+        $goodsInfo = $sub->transport_goods;
+        $goodsInfo['transport_start_place_longitude'] = $position['coords']['longitude'];
+        $goodsInfo['transport_start_place_latitude'] = $position['coords']['latitude'];
+        $sub->transport_goods = $goodsInfo;
         $sub->save();
         $this->dispatch(new StartTransportSub($sub->id, $position));
         return self::createJsonData(true);
@@ -163,7 +175,13 @@ class TransportController extends Controller {
         }
         $sub->transport_end_place = $request->input('transport_end_place');
         $sub->transport_start_time = $request->input('transport_start_time');
-        $sub->transport_goods = $request->input('transport_goods');
+        $sub->transport_goods = [
+            'transport_goods'=>$request->input('transport_goods'),
+            'transport_start_place_longitude' => $request->input('transport_start_place_longitude'),
+            'transport_start_place_latitude' => $request->input('transport_start_place_latitude'),
+            'transport_end_place_longitude'=> $request->input('transport_end_place_longitude'),
+            'transport_end_place_latitude'=> $request->input('transport_end_place_latitude')
+        ];
         $sub->save();
         return self::createJsonData(true,$sub->toArray());
     }

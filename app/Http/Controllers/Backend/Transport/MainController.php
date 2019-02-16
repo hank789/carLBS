@@ -111,6 +111,7 @@ class MainController extends Controller
     public function store(StoreMainRequest $request)
     {
         $transportNumber = NumberUuid::instance()->get_uuid_number();
+        $coordinate = coordinate_bd_decrypt($request->input('transport_end_place_longitude'),$request->input('transport_end_place_latitude'));
         TransportMain::create([
             'user_id' => $request->user()->id,
             'transport_number' => $transportNumber,
@@ -119,7 +120,11 @@ class MainController extends Controller
             'transport_contact_people' => $request->input('transport_contact_people'),
             'transport_contact_phone' => $request->input('transport_contact_phone'),
             'transport_start_time' => $request->input('transport_start_time'),
-            'transport_goods' => $request->input('transport_goods'),
+            'transport_goods' => [
+                'transport_goods'=>$request->input('transport_goods'),
+                'transport_end_place_longitude'=> $coordinate['gg_lon'],
+                'transport_end_place_latitude'=> $coordinate['gg_lat']
+            ],
             'transport_status' => $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING)
         ]);
         return redirect()->route('admin.transport.main.index')->withFlashSuccess('行程添加成功');

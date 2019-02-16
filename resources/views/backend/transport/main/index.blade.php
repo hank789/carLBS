@@ -69,7 +69,7 @@
                                 <td>{{ $item->transport_contact_phone }}</td>
                                 <td>0</td>
                                 <td>{{ $item->transport_start_time }}</td>
-                                <td>{{ str_limit($item->transport_goods,50) }}</td>
+                                <td>{{ str_limit($item->transport_goods['transport_goods'],50) }}</td>
                                 <td>{{ $item->systemUser->fullname }}</td>
                                 <td>{{ $item->created_at }}</td>
                                 <td>{!! $item->status_label !!}</td>

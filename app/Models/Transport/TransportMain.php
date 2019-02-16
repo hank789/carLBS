@@ -59,6 +59,10 @@ class TransportMain extends Model {
     const TRANSPORT_STATUS_FINISH = 2;
 
 
+    protected $casts = [
+        'transport_goods' => 'json'
+    ];
+
     /**
      * @return string
      */
