@@ -11,6 +11,7 @@ use App\Services\GeoHash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use function PHPSTORM_META\type;
 
 /**
  * @author: wanghui
@@ -260,7 +261,6 @@ class TransportController extends Controller {
             'event_detail' => 'required',
             'position' => 'required',
         ]);
-        //\Log::info('test',$request->all());
         $sub = TransportSub::find($request->input('transport_sub_id'));
         if (!$sub) {
             throw new ApiException(ApiException::TRANSPORT_SUB_NOT_EXIST);
@@ -268,10 +268,7 @@ class TransportController extends Controller {
         if ($sub->api_user_id != $user->id) {
             throw new ApiException(ApiException::BAD_REQUEST);
         }
-        $position = $request->input('position');
-        if (!is_array($position)) {
-            $position = json_decode(json_encode($position),true);
-        }
+        $position = json_decode($request->input('position'),true);
         $images = [];
         for ($i=0;$i<=8;$i++) {
             $image_file = 'image'.$i;
