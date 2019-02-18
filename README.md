@@ -7,3 +7,4 @@
 5. 执行`php artisan db:seed`
 6. 执行`php artisan jwt:secret`
 7. 执行`php artisan storage:link`
+8. 执行`queue:failed-table`

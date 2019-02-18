@@ -222,7 +222,25 @@ class TransportController extends Controller {
         if ($sub->api_user_id != $user->id) {
             throw new ApiException(ApiException::BAD_REQUEST);
         }
+        $images = [];
+        for ($i=0;$i<=8;$i++) {
+            $image_file = 'image'.$i;
+            if($request->hasFile($image_file)){
+                $file_0 = $request->file($image_file);
+                $extension = strtolower($file_0->getClientOriginalExtension());
+                $extArray = array('png', 'gif', 'jpeg', 'jpg');
+                if(in_array($extension, $extArray)){
+                    $file_name = 'transport/'.date('Y').'/'.date('m').'/'.time().str_random(7).'.'.$extension;
+                    dispatch((new UploadFile($file_name,base64_encode(File::get($file_0)))));
+                    //Storage::disk('oss')->put($file_name,File::get($file_0));
+                    $images[] = Storage::disk('oss')->url($file_name);
+                }
+            }
+        }
         $position = $request->input('position');
+        if ($images) {
+            $position = json_decode($position,true);
+        }
         $xiehuo_type = $request->input('xiehuo_type',1);
         $xiehuo = TransportXiehuo::create([
             'api_user_id' => $user->id,
@@ -231,15 +249,13 @@ class TransportController extends Controller {
             'xiehuo_type' => $xiehuo_type,
             'geohash' => GeoHash::instance()->encode($position['coords']['latitude'],$position['coords']['longitude']),
             'transport_goods' => [
-                'longitude' => $position['longitude'],
-                'latitude' => $position['latitude'],
-                'address_province' => $position['address']['city'].' '.$position['address']['district'],
-                'address_detail' => $position['address']['street'].' '.$position['address']['streetNum'],
+                'address_detail' => $position,
                 'car_number' => $request->input('car_number'),
                 'transport_end_place' => $request->input('transport_end_place'),
+                'transport_end_place_longitude'=> $request->input('transport_end_place_longitude'),
+                'transport_end_place_latitude'=> $request->input('transport_end_place_latitude'),
                 'transport_goods' => $request->input('transport_goods'),
-                'shipping_documents' => $request->input('shipping_documents',''),
-                'description' => $request->input('event_detail')
+                'shipping_documents' => $images
             ]
         ]);
         if ($xiehuo_type == TransportXiehuo::XIEHUO_TYPE_END) {
