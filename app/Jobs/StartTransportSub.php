@@ -58,8 +58,17 @@ class StartTransportSub implements ShouldQueue
             'transport_end_place' => $sub->transport_end_place,
             'transport_goods' => str_limit($sub->transport_goods['transport_goods'],125)
         ];
+
         if (!$exist) {
-            BaiduTrace::instance()->addEntity($entity_name,$sub->apiUser->name,$entity_custom_fields);
+            $res = BaiduTrace::instance()->addEntity($entity_name,$sub->apiUser->name,$entity_custom_fields);
+            if (!$res) {
+                $res = BaiduTrace::instance()->addEntity($entity_name,$sub->apiUser->name,$entity_custom_fields);
+                if (!$res) {
+                    $sub->transport_status = TransportSub::TRANSPORT_STATUS_PENDING;
+                    $sub->save();
+                    return;
+                }
+            }
         } else {
             BaiduTrace::instance()->updateEntity($entity_name,$sub->apiUser->name,$entity_custom_fields);
         }

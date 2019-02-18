@@ -20,7 +20,7 @@ class BaiduTrace
     private  $check = 0;//请求校验方式 为 sn 校验方式时需改为1
     private  $sk = 'KvUw3VwjD7xtIeFl15tKbciV2x2qqdiEj'; //请求校验方式 为 sn 校验方式时需填写
     private  $method = 'GET';
-    private  $url = 'https://yingyan.baidu.com/api/v3/';
+    private  $url = 'http://yingyan.baidu.com/api/v3/';
 
     public function __construct()
     {
@@ -146,7 +146,7 @@ class BaiduTrace
             \Log::info('test',[$url]);
             $data = $this->_curl($url);
         } else {
-            $url = urlencode($this->url . $uri);
+            $url = $this->url . $uri;
             $data = $this->_curl($url,$params);
         }
         return json_decode($data,true);
