@@ -49,8 +49,12 @@ class SaveBatchLocation implements ShouldQueue
         $time = new \DateTime();
 
         $lastLbs = TransportLbs::where('transport_sub_id',$sub->id)->orderBy('id','desc')->first();
-        $last_lng = $lastLbs->address_detail['coords']['longitude'];
-        $last_lat = $lastLbs->address_detail['coords']['latitude'];
+        if ($lastLbs) {
+            $last_lng = $lastLbs->address_detail['coords']['longitude'];
+            $last_lat = $lastLbs->address_detail['coords']['latitude'];
+        } else {
+            $last_lng = $last_lat = '';
+        }
         foreach ($this->data as $key=>$item) {
             if ($last_lat != $item['coords']['latitude'] && $last_lng != $item['coords']['longitude']) {
                 $time->setTimestamp($item['timestamp']/1000);
