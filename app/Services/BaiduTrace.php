@@ -105,6 +105,7 @@ class BaiduTrace
         $params = [];
         $params['ak'] = $this->ak;
         $params['service_id'] = $this->serviceId;
+        $point_list = [];
         foreach ($positionList as $position) {
             $item = [];
             $item['entity_name'] = $entity_name;//标识轨迹点所属的 entity
@@ -119,8 +120,9 @@ class BaiduTrace
             if ($customerFields) {
                 $item = array_merge($item, $customerFields);
             }
-            $params['point_list'][] = $item;
+            $point_list[] = $item;
         }
+        $params['point_list'] = json_encode($point_list);
         $res = $this->_sendHttp('track/addpoints',$params);
         if ($res['status'] != 0) {
             event(new ExceptionNotify('批量轨迹上传失败:'.$res['message']));

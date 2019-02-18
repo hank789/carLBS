@@ -47,15 +47,23 @@ class SaveBatchLocation implements ShouldQueue
         $sub = TransportSub::find($this->transport_sub_id);
         if ($sub->api_user_id != $this->user_id) return;
         $time = new \DateTime();
-        foreach ($this->data as $item) {
-            $time->setTimestamp($item['timestamp']/1000);
-            TransportLbs::create([
-                'api_user_id' => $sub->api_user_id,
-                'transport_main_id' => $sub->transport_main_id,
-                'transport_sub_id' => $sub->id,
-                'address_detail' => $item,
-                'created_at' => $time->format('Y-m-d H:i:s')
-            ]);
+
+        $lastLbs = TransportLbs::where('transport_sub_id',$sub->id)->orderBy('id','desc')->first();
+        $last_lng = $lastLbs->address_detail['coords']['longitude'];
+        $last_lat = $lastLbs->address_detail['coords']['latitude'];
+        foreach ($this->data as $key=>$item) {
+            if ($last_lat != $item['coords']['latitude'] && $last_lng != $item['coords']['longitude']) {
+                $time->setTimestamp($item['timestamp']/1000);
+                TransportLbs::create([
+                    'api_user_id' => $sub->api_user_id,
+                    'transport_main_id' => $sub->transport_main_id,
+                    'transport_sub_id' => $sub->id,
+                    'address_detail' => $item,
+                    'created_at' => $time->format('Y-m-d H:i:s')
+                ]);
+            } else {
+                unset($this->data[$key]);
+            }
         }
         BaiduTrace::instance()->trackBatch($sub->getEntityName(),$this->data);
     }
