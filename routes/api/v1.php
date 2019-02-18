@@ -33,6 +33,9 @@ Route::group(['prefix' => 'car','namespace'=>'Car','middleware' => ['auth:api','
     Route::post('location/saveSingle','LocationController@saveSingle');
     //批量上传位置信息
     Route::post('location/saveBatch','LocationController@saveBatch');
+    //获取事件类型
+    Route::get('transport/getEventType','TransportController@getEventType');
+
 
     //行程信息
     Route::post('transport/detail','TransportController@detail');
