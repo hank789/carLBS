@@ -55,7 +55,7 @@ class SaveBatchLocation implements ShouldQueue
         } else {
             $last_lng = $last_lat = '';
         }
-        foreach ($this->data as $key=>$item) {
+        foreach ($this->data as $key=>&$item) {
             if ($last_lat != $item['coords']['latitude'] && $last_lng != $item['coords']['longitude']) {
                 $time->setTimestamp($item['timestamp']/1000);
                 TransportLbs::create([
@@ -65,6 +65,7 @@ class SaveBatchLocation implements ShouldQueue
                     'address_detail' => $item,
                     'created_at' => $time->format('Y-m-d H:i:s')
                 ]);
+                $item['timestamp'] = $item['timestamp']/1000;
             } else {
                 unset($this->data[$key]);
             }
