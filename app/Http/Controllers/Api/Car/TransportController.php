@@ -293,7 +293,7 @@ class TransportController extends Controller {
         if ($sub->api_user_id != $user->id) {
             throw new ApiException(ApiException::BAD_REQUEST);
         }
-        $position = json_decode($request->input('position'),true);
+        $position = $request->input('position');
         $images = [];
         for ($i=0;$i<=8;$i++) {
             $image_file = 'image'.$i;
@@ -308,6 +308,9 @@ class TransportController extends Controller {
                     $images[] = Storage::disk('oss')->url($file_name);
                 }
             }
+        }
+        if ($images) {
+            $position = json_decode($position,true);
         }
         TransportEvent::create([
             'api_user_id' => $user->id,
