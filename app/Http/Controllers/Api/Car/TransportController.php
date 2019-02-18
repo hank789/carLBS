@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Controller;
 use App\Jobs\StartTransportSub;
 use App\Jobs\UploadFile;
 use App\Models\Transport\TransportEvent;
+use App\Models\Transport\TransportLbs;
 use App\Models\Transport\TransportMain;
 use App\Models\Transport\TransportSub;
 use App\Models\Transport\TransportXiehuo;
@@ -72,6 +73,13 @@ class TransportController extends Controller {
         $data['transport_contact_phone'] = $main->transport_contact_phone;
         $data['transport_number'] = $main->transport_number;
         $data['transport_start_time'] = date('Y-m-d H:i',strtotime($data['transport_start_time']));
+        $data['need_upload_positions'] = false;
+        if ($sub->transport_status == TransportSub::TRANSPORT_STATUS_PROCESSING) {
+            $lastLbs = TransportLbs::where('transport_sub_id',$sub->id)->orderBy('id','desc')->first();
+            if (!$lastLbs || $lastLbs->created_at <= date('Y-m-d H:i:s',strtotime('-70 seconds'))) {
+                $data['need_upload_positions'] = true;
+            }
+        }
 
         return self::createJsonData(true,$data);
     }
