@@ -176,6 +176,7 @@ return [
          * Package Service Providers that aren't auto-discover...
          */
         App\Third\Push\Getui\GetuiServiceProvider::class,
+        App\Third\AliOss\AliOssServiceProvider::class,
         /*
          * Application Service Providers...
          */
