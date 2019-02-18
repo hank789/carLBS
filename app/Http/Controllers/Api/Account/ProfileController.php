@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Api\Account;
 use App\Http\Controllers\Api\Controller;
+use App\Models\Transport\TransportSub;
 use Illuminate\Http\Request;
 /**
  * @author: wanghui
@@ -11,7 +12,13 @@ class ProfileController extends Controller {
 
     public function info(Request $request) {
         $user = $request->user();
-        return self::createJsonData(true,$user->toArray());
+        $sub = TransportSub::where('api_user_id', $user->id)->whereIn('transport_status',[TransportSub::TRANSPORT_STATUS_PENDING,TransportSub::TRANSPORT_STATUS_PROCESSING])->first();
+        $data = $user->toArray();
+        $data['transport_sub_id'] = '';
+        if ($sub) {
+            $data['transport_sub_id'] = $sub->id;
+        }
+        return self::createJsonData(true,$data);
     }
 
     //更新姓名
