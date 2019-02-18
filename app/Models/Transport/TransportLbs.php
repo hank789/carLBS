@@ -51,6 +51,10 @@ class TransportLbs extends Model {
      */
     public $timestamps = false;
 
+    protected $casts = [
+        'address_detail' => 'json'
+    ];
+
     /**
      * Get the transportMain relation.
      *
