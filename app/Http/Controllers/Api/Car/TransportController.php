@@ -247,7 +247,7 @@ class TransportController extends Controller {
             'transport_main_id' => $sub->transport_main_id,
             'transport_sub_id' => $sub->id,
             'xiehuo_type' => $xiehuo_type,
-            'geohash' => GeoHash::instance()->encode($position['coords']['latitude'],$position['coords']['longitude']),
+            'geohash' => GeoHash::instance()->encode($request->input('transport_end_place_latitude'),$request->input('transport_end_place_longitude')),
             'transport_goods' => [
                 'address_detail' => $position,
                 'car_number' => $request->input('car_number'),
@@ -276,6 +276,7 @@ class TransportController extends Controller {
             'event_type' => 'required',
             'event_detail' => 'required',
             'position' => 'required',
+            'event_place' => 'required'
         ]);
         $sub = TransportSub::find($request->input('transport_sub_id'));
         if (!$sub) {
@@ -305,9 +306,12 @@ class TransportController extends Controller {
             'transport_main_id' => $sub->transport_main_id,
             'transport_sub_id' => $sub->id,
             'event_type' => $request->input('event_type'),
-            'geohash' => GeoHash::instance()->encode($position['coords']['latitude'],$position['coords']['longitude']),
+            'geohash' => GeoHash::instance()->encode($request->input('event_place_latitude'),$request->input('event_place_longitude')),
             'event_detail' => [
                 'address_detail' => $position,
+                'event_place' => $request->input('event_place'),
+                'event_place_latitude' => $request->input('event_place_latitude'),
+                'event_place_longitude' => $request->input('event_place_longitude'),
                 'images' => $images,
                 'description' => $request->input('event_detail')
             ]
