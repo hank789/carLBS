@@ -260,6 +260,7 @@ class TransportController extends Controller {
             'event_detail' => 'required',
             'position' => 'required',
         ]);
+        //\Log::info('test',$request->all());
         $sub = TransportSub::find($request->input('transport_sub_id'));
         if (!$sub) {
             throw new ApiException(ApiException::TRANSPORT_SUB_NOT_EXIST);
@@ -268,6 +269,24 @@ class TransportController extends Controller {
             throw new ApiException(ApiException::BAD_REQUEST);
         }
         $position = $request->input('position');
+        if (!is_array($position)) {
+            $position = json_decode(json_encode($position),true);
+        }
+        $images = [];
+        for ($i=0;$i<=8;$i++) {
+            $image_file = 'image'.$i;
+            if($request->hasFile($image_file)){
+                $file_0 = $request->file($image_file);
+                $extension = strtolower($file_0->getClientOriginalExtension());
+                $extArray = array('png', 'gif', 'jpeg', 'jpg');
+                if(in_array($extension, $extArray)){
+                    $file_name = 'transport/'.date('Y').'/'.date('m').'/'.time().str_random(7).'.'.$extension;
+                    dispatch((new UploadFile($file_name,base64_encode(File::get($file_0)))));
+                    //Storage::disk('oss')->put($file_name,File::get($file_0));
+                    $images[] = Storage::disk('oss')->url($file_name);
+                }
+            }
+        }
         TransportEvent::create([
             'api_user_id' => $user->id,
             'transport_main_id' => $sub->transport_main_id,
@@ -275,10 +294,8 @@ class TransportController extends Controller {
             'event_type' => $request->input('event_type'),
             'geohash' => GeoHash::instance()->encode($position['coords']['latitude'],$position['coords']['longitude']),
             'event_detail' => [
-                'longitude' => $position['longitude'],
-                'latitude' => $position['latitude'],
-                'address_province' => $position['address']['city'].' '.$position['address']['district'],
-                'address_detail' => $position['address']['street'].' '.$position['address']['streetNum'],
+                'address_detail' => $position,
+                'images' => $images,
                 'description' => $request->input('event_detail')
             ]
         ]);
