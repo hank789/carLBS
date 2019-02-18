@@ -72,8 +72,12 @@ class SaveBatchLocation implements ShouldQueue
                 unset($this->data[$key]);
             }
         }
-        if (count($this->data) > 0) {
-            BaiduTrace::instance()->trackBatch($sub->getEntityName(),$this->data);
+        $count = count($this->data);
+        if ($count > 0) {
+            $dataList = array_chunk($this->data,60);
+            foreach ($dataList as $data) {
+                BaiduTrace::instance()->trackBatch($sub->getEntityName(),$data);
+            }
         }
     }
 }
