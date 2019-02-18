@@ -85,7 +85,7 @@ class BaiduTrace
         $params['loc_time'] = $position['timestamp'];//定位时设备的时间,Unix时间戳
         $params['coord_type_input'] = $position['coordsType'];//坐标类型
         $params['speed'] = $position['coords']['speed'] * 3.6;//速度，单位：km/h
-        $params['direction'] = $position['coords']['heading'];//方向
+        $params['direction'] = $position['coords']['heading']?:0;//方向
         $params['height'] = $position['coords']['altitude'];//高度,单位：米
         $params['radius'] = $position['coords']['accuracy'];//定位精度，GPS或定位SDK返回的值,单位：米
         if ($customerFields) {
@@ -114,7 +114,7 @@ class BaiduTrace
             $item['loc_time'] = $position['timestamp'];//定位时设备的时间,Unix时间戳
             $item['coord_type_input'] = $position['coordsType'];//坐标类型
             $item['speed'] = $position['coords']['speed'] * 3.6;//速度，单位：km/h
-            $item['direction'] = $position['coords']['heading'];//方向
+            $item['direction'] = $position['coords']['heading']?:0;//方向
             $item['height'] = $position['coords']['altitude'];//高度,单位：米
             $item['radius'] = $position['coords']['accuracy'];//定位精度，GPS或定位SDK返回的值,单位：米
             if ($customerFields) {
