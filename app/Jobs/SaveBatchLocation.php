@@ -52,11 +52,12 @@ class SaveBatchLocation implements ShouldQueue
         if ($lastLbs) {
             $last_lng = $lastLbs->address_detail['coords']['longitude'];
             $last_lat = $lastLbs->address_detail['coords']['latitude'];
+            $lastDate = strtotime($lastLbs->created_at);
         } else {
-            $last_lng = $last_lat = '';
+            $last_lng = $lastDate = $last_lat = '';
         }
         foreach ($this->data as $key=>&$item) {
-            if ($last_lat != $item['coords']['latitude'] && $last_lng != $item['coords']['longitude']) {
+            if (($last_lat != $item['coords']['latitude'] && $last_lng != $item['coords']['longitude']) || $lastDate<=strtotime('-5 minutes')) {
                 $time->setTimestamp($item['timestamp']/1000);
                 TransportLbs::create([
                     'api_user_id' => $sub->api_user_id,
@@ -65,6 +66,7 @@ class SaveBatchLocation implements ShouldQueue
                     'address_detail' => $item,
                     'created_at' => $time->format('Y-m-d H:i:s')
                 ]);
+                $lastDate = $time->getTimestamp();
                 $last_lat = $item['coords']['latitude'];
                 $last_lng = $item['coords']['longitude'];
                 $item['timestamp'] = $item['timestamp']/1000;
