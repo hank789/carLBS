@@ -43,6 +43,13 @@ class EventServiceProvider extends ServiceProvider
         \App\Listeners\Backend\Auth\User\UserEventListener::class,
         \App\Listeners\Backend\Auth\Role\RoleEventListener::class,
         \App\Listeners\Backend\Transport\User\UserEventListener::class,
+
+        /*
+        * Api Subscribers
+        */
+        \App\Listeners\Api\SystemEventListener::class,
+        \App\Listeners\Api\Auth\UserEventListener::class,
+
     ];
 
     /**
