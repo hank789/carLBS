@@ -57,7 +57,8 @@ class SaveBatchLocation implements ShouldQueue
             $last_lng = $lastDate = $last_lat = '';
         }
         foreach ($this->data as $key=>&$item) {
-            if (($last_lat != $item['coords']['latitude'] && $last_lng != $item['coords']['longitude']) || $lastDate<=strtotime('-5 minutes')) {
+            //检查一下每个轨迹点的loc_time参数，管理台在绘制的时候，如果前后点loc_time间隔超过5分钟就不连线了
+            if (($last_lat != $item['coords']['latitude'] && $last_lng != $item['coords']['longitude']) || $lastDate<=strtotime('-250 seconds')) {
                 $time->setTimestamp($item['timestamp']/1000);
                 TransportLbs::create([
                     'api_user_id' => $sub->api_user_id,
@@ -69,7 +70,7 @@ class SaveBatchLocation implements ShouldQueue
                 $lastDate = $time->getTimestamp();
                 $last_lat = $item['coords']['latitude'];
                 $last_lng = $item['coords']['longitude'];
-                $item['timestamp'] = $item['timestamp']/1000;
+                $item['timestamp'] = intval($item['timestamp']/1000);
             } else {
                 unset($this->data[$key]);
             }
