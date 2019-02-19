@@ -54,6 +54,23 @@ class BaiduTrace
         return true;
     }
 
+    /**
+     * 支持根据多个条件筛选，多个条件用竖线分隔（active_time 和 inactive_time 不可同时输入）
+    规则：filter=key1:value1|key2:value2。
+    示例："filter=entity_names:张三,李四|active_time:1471708800|team:北京"
+     * @param $entity_names
+     * @param $active_time
+     * @param string $inactive_time
+     * @param string $custom_filter
+     */
+    public function queryEntity($entity_names='',$active_time='',$inactive_time='',$custom_filter='') {
+        $this->method = 'GET';
+        $params = [];
+        $params['ak'] = $this->ak;
+        $params['service_id'] = $this->serviceId;
+
+    }
+
     //更新设备
     public function updateEntity($entity_name,$entity_desc, array $customerFields = []) {
         $this->method = 'post';
@@ -146,6 +163,7 @@ class BaiduTrace
             \Log::info('test',[$url]);
             $data = $this->_curl($url);
         } else {
+            RateLimiter::instance()->lock_acquire('baiduyingyan-other',59,1);
             $url = $this->url . $uri;
             $data = $this->_curl($url,$params);
         }
