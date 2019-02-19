@@ -17,6 +17,10 @@ class ProfileController extends Controller {
         $data = $user->toArray();
         $data['transport_sub_id'] = '';
         $data['need_upload_positions'] = false;
+        //每60秒上传一次轨迹信息
+        $data['upload_positions_limit_time'] = 60;
+        //每5秒监控一次位置信息
+        $data['watch_position_limit_time'] = 5;
         if ($sub) {
             if ($sub->transport_status == TransportSub::TRANSPORT_STATUS_PROCESSING) {
                 $lastLbs = TransportLbs::where('transport_sub_id',$sub->id)->orderBy('id','desc')->first();
