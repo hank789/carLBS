@@ -56,7 +56,7 @@ class SaveSingleLocation implements ShouldQueue
             'address_detail' => $this->data,
             'created_at' => $time->format('Y-m-d H:i:s')
         ]);
-        $item['timestamp'] = intval($this->data['timestamp']/1000);
+        $this->data['timestamp'] = intval($this->data['timestamp']/1000);
         BaiduTrace::instance()->trackSingle($sub->getEntityName(),$this->data);
     }
 }
