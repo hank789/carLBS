@@ -16,6 +16,7 @@ trait BaseController {
         $sub = TransportSub::where('api_user_id', $user->id)->whereIn('transport_status',[TransportSub::TRANSPORT_STATUS_PENDING,TransportSub::TRANSPORT_STATUS_PROCESSING])->first();
         $data = $user->toArray();
         $data['transport_sub_id'] = '';
+        $data['transport_sub_status'] = '';
         $data['need_upload_positions'] = false;
         //每60秒上传一次轨迹信息
         $data['upload_positions_limit_time'] = 60;
@@ -23,6 +24,7 @@ trait BaseController {
         $data['watch_position_limit_time'] = 10;
         if ($sub) {
             $data['transport_sub_id'] = $sub->id;
+            $data['transport_sub_status'] = $sub->transport_status;
             /*if ($sub->transport_status == TransportSub::TRANSPORT_STATUS_PROCESSING) {
                 $lastLbs = TransportLbs::where('transport_sub_id',$sub->id)->orderBy('id','desc')->first();
                 if (!$lastLbs || $lastLbs->created_at <= date('Y-m-d H:i:s',strtotime('-70 seconds'))) {
