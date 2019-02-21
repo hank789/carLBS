@@ -13,23 +13,7 @@ class ProfileController extends Controller {
 
     public function info(Request $request) {
         $user = $request->user();
-        $sub = TransportSub::where('api_user_id', $user->id)->whereIn('transport_status',[TransportSub::TRANSPORT_STATUS_PENDING,TransportSub::TRANSPORT_STATUS_PROCESSING])->first();
-        $data = $user->toArray();
-        $data['transport_sub_id'] = '';
-        $data['need_upload_positions'] = false;
-        //每60秒上传一次轨迹信息
-        $data['upload_positions_limit_time'] = 60;
-        //每10秒监控一次位置信息
-        $data['watch_position_limit_time'] = 10;
-        if ($sub) {
-            if ($sub->transport_status == TransportSub::TRANSPORT_STATUS_PROCESSING) {
-                $lastLbs = TransportLbs::where('transport_sub_id',$sub->id)->orderBy('id','desc')->first();
-                if (!$lastLbs || $lastLbs->created_at <= date('Y-m-d H:i:s',strtotime('-70 seconds'))) {
-                    $data['need_upload_positions'] = true;
-                }
-            }
-            $data['transport_sub_id'] = $sub->id;
-        }
+        $data = $this->formatApiUserInfo($user);
         return self::createJsonData(true,$data);
     }
 

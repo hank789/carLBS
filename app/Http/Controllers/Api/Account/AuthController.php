@@ -136,14 +136,9 @@ class AuthController extends Controller
             event(new UserLoggedIn($user));
             $message = 'ok';
 
-            $info = [];
+            $info = $this->formatApiUserInfo($user);
             $info['token'] = $token;
             $info['newUser'] = $isNewUser;
-            $info['id'] = $user->id;
-            $info['name'] = $user->name;
-            $info['mobile'] = $user->mobile;
-            $info['gender'] = $user->gender;
-            $info['status'] = $user->status;
 
             /*认证成功*/
             return static::createJsonData(true,$info,ApiException::SUCCESS,$message);
