@@ -21,7 +21,7 @@ trait BaseController {
         //每60秒上传一次轨迹信息
         $data['upload_positions_limit_time'] = 60;
         //每8秒监控一次位置信息
-        $data['watch_position_limit_time'] = 8;
+        $data['watch_position_limit_time'] = 10;
         if ($sub) {
             $data['transport_sub_id'] = $sub->id;
             $data['transport_sub_status'] = $sub->transport_status;
