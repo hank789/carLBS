@@ -121,8 +121,10 @@ class TransportController extends Controller {
                 'transport_goods'=>$request->input('transport_goods'),
                 'transport_start_place_longitude' => $request->input('transport_start_place_longitude'),
                 'transport_start_place_latitude' => $request->input('transport_start_place_latitude'),
+                'transport_start_place_coordsType' => $request->input('transport_start_place_coordsType'),
                 'transport_end_place_longitude'=> $request->input('transport_end_place_longitude'),
-                'transport_end_place_latitude'=> $request->input('transport_end_place_latitude')
+                'transport_end_place_latitude'=> $request->input('transport_end_place_latitude'),
+                'transport_end_place_coordsType' => $request->input('transport_end_place_coordsType'),
             ],
             'transport_status' => TransportSub::TRANSPORT_STATUS_PENDING
         ]);
@@ -153,6 +155,7 @@ class TransportController extends Controller {
         $goodsInfo = $sub->transport_goods;
         $goodsInfo['transport_start_place_longitude'] = $position['coords']['longitude'];
         $goodsInfo['transport_start_place_latitude'] = $position['coords']['latitude'];
+        $goodsInfo['transport_start_place_coordsType'] = $position['coordsType'];
         $goodsInfo['transport_start_real_time'] = date('Y-m-d H:i:s');
         $sub->transport_goods = $goodsInfo;
         $sub->save();
@@ -202,8 +205,10 @@ class TransportController extends Controller {
             'transport_goods'=>$request->input('transport_goods'),
             'transport_start_place_longitude' => $request->input('transport_start_place_longitude'),
             'transport_start_place_latitude' => $request->input('transport_start_place_latitude'),
+            'transport_start_place_coordsType' => $request->input('transport_start_place_coordsType'),
             'transport_end_place_longitude'=> $request->input('transport_end_place_longitude'),
-            'transport_end_place_latitude'=> $request->input('transport_end_place_latitude')
+            'transport_end_place_latitude'=> $request->input('transport_end_place_latitude'),
+            'transport_end_place_coordsType' => $request->input('transport_end_place_coordsType'),
         ];
         $sub->save();
         return self::createJsonData(true,$sub->toArray());
@@ -262,6 +267,7 @@ class TransportController extends Controller {
                 'transport_end_place' => $request->input('transport_end_place'),
                 'transport_end_place_longitude'=> $request->input('transport_end_place_longitude'),
                 'transport_end_place_latitude'=> $request->input('transport_end_place_latitude'),
+                'transport_end_place_coordsType' => $request->input('transport_end_place_coordsType'),
                 'transport_goods' => $request->input('transport_goods'),
                 'shipping_documents' => $images
             ]
@@ -323,6 +329,7 @@ class TransportController extends Controller {
                 'event_place' => $request->input('event_place'),
                 'event_place_latitude' => $request->input('event_place_latitude'),
                 'event_place_longitude' => $request->input('event_place_longitude'),
+                'event_place_coordsType' => $request->input('event_place_coordsType'),
                 'images' => $images,
                 'description' => $request->input('event_detail')
             ]

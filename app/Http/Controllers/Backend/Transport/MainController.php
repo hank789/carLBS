@@ -123,7 +123,8 @@ class MainController extends Controller
             'transport_goods' => [
                 'transport_goods'=>$request->input('transport_goods'),
                 'transport_end_place_longitude'=> $coordinate['gg_lon'],
-                'transport_end_place_latitude'=> $coordinate['gg_lat']
+                'transport_end_place_latitude'=> $coordinate['gg_lat'],
+                'transport_end_place_coordsType' => 'gcj02',
             ],
             'transport_status' => $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING)
         ]);
