@@ -28,3 +28,14 @@ output.txt
 coverage.xml
 /coverage
 .phpunit.result.cache
+/public/readmeImages
+/public/README.md
+/public/package.json
+/public/package-lock.json
+/public/LICENSE
+/public/component.json
+/map/node_modules
+/public/manager.html
+/public/components
+/public/script
+/public/static
