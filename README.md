@@ -8,3 +8,7 @@
 6. 执行`php artisan jwt:secret`
 7. 执行`php artisan storage:link`
 8. 执行`queue:failed-table`
+
+##百度鹰眼前端
+1. cd map
+2. fis3 release demo -d ../public
