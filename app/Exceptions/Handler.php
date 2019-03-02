@@ -101,6 +101,10 @@ class Handler extends ExceptionHandler
             return CreateJsonResponseData::createJsonData(false,[],$exception->getCode(),'出错了,请稍后再试~');
         }
 
+        if($request->is('api/*')){
+            return CreateJsonResponseData::createJsonData(false,[],$exception->getCode(),'出错了,请稍后再试~');
+        }
+
         if ($exception instanceof UnauthorizedException) {
             return redirect()
                 ->route(home_route())
