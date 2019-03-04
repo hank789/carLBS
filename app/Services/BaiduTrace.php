@@ -145,18 +145,18 @@ class BaiduTrace
             $formatLast = BaiduMap::instance()->geocoder($latitude,$longitude,0,$position['coordsType']);
             if ($formatLast['status'] == 0) {
                 if ($toBaiduCoordType) {
-                    $latitude = $formatLast['location']['lat'];
-                    $longitude = $formatLast['location']['lng'];
+                    $latitude = $formatLast['result']['location']['lat'];
+                    $longitude = $formatLast['result']['location']['lng'];
                     $coordsType = 'bd09ll';
                 }
                 if ($returnFullInfo) {
-                    $item['formatted_address'] = $formatLast['formatted_address'];
-                    $item['business'] = $formatLast['business'];
-                    $item['addressComponent'] = $formatLast['addressComponent'];
-                    $item['poiRegions'] = $formatLast['poiRegions'];
-                    $item['sematic_description'] = $formatLast['sematic_description'];
-                    $item['cityCode'] = $formatLast['cityCode'];
-                    $item['pois'] = $formatLast['pois'];
+                    $item['formatted_address'] = $formatLast['result']['formatted_address'];
+                    $item['business'] = $formatLast['result']['business'];
+                    $item['addressComponent'] = $formatLast['result']['addressComponent'];
+                    $item['poiRegions'] = $formatLast['result']['poiRegions'];
+                    $item['sematic_description'] = $formatLast['result']['sematic_description'];
+                    $item['cityCode'] = $formatLast['result']['cityCode'];
+                    $item['pois'] = $formatLast['result']['pois'];
                 }
             }
         }

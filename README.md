@@ -12,3 +12,4 @@
 ##百度鹰眼前端
 1. cd map
 2. fis3 release demo -d ../public
+如果编译有问题执行：fis3 release -c
