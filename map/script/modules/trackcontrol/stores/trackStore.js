@@ -569,7 +569,7 @@ var TrackStore = Reflux.createStore({
                             if (dataGeo.result.formatted_address !== '') {
                                 address = dataGeo.result.formatted_address;
                             } else {
-                                address = dataGeo.result.addressComponent.city + ', ' + location_desc.result.addressComponent.country;
+                                address = dataGeo.result.addressComponent.city + ', ' + dataGeo.result.addressComponent.country;
                             }
                             that.data.selectCompleteEntities[index] = {
                                 point: [item.latest_location.longitude, item.latest_location.latitude],
@@ -871,6 +871,7 @@ var TrackStore = Reflux.createStore({
                                                      'transport_mode=' + that.data.transport_mode[that.data.trackProcess.transport_mode - 1]
                                 };
                                 Urls.jsonp(Urls.getDistance, param_time, function(data_time) {
+                                    let key = item.entity_name;
                                     if (data_time.status === 0) {
                                         if (!distance_time[key]) {
                                             distance_time[key] = {};

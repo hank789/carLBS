@@ -5,7 +5,6 @@ namespace App\Jobs;
 use App\Models\Transport\TransportLbs;
 use App\Models\Transport\TransportSub;
 use App\Services\BaiduTrace;
-use App\Services\GeoHash;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -57,6 +56,11 @@ class SaveBatchLocation implements ShouldQueue
             $last_lng = $lastDate = $last_lat = '';
         }
         var_dump(json_encode($this->data));
+        if (count($this->data) >= 1) {
+            $lastPosition = $this->data[count($this->data)-1];
+            $sub->saveLastPosition($lastPosition);
+        }
+
         foreach ($this->data as $key=>&$item) {
             //检查一下每个轨迹点的loc_time参数，管理台在绘制的时候，如果前后点loc_time间隔超过5分钟就不连线了
             $time->setTimestamp($item['timestamp']/1000);

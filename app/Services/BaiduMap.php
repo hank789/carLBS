@@ -8,6 +8,8 @@
 namespace App\Services;
 
 
+use App\Events\Api\ExceptionNotify;
+
 class BaiduMap
 {
     protected static $instance = null;
@@ -18,7 +20,7 @@ class BaiduMap
     private  $sk = 'KvUw3VwjD7xtIeFl15tKbciV2x2qqdiEj'; //请求校验方式 为 sn 校验方式时需填写
     private  $method = 'GET';
     private  $output = 'json'; //json or xml
-    private  $coord = 'gcj02';//为空是百度墨卡托坐标,bd09ll 是百度经纬度坐标,﻿gcj02是国标
+    private  $coord = 'bd09ll';//为空是百度墨卡托坐标,bd09ll 是百度经纬度坐标,﻿gcj02是国标
     private  $coding = 'utf-8';//返回编码类型utf-8 or gbk
     private  $url = 'https://api.map.baidu.com/';
 
@@ -123,11 +125,19 @@ class BaiduMap
      * @param $lng
      * @return mixed
      */
-    public function geocoder($lat,$lng) {
+    public function geocoder($lat,$lng,$pois = 0,$coordtype='',$ret_coordtype='') {
         $params['location'] = $lat.','.$lng;
-        $params['coordtype'] = $this->coord;
-        $params['pois'] = 1;
+        if ($coordtype) {
+            $params['coordtype'] = $coordtype;
+        } else {
+            $params['coordtype'] = $this->coord;
+        }
+        if ($ret_coordtype) {
+            $params['ret_coordtype'] = $ret_coordtype;
+        }
+        $params['pois'] = $pois;
         $params['output'] = $this->output;
+        $params['latest_admin'] = 1;
         return $this->_sendHttp('geocoder/v2/',$params);
     }
 
@@ -149,7 +159,11 @@ class BaiduMap
             $url = urlencode($this->url . $uri);
             $data = $this->_curl($url,$params);
         }
-        return json_decode($data,true);
+        $return = json_decode($data,true);
+        if ($return['status'] != 0) {
+            event(new ExceptionNotify('BaiduMap请求出错：'.$return['status']));
+        }
+        return $return;
     }
     /**
      * 生成发送HTTP请求

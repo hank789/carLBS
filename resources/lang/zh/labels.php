@@ -127,6 +127,8 @@ return [
         ],
 
         'passwords' => [
+            'expired_password_box_title'      => '密码已过期',
+            'update_password_button'          => '更新密码',
             'forgot_password'                 => '忘记密码了？',
             'reset_password_box_title'        => '重置密码',
             'reset_password_button'           => '重置密码',

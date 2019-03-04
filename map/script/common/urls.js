@@ -20,9 +20,9 @@ var urls = {
     // 获取track列表
     trackList: '//yingyan.baidu.com/api/v2/track/gethistory',
     // 获取停留点
-    getstaypoint: '//yingyan.baidu.com/api/v2/analysis/staypoint',
+    getstaypoint: '//yingyan.baidu.com/api/v3/analysis/staypoint',
     // 获取驾驶行为分析信息
-    getBehaviorAnalysis: '//yingyan.baidu.com/api/v2/analysis/drivingbehavior',
+    getBehaviorAnalysis: '//yingyan.baidu.com/api/v3/analysis/drivingbehavior',
 
     /**
      * Jquery AJAX GET

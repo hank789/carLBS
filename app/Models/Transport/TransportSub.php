@@ -1,6 +1,7 @@
 <?php namespace App\Models\Transport;
 
 use App\Models\Relations\BelongsToApiUserTrait;
+use App\Services\BaiduTrace;
 use Illuminate\Database\Eloquent\Model;
 /**
  * App\Models\Transport\TransportSub
@@ -65,6 +66,15 @@ class TransportSub extends Model {
 
     public function getEntityName() {
         return $this->car_number;
+    }
+
+    public function saveLastPosition(array $lastPosition) {
+        $transportGoods = $this->transport_goods;
+        if ($lastPosition['coordsType'] != 'bd09ll') {
+            $transportGoods['lastPosition'] = BaiduTrace::instance()->formatGeoLocation($lastPosition,true,true);
+            $this->transport_goods = $transportGoods;
+            $this->save();
+        }
     }
 
 }

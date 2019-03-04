@@ -84,6 +84,7 @@ class StartTransportSub implements ShouldQueue
             'address_detail' => $this->data,
             'created_at' => $time->format('Y-m-d H:i:s')
         ]);
+        $sub->saveLastPosition($this->data);
         BaiduTrace::instance()->trackSingle($entity_name,$this->data);
     }
 }

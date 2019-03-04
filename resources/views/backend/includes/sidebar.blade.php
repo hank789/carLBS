@@ -24,7 +24,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ active_class(Active::checkUriPattern('admin/transport')) }}" href="{{ route('admin.dashboard') }}">
+                <a class="nav-link" href="/manager.html" target="_blank">
                     <i class="nav-icon icon-location-pin"></i> 在线车辆
                 </a>
             </li>

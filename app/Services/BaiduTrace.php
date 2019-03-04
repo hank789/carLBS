@@ -97,14 +97,9 @@ class BaiduTrace
         $params['ak'] = $this->ak;
         $params['service_id'] = $this->serviceId;
         $params['entity_name'] = $entity_name;//标识轨迹点所属的 entity
-        $params['latitude'] = $position['coords']['latitude'];//纬度
-        $params['longitude'] = $position['coords']['longitude'];//经度
-        $params['loc_time'] = $position['timestamp'];//定位时设备的时间,Unix时间戳
-        $params['coord_type_input'] = $position['coordsType'];//坐标类型
-        $params['speed'] = $position['coords']['speed'] * 3.6;//速度，单位：km/h
-        $params['direction'] = $position['coords']['heading']?:0;//方向
-        $params['height'] = ($position['coords']['altitude']<1)?0:$position['coords']['altitude'];//高度,单位：米
-        $params['radius'] = $position['coords']['accuracy'];//定位精度，GPS或定位SDK返回的值,单位：米
+
+        $params = array_merge($params,$this->formatGeoLocation($position));
+
         if ($customerFields) {
             $params = array_merge($params, $customerFields);
         }
@@ -126,14 +121,7 @@ class BaiduTrace
         foreach ($positionList as $position) {
             $item = [];
             $item['entity_name'] = $entity_name;//标识轨迹点所属的 entity
-            $item['latitude'] = $position['coords']['latitude'];//纬度
-            $item['longitude'] = $position['coords']['longitude'];//经度
-            $item['loc_time'] = $position['timestamp'];//定位时设备的时间,Unix时间戳
-            $item['coord_type_input'] = $position['coordsType'];//坐标类型
-            $item['speed'] = $position['coords']['speed'] * 3.6;//速度，单位：km/h
-            $item['direction'] = $position['coords']['heading']?:0;//方向
-            $item['height'] = ($position['coords']['altitude']<1)?0:$position['coords']['altitude'];//高度,单位：米
-            $item['radius'] = $position['coords']['accuracy'];//定位精度，GPS或定位SDK返回的值,单位：米
+            $item = array_merge($item,$this->formatGeoLocation($position));
             if ($customerFields) {
                 $item = array_merge($item, $customerFields);
             }
@@ -146,6 +134,41 @@ class BaiduTrace
             return false;
         }
         return true;
+    }
+
+    public function formatGeoLocation($position,$toBaiduCoordType = false,$returnFullInfo = false) {
+        $item = [];
+        $latitude = $position['coords']['latitude'];
+        $longitude = $position['coords']['longitude'];
+        $coordsType = $position['coordsType'];
+        if (($toBaiduCoordType && $coordsType != 'bd09ll') || $returnFullInfo) {
+            $formatLast = BaiduMap::instance()->geocoder($latitude,$longitude,0,$position['coordsType']);
+            if ($formatLast['status'] == 0) {
+                if ($toBaiduCoordType) {
+                    $latitude = $formatLast['location']['lat'];
+                    $longitude = $formatLast['location']['lng'];
+                    $coordsType = 'bd09ll';
+                }
+                if ($returnFullInfo) {
+                    $item['formatted_address'] = $formatLast['formatted_address'];
+                    $item['business'] = $formatLast['business'];
+                    $item['addressComponent'] = $formatLast['addressComponent'];
+                    $item['poiRegions'] = $formatLast['poiRegions'];
+                    $item['sematic_description'] = $formatLast['sematic_description'];
+                    $item['cityCode'] = $formatLast['cityCode'];
+                    $item['pois'] = $formatLast['pois'];
+                }
+            }
+        }
+        $item['latitude'] = $latitude;//纬度
+        $item['longitude'] = $longitude;//经度
+        $item['loc_time'] = $position['timestamp'];//定位时设备的时间,Unix时间戳
+        $item['coord_type_input'] = $coordsType;//坐标类型
+        $item['speed'] = $position['coords']['speed'] * 3.6;//速度，单位：km/h
+        $item['direction'] = $position['coords']['heading']?:0;//方向
+        $item['height'] = ($position['coords']['altitude']<1)?0:$position['coords']['altitude'];//高度,单位：米
+        $item['radius'] = $position['coords']['accuracy'];//定位精度，GPS或定位SDK返回的值,单位：米
+        return $item;
     }
 
     /**
