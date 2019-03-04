@@ -128,6 +128,13 @@ class BaiduMap
     public function geocoder($lat,$lng,$pois = 0,$coordtype='',$ret_coordtype='bd09ll') {
         $params['location'] = $lat.','.$lng;
         if ($coordtype) {
+            switch ($coordtype) {
+                case 'wgs84':
+                case 'gcj02':
+                case 'bd09':
+                    $coordtype .= 'll';
+                    break;
+            }
             $params['coordtype'] = $coordtype;
         } else {
             $params['coordtype'] = $this->coord;
