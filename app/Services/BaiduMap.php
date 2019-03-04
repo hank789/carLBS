@@ -125,7 +125,7 @@ class BaiduMap
      * @param $lng
      * @return mixed
      */
-    public function geocoder($lat,$lng,$pois = 0,$coordtype='',$ret_coordtype='') {
+    public function geocoder($lat,$lng,$pois = 0,$coordtype='',$ret_coordtype='bd09ll') {
         $params['location'] = $lat.','.$lng;
         if ($coordtype) {
             $params['coordtype'] = $coordtype;
