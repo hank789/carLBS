@@ -70,11 +70,9 @@ class TransportSub extends Model {
 
     public function saveLastPosition(array $lastPosition) {
         $transportGoods = $this->transport_goods;
-        if ($lastPosition['coordsType'] != 'bd09ll') {
-            $transportGoods['lastPosition'] = BaiduTrace::instance()->formatGeoLocation($lastPosition,true,true);
-            $this->transport_goods = $transportGoods;
-            $this->save();
-        }
+        $transportGoods['lastPosition'] = BaiduTrace::instance()->formatGeoLocation($lastPosition,true,true);
+        $this->transport_goods = $transportGoods;
+        $this->save();
     }
 
 }
