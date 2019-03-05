@@ -76,6 +76,7 @@ class StartTransportSub implements ShouldQueue
         $entity_info['lastSub'] = [
             'username' => $sub->apiUser->name,
             'sub_id' => $sub->id,
+            'start_time' => date('Y-m-d H:i:s'),
             'goods_info' => $sub->transport_goods['transport_goods']
         ];
         $entity->entity_info = $entity_info;

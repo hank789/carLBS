@@ -47,8 +47,8 @@ class YingyanController extends Controller
         foreach ($entities as $entity) {
             $list[] = [
                 'entity_name' => $entity->car_number,
-                'entity_desc' => $entity->apiUser->name,
-                'create_time' => (string)$entity->created_at,
+                'entity_desc' => $entity->entity_info['username']??'',
+                'create_time' => $entity->entity_info['start_time']??(string)$entity->created_at,
                 'modify_time' => (string)$entity->last_loc_time,
                 'latest_location' => $entity->entity_info['lastPosition']??[]
             ];
