@@ -159,6 +159,19 @@ class TransportController extends Controller {
         if ($sub->api_user_id != $user->id) {
             throw new ApiException(ApiException::BAD_REQUEST);
         }
+        //已经是运输中的状态了
+        if ($sub->transport_status == TransportSub::TRANSPORT_STATUS_PROCESSING) {
+            return self::createJsonData(true);
+        }
+        if ($sub->transport_status != TransportSub::TRANSPORT_STATUS_PENDING) {
+            throw new ApiException(ApiException::BAD_REQUEST);
+        }
+        $existPrecessing = TransportSub::where('transport_entity_id',$sub->transport_entity_id)
+            ->where('transport_status',TransportSub::TRANSPORT_STATUS_PROCESSING)->first();
+        if ($existPrecessing) {
+            throw new ApiException(ApiException::TRANSPORT_SUB_EXIST_PROCESSING_SAME_CAR);
+        }
+
         $position = $request->input('position');
         $sub->transport_start_place = $position['address']['city'].$position['address']['district'].$position['address']['street'].$position['address']['streetNum'];
         $sub->transport_status = TransportSub::TRANSPORT_STATUS_PROCESSING;

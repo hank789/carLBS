@@ -45,6 +45,7 @@ class ApiException extends Exception
     const TRANSPORT_NUMBER_NOT_EXIST = 1200;
     const TRANSPORT_MAIN_FINISH = 1201;
     const TRANSPORT_SUB_NOT_EXIST = 1202;
+    const TRANSPORT_SUB_EXIST_PROCESSING_SAME_CAR = 1203;
 
 
 
@@ -73,7 +74,8 @@ class ApiException extends Exception
 
         self::TRANSPORT_NUMBER_NOT_EXIST => '行程号不存在',
         self::TRANSPORT_MAIN_FINISH => '该行程已结束',
-        self::TRANSPORT_SUB_NOT_EXIST => '行程不存在'
+        self::TRANSPORT_SUB_NOT_EXIST => '行程不存在',
+        self::TRANSPORT_SUB_EXIST_PROCESSING_SAME_CAR => '该车辆已在运输中，请联系管理员核实'
     ];
 
 
