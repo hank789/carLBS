@@ -82,10 +82,10 @@ class TransportSub extends Model {
         $transportGoods = $this->transport_goods;
         $transportGoods['lastPosition'] = BaiduTrace::instance()->formatGeoLocation($lastPosition,true,true);
         $this->transport_goods = $transportGoods;
-        $this->last_loc_time = date('Y-m-d H:i:s',$lastPosition['timestamp']);
+        $this->last_loc_time = date('Y-m-d H:i:s',$transportGoods['lastPosition']['loc_time']);
         $this->save();
         $entity = $this->transportEntity;
-        $entity->last_loc_time = date('Y-m-d H:i:s',$lastPosition['timestamp']);
+        $entity->last_loc_time = date('Y-m-d H:i:s',$transportGoods['lastPosition']['loc_time']);
         $entity_info = $entity->entity_info;
         $entity_info['lastPosition'] = $transportGoods['lastPosition'];
         $entity->entity_info = $entity_info;

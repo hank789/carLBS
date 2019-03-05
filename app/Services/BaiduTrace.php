@@ -162,7 +162,7 @@ class BaiduTrace
         }
         $item['latitude'] = $latitude;//纬度
         $item['longitude'] = $longitude;//经度
-        $item['loc_time'] = $position['timestamp'];//定位时设备的时间,Unix时间戳
+        $item['loc_time'] = strlen($position['timestamp'])>10?intval($position['timestamp']/1000):$position['timestamp'];//定位时设备的时间,Unix时间戳
         $item['coord_type_input'] = $coordsType;//坐标类型
         $item['speed'] = $position['coords']['speed'] * 3.6;//速度，单位：km/h
         $item['direction'] = $position['coords']['heading']?:0;//方向

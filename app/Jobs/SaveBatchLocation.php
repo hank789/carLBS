@@ -75,7 +75,6 @@ class SaveBatchLocation implements ShouldQueue
                 $lastDate = $time->getTimestamp();
                 $last_lat = $item['coords']['latitude'];
                 $last_lng = $item['coords']['longitude'];
-                $item['timestamp'] = intval($item['timestamp']/1000);
             } else {
                 unset($this->data[$key]);
             }
