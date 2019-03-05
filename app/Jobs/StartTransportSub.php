@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Events\Api\ExceptionNotify;
+use App\Models\Transport\TransportEntity;
 use App\Models\Transport\TransportLbs;
 use App\Models\Transport\TransportSub;
 use App\Services\BaiduTrace;
@@ -48,10 +49,8 @@ class StartTransportSub implements ShouldQueue
             event(new ExceptionNotify('司机开始行程不存在：'.$this->sub_id));
             return;
         }
-        $entity_name = $sub->getEntityName();
-        $exist = TransportSub::where('car_number',$sub->car_number)
-            ->where('transport_status','>=',TransportSub::TRANSPORT_STATUS_PROCESSING)
-            ->where('id','!=',$sub->id)->first();
+        $entity = $sub->transportEntity;
+        $entity_name = $entity->car_number;
         $entity_custom_fields = [
             'transport_main_id' => $sub->transport_main_id,
             'transport_start_place' => $sub->transport_start_place,
@@ -59,7 +58,7 @@ class StartTransportSub implements ShouldQueue
             'transport_goods' => str_limit($sub->transport_goods['transport_goods'],125)
         ];
 
-        if (!$exist) {
+        if ($entity->entity_status != 1) {
             $res = BaiduTrace::instance()->addEntity($entity_name,$sub->apiUser->name,$entity_custom_fields);
             if (!$res) {
                 $res = BaiduTrace::instance()->addEntity($entity_name,$sub->apiUser->name,$entity_custom_fields);
@@ -69,9 +68,18 @@ class StartTransportSub implements ShouldQueue
                     return;
                 }
             }
+            $entity->entity_status = 1;
         } else {
             BaiduTrace::instance()->updateEntity($entity_name,$sub->apiUser->name,$entity_custom_fields);
         }
+        $entity_info = $entity->entity_info;
+        $entity_info['lastSub'] = [
+            'username' => $sub->apiUser->name,
+            'sub_id' => $sub->id,
+            'goods_info' => $sub->transport_goods['transport_goods']
+        ];
+        $entity->entity_info = $entity_info;
+        $entity->save();
         if (!isset($this->data['address']['city'])) {
             //$address_province = $this->data['address']['city'].' '.$this->data['address']['district'];
         }

@@ -18,7 +18,7 @@ class CreateTravelTables extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned()->index('transport_main_user_id')->comment('本次行程的录入人员');
             $table->string('transport_number',36)->unique()->comment('行程编码');
-            $table->tinyInteger('transport_status')->default(0)->comment('状态');
+            $table->tinyInteger('transport_status')->default(0)->index('transport_main_status')->comment('状态');
             $table->string('transport_start_place')->nullable()->comment('行程出发地');
             $table->string('transport_end_place')->nullable()->comment('行程目的地');
             $table->string('transport_contact_people')->nullable()->comment('本次行程的联系人');
@@ -28,13 +28,22 @@ class CreateTravelTables extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+        //车辆信息
+        Schema::create('transport_entity', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('car_number',32)->unique();
+            $table->dateTime('last_loc_time')->nullable()->comment('最后定位时间');
+            $table->json('entity_info')->nullable()->comment('详细信息');
+            $table->tinyInteger('entity_status')->default(0)->index('transport_entity_status')->comment('状态');
+            $table->timestamps();
+        });
         //司机行程信息
         Schema::create('transport_sub', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('transport_main_id')->unsigned()->index('transport_sub_transport_main_id');
             $table->integer('api_user_id')->unsigned()->index('transport_sub_api_user_id')->comment('司机id');
-            $table->tinyInteger('transport_status')->default(0)->comment('状态');
-            $table->string('car_number',32)->index('transport_sub_car_number')->nullable()->comment('车牌号');
+            $table->tinyInteger('transport_status')->default(0)->index('transport_sub_status')->comment('状态');
+            $table->integer('transport_entity_id')->unsigned()->index('transport_sub_entity_id')->nullable()->comment('车辆id');
             $table->dateTime('transport_start_time')->nullable()->comment('行程出发时间');
             $table->string('transport_start_place')->nullable()->comment('行程出发地');
             $table->string('transport_end_place')->nullable()->comment('行程目的地');
@@ -87,5 +96,6 @@ class CreateTravelTables extends Migration
         Schema::dropIfExists('transport_lbs');
         Schema::dropIfExists('transport_events');
         Schema::dropIfExists('transport_xiehuo');
+        Schema::dropIfExists('transport_entity');
     }
 }

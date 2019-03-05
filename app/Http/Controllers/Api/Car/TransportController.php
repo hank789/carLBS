@@ -3,6 +3,7 @@ use App\Exceptions\ApiException;
 use App\Http\Controllers\Api\Controller;
 use App\Jobs\StartTransportSub;
 use App\Jobs\UploadFile;
+use App\Models\Transport\TransportEntity;
 use App\Models\Transport\TransportEvent;
 use App\Models\Transport\TransportLbs;
 use App\Models\Transport\TransportMain;
@@ -12,7 +13,6 @@ use App\Services\GeoHash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
-use function PHPSTORM_META\type;
 
 /**
  * @author: wanghui
@@ -80,6 +80,7 @@ class TransportController extends Controller {
                 $data['need_upload_positions'] = true;
             }
         }
+        $data['car_number'] = $sub->transportEntity->car_number;
 
         return self::createJsonData(true,$data);
     }
@@ -110,10 +111,11 @@ class TransportController extends Controller {
         if ($request->input('transport_start_place')) {
             $transport_start_place = $request->input('transport_start_place');
         }
+        $entity = TransportEntity::findOrCreateByCarNumber($request->input('car_number'));
         $sub = TransportSub::create([
             'api_user_id' => $user->id,
             'transport_main_id' => $main->id,
-            'car_number' => $request->input('car_number'),
+            'transport_entity_id' => $entity->id,
             'transport_start_place' => $transport_start_place,
             'transport_end_place' => $request->input('transport_end_place'),
             'transport_start_time' => $request->input('transport_start_time'),
@@ -128,7 +130,15 @@ class TransportController extends Controller {
             ],
             'transport_status' => TransportSub::TRANSPORT_STATUS_PENDING
         ]);
+        $entity_info = $entity->entity_info;
 
+        $entity_info['lastSub'] = [
+            'username' => $user->name,
+            'sub_id' => $sub->id,
+            'goods_info' => $request->input('transport_goods')
+        ];
+        $entity->entity_info = $entity_info;
+        $entity->save();
         return self::createJsonData(true,$sub->toArray());
     }
 
@@ -194,7 +204,8 @@ class TransportController extends Controller {
         if ($sub->transport_status != TransportSub::TRANSPORT_STATUS_PENDING) {
             throw new ApiException(ApiException::BAD_REQUEST);
         }
-        $sub->car_number = $request->input('car_number');
+        $entity = TransportEntity::findOrCreateByCarNumber($request->input('car_number'));
+        $sub->transport_entity_id = $entity->id;
         $transport_start_place = $request->input('transport_start_place');
         if ($transport_start_place) {
             $sub->transport_start_place = $transport_start_place;

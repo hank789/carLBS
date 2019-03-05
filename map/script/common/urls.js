@@ -56,6 +56,37 @@ var urls = {
             complete: after
         });
     },
+  /**
+   * Jquery AJAX GET
+   *
+   * @param {string} url 请求url
+   * @param {object} params 请求参数
+   * @param {function} success 请求成功回调函数
+   * @param {function} before 请求前函数
+   * @param {function} fail 请求失败回调函数
+   * @param {function} after 请求完成回调函数
+   */
+  get: function (url, params, success, before, fail, after) {
+    if (before) {
+      before();
+    }
+    params.timeStamp = new Date().getTime();
+    fail = fail || function () { };
+    after = after || function () { };
+    // 严重推荐自己编写代理服务，将service_id和ak隐藏！！通过service_id和ak可以
+    // 拿到该服务的所有数据，一旦泄露，后果严重!!!
+    params.ak = Commonfun.getQueryString('ak');
+    params.service_id = Commonfun.getQueryString('service_id');
+    $.ajax({
+      type: 'GET',
+      url: url,
+      data: params,
+      dataType: 'json',
+      success: success,
+      error: fail,
+      complete: after
+    });
+  },
 
     /**
      * JSONP
@@ -66,6 +97,10 @@ var urls = {
      * @param {function} before 请求前函数
      */
     jsonp: function (url, params, callback, before) {
+        if (url === this.searchEntity) {
+            this.get(url, params,callback,before);
+            return;
+        }
         var that = this;
         if (before) {
             before();
@@ -77,6 +112,7 @@ var urls = {
         for (let i in params) {
             url = url + i + '=' + params[i] + '&';
         }
+        
         var timeStamp = (Math.random() * 100000).toFixed(0);
         window['ck' + timeStamp] = callback || function () {};
         var completeUrl = url + '&callback=ck' + timeStamp;

@@ -7,6 +7,7 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Backend\Map\ManageYingyanRequest;
+use App\Models\Transport\TransportEntity;
 use App\Models\Transport\TransportSub;
 
 class YingyanController extends Controller
@@ -21,7 +22,7 @@ class YingyanController extends Controller
         $service_id = $request->input('service_id');
         $callback = $request->input('callback');
         \Log::info('test',$request->all());
-        $queryModel = TransportSub::query();
+        $queryModel = TransportEntity::query();
         if ($query) {
             $queryModel = $queryModel->where('car_number','like','%'.$query.'%');
         }
@@ -40,7 +41,7 @@ class YingyanController extends Controller
                 }
             }
         }
-        $entities = $queryModel->orderBy('last_loc_time','desc')->paginate($page_size,[],'page',$page_index);
+        $entities = $queryModel->orderBy('last_loc_time','desc')->paginate($page_size,['*'],'page',$page_index);
         $list = [];
         $return = [];
         foreach ($entities as $entity) {
@@ -49,7 +50,7 @@ class YingyanController extends Controller
                 'entity_desc' => $entity->apiUser->name,
                 'create_time' => (string)$entity->created_at,
                 'modify_time' => (string)$entity->last_loc_time,
-                'latest_location' => $entity->transport_goods['lastPosition']
+                'latest_location' => $entity->entity_info['lastPosition']??[]
             ];
         }
         $return['entities'] = $list;

@@ -42,7 +42,7 @@ class TransportSub extends Model {
     use BelongsToApiUserTrait;
 
     protected $table = 'transport_sub';
-    protected $fillable = ['api_user_id', 'transport_main_id','car_number','transport_start_place','transport_end_place',
+    protected $fillable = ['api_user_id', 'transport_main_id','transport_entity_id','transport_start_place','transport_end_place',
         'transport_start_time','transport_goods','transport_status','last_loc_time'];
 
     const TRANSPORT_STATUS_CANCLE = -1;
@@ -64,8 +64,18 @@ class TransportSub extends Model {
         return $this->belongsTo('App\Models\Transport\TransportMain');
     }
 
+    /**
+     * Get the transportMain relation.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function transportEntity()
+    {
+        return $this->belongsTo('App\Models\Transport\TransportEntity');
+    }
+
     public function getEntityName() {
-        return $this->car_number;
+        return $this->transportEntity->car_number;
     }
 
     public function saveLastPosition(array $lastPosition) {
@@ -74,6 +84,12 @@ class TransportSub extends Model {
         $this->transport_goods = $transportGoods;
         $this->last_loc_time = date('Y-m-d H:i:s',$lastPosition['timestamp']);
         $this->save();
+        $entity = $this->transportEntity;
+        $entity->last_loc_time = date('Y-m-d H:i:s',$lastPosition['timestamp']);
+        $entity_info = $entity->entity_info;
+        $entity_info['lastPosition'] = $transportGoods['lastPosition'];
+        $entity->entity_info = $entity_info;
+        $entity->save();
     }
 
 }
