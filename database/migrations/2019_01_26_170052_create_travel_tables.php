@@ -38,6 +38,7 @@ class CreateTravelTables extends Migration
             $table->dateTime('transport_start_time')->nullable()->comment('行程出发时间');
             $table->string('transport_start_place')->nullable()->comment('行程出发地');
             $table->string('transport_end_place')->nullable()->comment('行程目的地');
+            $table->dateTime('last_loc_time')->nullable()->comment('最后定位时间');
             $table->json('transport_goods')->nullable()->comment('货物信息');
             $table->timestamps();
         });

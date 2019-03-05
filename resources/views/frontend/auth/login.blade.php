@@ -27,11 +27,13 @@
 
 
     <div class="container">
+        @include('includes.partials.messages')
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card-group">
                     <div class="card p-4">
                         <div class="card-body">
+
                             {{ html()->form('POST', route('frontend.auth.login.post'))->open() }}
                             <h1>登陆</h1>
                             <p class="text-muted">Sign In to your account</p>

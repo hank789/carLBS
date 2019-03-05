@@ -43,7 +43,7 @@ class TransportSub extends Model {
 
     protected $table = 'transport_sub';
     protected $fillable = ['api_user_id', 'transport_main_id','car_number','transport_start_place','transport_end_place',
-        'transport_start_time','transport_goods','transport_status'];
+        'transport_start_time','transport_goods','transport_status','last_loc_time'];
 
     const TRANSPORT_STATUS_CANCLE = -1;
     const TRANSPORT_STATUS_PENDING = 0;
@@ -72,6 +72,7 @@ class TransportSub extends Model {
         $transportGoods = $this->transport_goods;
         $transportGoods['lastPosition'] = BaiduTrace::instance()->formatGeoLocation($lastPosition,true,true);
         $this->transport_goods = $transportGoods;
+        $this->last_loc_time = date('Y-m-d H:i:s',$lastPosition['timestamp']);
         $this->save();
     }
 
