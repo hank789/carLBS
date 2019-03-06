@@ -28,7 +28,44 @@
 
                 <div class="tab-content">
                     <div class="tab-pane active" id="overview" role="tabpanel" aria-expanded="true">
-                        @include('backend.auth.user.show.tabs.overview')
+                        <div class="col">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+
+                                    <tr>
+                                        <th>@lang('labels.backend.access.users.tabs.content.overview.name')</th>
+                                        <td>{{ $user->name }}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>手机号</th>
+                                        <td>{{ $user->mobile }}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>@lang('labels.backend.access.users.tabs.content.overview.status')</th>
+                                        <td>{!! $user->status_label !!}</td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <th>@lang('labels.backend.access.users.tabs.content.overview.last_login_at')</th>
+                                        <td>
+                                            @if($user->last_login_at)
+                                                {{ $user->last_login_at }}
+                                            @else
+                                                N/A
+                                            @endif
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th>@lang('labels.backend.access.users.tabs.content.overview.last_login_ip')</th>
+                                        <td>{{ $user->last_login_ip ?? 'N/A' }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div><!--table-responsive-->
                     </div><!--tab-->
                 </div><!--tab-content-->
             </div><!--col-->
@@ -39,11 +76,9 @@
         <div class="row">
             <div class="col">
                 <small class="float-right text-muted">
-                    <strong>@lang('labels.backend.access.users.tabs.content.overview.created_at'):</strong> {{ timezone()->convertToLocal($user->created_at) }} ({{ $user->created_at->diffForHumans() }}),
-                    <strong>@lang('labels.backend.access.users.tabs.content.overview.last_updated'):</strong> {{ timezone()->convertToLocal($user->updated_at) }} ({{ $user->updated_at->diffForHumans() }})
-                    @if($user->trashed())
-                        <strong>@lang('labels.backend.access.users.tabs.content.overview.deleted_at'):</strong> {{ timezone()->convertToLocal($user->deleted_at) }} ({{ $user->deleted_at->diffForHumans() }})
-                    @endif
+                    <strong>@lang('labels.backend.access.users.tabs.content.overview.created_at'):</strong> {{ $user->created_at }} ({{ $user->created_at->diffForHumans() }}),
+                    <strong>@lang('labels.backend.access.users.tabs.content.overview.last_updated'):</strong> {{ $user->updated_at }} ({{ $user->updated_at->diffForHumans() }})
+
                 </small>
             </div><!--col-->
         </div><!--row-->

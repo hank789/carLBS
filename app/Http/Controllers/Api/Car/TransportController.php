@@ -173,7 +173,7 @@ class TransportController extends Controller {
         }
 
         $position = $request->input('position');
-        $sub->transport_start_place = $position['address']['city'].$position['address']['district'].$position['address']['street'].$position['address']['streetNum'];
+        $sub->transport_start_place = $position['address']['city'].$position['address']['district'].($position['address']['street']??'').($position['address']['streetNum']??'');
         $sub->transport_status = TransportSub::TRANSPORT_STATUS_PROCESSING;
         $goodsInfo = $sub->transport_goods;
         $goodsInfo['transport_start_place_longitude'] = $position['coords']['longitude'];

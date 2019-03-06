@@ -56,8 +56,9 @@ class UserController extends Controller
      *
      * @return mixed
      */
-    public function show(ManageUserRequest $request, ApiUser $user)
+    public function show(ManageUserRequest $request, $id)
     {
+        $user = ApiUser::find($id);
         return view('backend.transport.user.show')
             ->withUser($user);
     }
@@ -66,9 +67,6 @@ class UserController extends Controller
     public function mark(ManageUserRequest $request, $id, $status)
     {
         $user = ApiUser::find($id);
-        if (auth()->id() == $user->id && $status == 0) {
-            throw new GeneralException(__('exceptions.backend.access.users.cant_deactivate_self'));
-        }
 
         $user->status = $status;
 
