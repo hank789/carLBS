@@ -48,6 +48,7 @@ class BaiduTrace
         }
         $res = $this->_sendHttp('entity/add',$params);
         if ($res['status'] != 0) {
+            \Log::info('test',$res);
             event(new ExceptionNotify('设备注册失败:'.$res['message']));
             return false;
         }
