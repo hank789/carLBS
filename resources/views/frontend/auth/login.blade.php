@@ -36,7 +36,7 @@
 
                             {{ html()->form('POST', route('frontend.auth.login.post'))->open() }}
                             <h1>登陆</h1>
-                            <p class="text-muted">Sign In to your account</p>
+                            <p class="text-muted">车辆管理后台</p>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
 <span class="input-group-text">
@@ -67,8 +67,7 @@
                     <div class="card text-white bg-primary py-5 d-md-down-none" style="width:44%">
                         <div class="card-body text-center">
                             <div>
-                                <h2>介绍</h2>
-                                <p>车辆管理后台.</p>
+                                <p><img class="navbar-brand-full" src="{{ asset('img/backend/brand/logo.svg') }}" width="150" height="150" alt="CoreUI Logo"></p>
                             </div>
                         </div>
                     </div>
