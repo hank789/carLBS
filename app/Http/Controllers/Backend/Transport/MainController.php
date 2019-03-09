@@ -131,43 +131,36 @@ class MainController extends Controller
         return redirect()->route('admin.transport.main.index')->withFlashSuccess('行程添加成功');
     }
 
-    /**
-     * @param ManageUserRequest    $request
-     * @param RoleRepository       $roleRepository
-     * @param PermissionRepository $permissionRepository
-     * @param User                 $user
-     *
-     * @return mixed
-     */
-    public function edit(ManageUserRequest $request, RoleRepository $roleRepository, PermissionRepository $permissionRepository, User $user)
+    public function edit(ManageMainRequest $request,$id)
     {
-        return view('backend.auth.user.edit')
-            ->withUser($user)
-            ->withRoles($roleRepository->get())
-            ->withUserRoles($user->roles->pluck('name')->all())
-            ->withPermissions($permissionRepository->get(['id', 'name']))
-            ->withUserPermissions($user->permissions->pluck('name')->all());
+        $main = TransportMain::find($id);
+        return view('backend.transport.main.edit')
+            ->with('main',$main);
     }
 
-    /**
-     * @param UpdateUserRequest $request
-     * @param User              $user
-     *
-     * @return mixed
-     * @throws \App\Exceptions\GeneralException
-     * @throws \Throwable
-     */
-    public function update(UpdateUserRequest $request, User $user)
-    {
-        $this->userRepository->update($user, $request->only(
-            'first_name',
-            'last_name',
-            'email',
-            'roles',
-            'permissions'
-        ));
 
-        return redirect()->route('admin.auth.user.index')->withFlashSuccess(__('alerts.backend.users.updated'));
+    public function update(StoreMainRequest $request, $id)
+    {
+        $main = TransportMain::find($id);
+        if ($main->transport_end_place != $request->input('transport_end_place')) {
+            $coordinate = coordinate_bd_decrypt($request->input('transport_end_place_longitude'),$request->input('transport_end_place_latitude'));
+        }
+        $main->update([
+            'transport_start_place' => $request->input('transport_start_place'),
+            'transport_end_place' => $request->input('transport_end_place'),
+            'transport_contact_people' => $request->input('transport_contact_people'),
+            'transport_contact_phone' => $request->input('transport_contact_phone'),
+            'transport_start_time' => $request->input('transport_start_time'),
+            'transport_goods' => [
+                'transport_goods'=>$request->input('transport_goods'),
+                'transport_end_place_longitude'=> $coordinate['gg_lon']??$main->transport_goods['transport_end_place_longitude'],
+                'transport_end_place_latitude'=> $coordinate['gg_lat']??$main->transport_goods['transport_end_place_latitude'],
+                'transport_end_place_coordsType' => 'gcj02',
+            ],
+            'transport_status' => $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING)
+        ]);
+
+        return redirect()->route('admin.transport.main.index')->withFlashSuccess('行程修改成功');
     }
 
     /**

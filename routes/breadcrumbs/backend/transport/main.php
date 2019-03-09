@@ -14,3 +14,8 @@ Breadcrumbs::for('admin.transport.main.create', function ($trail) {
     $trail->parent('admin.transport.main.index');
     $trail->push('添加行程', route('admin.transport.main.create'));
 });
+
+Breadcrumbs::for('admin.transport.main.edit', function ($trail, $id) {
+    $trail->parent('admin.transport.main.index');
+    $trail->push('修改行程', route('admin.transport.main.edit',$id));
+});
