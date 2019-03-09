@@ -7,7 +7,7 @@
 @endsection
 
 @section('content')
-{{ html()->form('POST', route('admin.transport.main.update',['id'=>$main->id]))->class('form-horizontal')->open() }}
+{{ html()->form('PATCH', route('admin.transport.main.update',['id'=>$main->id]))->class('form-horizontal')->open() }}
     <input type="hidden" id="transport_end_place_longitude" name="transport_end_place_longitude" value="{{ $main->transport_goods['transport_end_place_longitude'] }}" />
     <input type="hidden" id="transport_end_place_latitude" name="transport_end_place_latitude" value="{{ $main->transport_goods['transport_end_place_latitude'] }}" />
     <div class="card">
@@ -138,7 +138,7 @@
                                 <label class="form-check-label" for="inline-radio1">已发布，运输中</label>
                             </div>
                             <div class="form-check form-check-inline mr-1">
-                                <input class="form-check-input" type="radio" value="2" {{ $main->transport_status==2?'checked':'' }} checked name="transport_status">
+                                <input class="form-check-input" type="radio" value="2" {{ $main->transport_status==2?'checked':'' }} name="transport_status">
                                 <label class="form-check-label" for="inline-radio2">运输完成</label>
                             </div>
                         </div><!--col-->
