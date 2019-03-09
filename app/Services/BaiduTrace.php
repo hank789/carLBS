@@ -122,7 +122,7 @@ class BaiduTrace
         $params['ak'] = $this->ak;
         $params['service_id'] = $this->serviceId;
         $point_list = [];
-        foreach ($positionList as $position) {
+        foreach ($positionList as $key=>$position) {
             $item = [];
             $item['entity_name'] = $entity_name;//标识轨迹点所属的 entity
             $item = array_merge($item,$this->formatGeoLocation($position));

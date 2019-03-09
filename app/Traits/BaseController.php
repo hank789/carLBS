@@ -19,7 +19,7 @@ trait BaseController {
         $data['transport_sub_status'] = '';
         $data['need_upload_positions'] = false;
         //每60秒上传一次轨迹信息
-        $data['upload_positions_limit_time'] = 60;
+        $data['upload_positions_limit_time'] = 30;
         //每8秒监控一次位置信息
         $data['watch_position_limit_time'] = 10;
         if ($sub) {
