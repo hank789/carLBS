@@ -154,7 +154,7 @@ class MainController extends Controller
                 $item->getFormatXiehuoType(),
                 $item->transport_goods['transport_end_place'],
                 $images,
-                $item->event_detail['transport_goods'],
+                $item->transport_goods['transport_goods'],
                 $item->created_at,
             ];
         }

@@ -71,7 +71,7 @@ class TransportXiehuo extends Model {
      */
     public function getFormatXiehuoType()
     {
-        switch ($this->transport_status) {
+        switch ($this->xiehuo_type) {
             case self::XIEHUO_TYPE_END:
                 return "目的地卸货";
                 break;
