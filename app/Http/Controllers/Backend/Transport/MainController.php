@@ -114,7 +114,7 @@ class MainController extends Controller
         foreach ($list as $item) {
             $images = '';
             foreach ($item->event_detail['images'] as $image) {
-                $images .= '<image src="'.$image.'" style="height:300px;width:300px" >';
+                $images .= '<a target="_blank" href="'.$image.'"><img src="'.$image.'" style="height:100px;width:100px" /></a>';
             }
             $data[] = [
                 $item->apiUser->name,
@@ -145,7 +145,7 @@ class MainController extends Controller
         foreach ($list as $item) {
             $images = '';
             foreach ($item->transport_goods['shipping_documents'] as $image) {
-                $images .= '<image src="'.$image.'" style="height:300px;width:300px" >';
+                $images .= '<a target="_blank" href="'.$image.'"><img src="'.$image.'" style="height:100px;width:100px" /></a>';
             }
             $data[] = [
                 $item->apiUser->name,
