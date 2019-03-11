@@ -90,7 +90,7 @@ class Handler extends ExceptionHandler
             return CreateJsonResponseData::createJsonData(false,$res_data,$exception->getCode(), $err_msg);
         }
 
-        if ($exception instanceof AuthenticationException) {
+        if ($request->is('api/*') && $exception instanceof AuthenticationException) {
             return CreateJsonResponseData::createJsonData(false,[],ApiException::TOKEN_INVALID,'需登录后才能操作');
         }
 

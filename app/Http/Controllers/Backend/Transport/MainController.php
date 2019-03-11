@@ -8,6 +8,7 @@ use App\Http\Requests\Backend\Transport\ManageMainRequest;
 use App\Http\Requests\Backend\Transport\StoreMainRequest;
 use App\Models\Auth\ApiUser;
 use App\Models\Transport\TransportMain;
+use App\Models\Transport\TransportSub;
 use App\Services\NumberUuid;
 
 /**
@@ -66,10 +67,39 @@ class MainController extends Controller
      *
      * @return mixed
      */
-    public function show(ManageMainRequest $request, ApiUser $user)
+    public function show(ManageMainRequest $request, $id)
     {
-        return view('backend.transport.user.show')
-            ->withUser($user);
+        $main = TransportMain::find($id);
+        return view('backend.transport.main.show')
+            ->with('main',$main);
+    }
+
+    public function getSubList(ManageMainRequest $request, $id) {
+        $draw = $request->input('draw',1);
+        $start = $request->input('start',0);
+        $length = $request->input('length',10);
+        $page = $start/$length + 1;
+        $list = TransportSub::where('transport_main_id',$id)->orderBy('id','desc')->paginate($length,['*'],'page',$page);
+        $data = [];
+        foreach ($list as $item) {
+            $data[] = [
+                $item->apiUser->name,
+                $item->apiUser->mobile,
+                $item->transportEntity->car_number,
+                $item->transport_start_time,
+                $item->getTransportEventCount(),
+                $item->getTransportXiehuoCount(),
+                $item->transport_goods['lastPosition']['formatted_address']??'',
+                $item->status_label,
+                $item->show_button
+            ];
+        }
+        return response()->json([
+            'draw' => $draw,
+            'data' =>$data,
+            'recordsTotal' => $list->total(),
+            'recordsFiltered' => $list->total()
+        ]);
     }
 
 

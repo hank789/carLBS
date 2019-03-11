@@ -138,4 +138,13 @@ class TransportMain extends Model {
 		  </div>
 		</div>';
     }
+
+
+    public function getTransportEventCount() {
+        return TransportEvent::where('transport_main_id',$this->id)->count();
+    }
+
+    public function getTransportXiehuoCount() {
+        return TransportXiehuo::where('transport_main_id',$this->id)->count();
+    }
 }

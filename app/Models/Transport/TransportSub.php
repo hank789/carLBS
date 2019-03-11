@@ -45,7 +45,7 @@ class TransportSub extends Model {
     protected $fillable = ['api_user_id', 'transport_main_id','transport_entity_id','transport_start_place','transport_end_place',
         'transport_start_time','transport_goods','transport_status','last_loc_time'];
 
-    const TRANSPORT_STATUS_CANCLE = -1;
+    const TRANSPORT_STATUS_CANCEL = -1;
     const TRANSPORT_STATUS_PENDING = 0;
     const TRANSPORT_STATUS_PROCESSING = 1;
     const TRANSPORT_STATUS_FINISH = 2;
@@ -98,6 +98,45 @@ class TransportSub extends Model {
         $entity_info['lastPosition'] = $transportGoods['lastPosition'];
         $entity->entity_info = $entity_info;
         $entity->save();
+    }
+
+    public function getTransportEventCount() {
+        return TransportEvent::where('transport_sub_id',$this->id)->count();
+    }
+
+    public function getTransportXiehuoCount() {
+        return TransportXiehuo::where('transport_sub_id',$this->id)->count();
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusLabelAttribute()
+    {
+        switch ($this->transport_status) {
+            case self::TRANSPORT_STATUS_PENDING:
+                return "<span class='badge badge-secondary'>未开始</span>";
+                break;
+            case self::TRANSPORT_STATUS_PROCESSING:
+                return "<span class='badge badge-info'>运输中</span>";
+                break;
+            case self::TRANSPORT_STATUS_FINISH:
+                return "<span class='badge badge-success'>已完成</span>";
+                break;
+            case self::TRANSPORT_STATUS_CANCEL:
+                return "<span class='badge badge-warning'>已取消</span>";
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getShowButtonAttribute()
+    {
+        return '<a href="'.route('admin.transport.sub.show', $this->id).'" data-toggle="tooltip" data-placement="top" title="'.__('buttons.general.crud.view').'">查看</a>';
     }
 
 }

@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Backend\Transport\UserController;
 use App\Http\Controllers\Backend\Transport\MainController;
+use App\Http\Controllers\Backend\Transport\SubController;
+
 
 /*
  * All route names are prefixed with 'admin.auth'.
@@ -44,6 +46,8 @@ Route::group([
     Route::group(['prefix' => 'main/{id}'], function () {
         // User
         Route::get('/', [MainController::class, 'show'])->name('main.show');
+        Route::get('sublist', [MainController::class, 'getSubList'])->name('main.sublist');
+
 
         // Status
         Route::get('mark/{status}', [MainController::class, 'mark'])->name('main.mark')->where(['status' => '[-1,0,1,2]']);
@@ -52,4 +56,7 @@ Route::group([
         Route::patch('/', [MainController::class, 'update'])->name('main.update');
         Route::delete('/', [MainController::class, 'destroy'])->name('main.destroy');
     });
+
+    Route::get('sub/{id}', [SubController::class, 'show'])->name('sub.show');
+
 });
