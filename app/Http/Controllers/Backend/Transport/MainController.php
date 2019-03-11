@@ -166,9 +166,6 @@ class MainController extends Controller
         ]);
     }
 
-
-
-
     public function mark(ManageMainRequest $request, $id, $status)
     {
         $main = TransportMain::find($id);

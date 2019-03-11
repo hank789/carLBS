@@ -18,6 +18,18 @@ if (! function_exists('app_name')) {
     }
 }
 
+if (! function_exists('app_display_name')) {
+    /**
+     * Helper to grab the application name.
+     *
+     * @return mixed
+     */
+    function app_display_name()
+    {
+        return config('app.displayName');
+    }
+}
+
 if (! function_exists('gravatar')) {
     /**
      * Access the gravatar helper.

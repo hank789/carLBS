@@ -15,6 +15,8 @@ return [
 
     'name' => env('APP_NAME', 'carLBS'),
 
+    'displayName' => '车百讯',
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

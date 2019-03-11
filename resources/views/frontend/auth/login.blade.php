@@ -36,7 +36,7 @@
 
                             {{ html()->form('POST', route('frontend.auth.login.post'))->open() }}
                             <h1>登陆</h1>
-                            <p class="text-muted">车辆管理后台</p>
+                            <p class="text-muted">{{app_display_name()}}管理后台</p>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
 <span class="input-group-text">

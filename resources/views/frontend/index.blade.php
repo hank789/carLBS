@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', app_name() . ' | ' . __('navs.general.home'))
+@section('title', app_display_name() . ' | ' . __('navs.general.home'))
 
 @section('content')
     <div class="row mb-4">
@@ -10,7 +10,7 @@
                     <i class="fas fa-home"></i> @lang('navs.general.home')
                 </div>
                 <div class="card-body">
-                    @lang('strings.frontend.welcome_to', ['place' => app_name()])
+                    @lang('strings.frontend.welcome_to', ['place' => app_display_name()])
                 </div>
             </div><!--card-->
         </div><!--col-->
