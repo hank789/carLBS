@@ -124,7 +124,7 @@ class MainController extends Controller
                 $item->event_detail['event_place'],
                 $images,
                 $item->event_detail['description'],
-                $item->created_at,
+                (string)$item->created_at,
             ];
         }
         return response()->json([
@@ -155,7 +155,7 @@ class MainController extends Controller
                 $item->transport_goods['transport_end_place'],
                 $images,
                 $item->transport_goods['transport_goods'],
-                $item->created_at,
+                (string)$item->created_at,
             ];
         }
         return response()->json([
