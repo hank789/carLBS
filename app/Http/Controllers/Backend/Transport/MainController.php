@@ -7,8 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Backend\Transport\ManageMainRequest;
 use App\Http\Requests\Backend\Transport\StoreMainRequest;
 use App\Models\Auth\ApiUser;
+use App\Models\Transport\TransportEvent;
 use App\Models\Transport\TransportMain;
 use App\Models\Transport\TransportSub;
+use App\Models\Transport\TransportXiehuo;
 use App\Services\NumberUuid;
 
 /**
@@ -101,6 +103,70 @@ class MainController extends Controller
             'recordsFiltered' => $list->total()
         ]);
     }
+
+    public function getEventList(ManageMainRequest $request, $id) {
+        $draw = $request->input('draw',1);
+        $start = $request->input('start',0);
+        $length = $request->input('length',10);
+        $page = $start/$length + 1;
+        $list = TransportEvent::where('transport_main_id',$id)->orderBy('id','desc')->paginate($length,['*'],'page',$page);
+        $data = [];
+        foreach ($list as $item) {
+            $images = '';
+            foreach ($item->event_detail['images'] as $image) {
+                $images = '<image src="'.$image.'" style="height:300px;width:300px" >';
+            }
+            $data[] = [
+                $item->apiUser->name,
+                $item->apiUser->mobile,
+                $item->transportSub->transportEntity->car_number,
+                $item->getFormatEventType(),
+                $item->event_detail['event_place'],
+                $images,
+                $item->event_detail['description'],
+                $item->created_at,
+            ];
+        }
+        return response()->json([
+            'draw' => $draw,
+            'data' =>$data,
+            'recordsTotal' => $list->total(),
+            'recordsFiltered' => $list->total()
+        ]);
+    }
+
+    public function getXiehuoList(ManageMainRequest $request, $id) {
+        $draw = $request->input('draw',1);
+        $start = $request->input('start',0);
+        $length = $request->input('length',10);
+        $page = $start/$length + 1;
+        $list = TransportXiehuo::where('transport_main_id',$id)->orderBy('id','desc')->paginate($length,['*'],'page',$page);
+        $data = [];
+        foreach ($list as $item) {
+            $images = '';
+            foreach ($item->transport_goods['shipping_documents'] as $image) {
+                $images = '<image src="'.$image.'" style="height:300px;width:300px" >';
+            }
+            $data[] = [
+                $item->apiUser->name,
+                $item->apiUser->mobile,
+                $item->transport_goods['car_number'],
+                $item->getFormatXiehuoType(),
+                $item->transport_goods['transport_end_place'],
+                $images,
+                $item->event_detail['transport_goods'],
+                $item->created_at,
+            ];
+        }
+        return response()->json([
+            'draw' => $draw,
+            'data' =>$data,
+            'recordsTotal' => $list->total(),
+            'recordsFiltered' => $list->total()
+        ]);
+    }
+
+
 
 
     public function mark(ManageMainRequest $request, $id, $status)

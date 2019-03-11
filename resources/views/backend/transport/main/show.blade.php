@@ -117,8 +117,8 @@
                                             <div class="panel-options">
                                                 <ul class="nav nav-tabs">
                                                     <li><a class="nav-link active" href="#tab-2" data-toggle="tab">运输车辆</a></li>
-                                                    <li><a class="nav-link" href="#tab-2" data-toggle="tab">卸货记录</a></li>
-                                                    <li><a class="nav-link" href="#tab-1" data-toggle="tab">突发事件</a></li>
+                                                    <li><a class="nav-link" href="#tab-1" data-toggle="tab">卸货记录</a></li>
+                                                    <li><a class="nav-link" href="#tab-3" data-toggle="tab">突发事件</a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -127,82 +127,22 @@
 
                                             <div class="tab-content">
                                                 <div class="tab-pane" id="tab-1">
-                                                    <div class="feed-activity-list">
-                                                        <div class="feed-element">
-                                                            <a href="#" class="float-left">
-                                                                <img alt="image" class="rounded-circle" src="img/a2.jpg">
-                                                            </a>
-                                                            <div class="media-body ">
-                                                                <small class="float-right">2小时</small>
-                                                                <strong>小明</strong> 发布消息 <strong>小红</strong> <br>
-                                                                <small class="text-muted">今天下午2:10</small>
-                                                                <div class="well">
-                                                                    时间从何而来？为什么时间似乎是流动的？
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="feed-element">
-                                                            <a href="#" class="float-left">
-                                                                <img alt="image" class="rounded-circle" src="img/a3.jpg">
-                                                            </a>
-                                                            <div class="media-body ">
-                                                                <small class="float-right">2小时</small>
-                                                                <strong>小明</strong> 添加1张照片 <strong>我的相册</strong> <br>
-                                                                <small class="text-muted">2天前在上午8:30</small>
-                                                            </div>
-                                                        </div>
-                                                        <div class="feed-element">
-                                                            <a href="#" class="float-left">
-                                                                <img alt="image" class="rounded-circle" src="img/a4.jpg">
-                                                            </a>
-                                                            <div class="media-body ">
-                                                                <small class="float-right text-navy">5小时</small>
-                                                                <strong>小明</strong> 发布了文章 <strong>我的世界有多大</strong> <br>
-                                                                <small class="text-muted">昨天1:21</small>
-                                                                <div class="actions">
-                                                                    <a class="btn btn-xs btn-white"><i class="fa fa-thumbs-up"></i> 赞 </a>
-                                                                    <a class="btn btn-xs btn-white"><i class="fa fa-heart"></i> 喜欢</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="feed-element">
-                                                            <a href="#" class="float-left">
-                                                                <img alt="image" class="rounded-circle" src="img/a5.jpg">
-                                                            </a>
-                                                            <div class="media-body ">
-                                                                <small class="float-right">2小时</small>
-                                                                <strong>小明</strong> 发布消息 <strong>小红</strong> <br>
-                                                                <small class="text-muted">昨天下午5:20</small>
-                                                                <div class="well">
-                                                                    时间从何而来？为什么时间似乎是流动的？
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="feed-element">
-                                                            <a href="#" class="float-left">
-                                                                <img alt="image" class="rounded-circle" src="img/profile.jpg">
-                                                            </a>
-                                                            <div class="media-body ">
-                                                                <small class="float-right">23小时</small>
-                                                                <strong>小明</strong> 发布了文章 <strong>我的世界有多大</strong> <br>
-                                                                <small class="text-muted">2天前在7:58</small>
-                                                            </div>
-                                                        </div>
-                                                        <div class="feed-element">
-                                                            <a href="#" class="float-left">
-                                                                <img alt="image" class="rounded-circle" src="img/a7.jpg">
-                                                            </a>
-                                                            <div class="media-body ">
-                                                                <small class="float-right">46小时</small>
-                                                                <strong>小明</strong> 添加1张照片 <strong>我的相册</strong> <br>
-                                                                <small class="text-muted">3天前在7:58</small>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
+                                                    <table class="table table-striped" id="table_transport_xiehuo">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>司机</th>
+                                                            <th>电话</th>
+                                                            <th>车牌号</th>
+                                                            <th>类型</th>
+                                                            <th>卸货地点</th>
+                                                            <th>图片</th>
+                                                            <th>货物信息</th>
+                                                            <th>发生时间</th>
+                                                        </tr>
+                                                        </thead>
+                                                    </table>
                                                 </div>
                                                 <div class="tab-pane active" id="tab-2">
-
                                                     <table class="table table-striped" id="table_transport_subs">
                                                         <thead>
                                                         <tr>
@@ -218,7 +158,22 @@
                                                         </tr>
                                                         </thead>
                                                     </table>
-
+                                                </div>
+                                                <div class="tab-pane" id="tab-3">
+                                                    <table class="table table-striped" id="table_transport_events">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>司机</th>
+                                                            <th>电话</th>
+                                                            <th>车牌号</th>
+                                                            <th>事件类型</th>
+                                                            <th>事件地址</th>
+                                                            <th>图片</th>
+                                                            <th>事件描述</th>
+                                                            <th>发生时间</th>
+                                                        </tr>
+                                                        </thead>
+                                                    </table>
                                                 </div>
                                             </div>
 
@@ -259,6 +214,20 @@
                 "processing": true,
                 "serverSide": true,
                 "ajax": "{{ route('admin.transport.main.sublist',['id'=>$main->id]) }}"
+            });
+            $('#table_transport_events').DataTable({
+                "ordering": false,
+                "searching": false,
+                "processing": true,
+                "serverSide": true,
+                "ajax": "{{ route('admin.transport.main.eventlist',['id'=>$main->id]) }}"
+            });
+            $('#table_transport_xiehuo').DataTable({
+                "ordering": false,
+                "searching": false,
+                "processing": true,
+                "serverSide": true,
+                "ajax": "{{ route('admin.transport.main.xiehuolist',['id'=>$main->id]) }}"
             });
         });
     </script>

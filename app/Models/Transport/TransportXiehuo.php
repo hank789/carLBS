@@ -65,4 +65,22 @@ class TransportXiehuo extends Model {
     public function transportSub() {
         return $this->belongsTo('App\Models\Transport\TransportSub');
     }
+
+    /**
+     * @return string
+     */
+    public function getFormatXiehuoType()
+    {
+        switch ($this->transport_status) {
+            case self::XIEHUO_TYPE_END:
+                return "目的地卸货";
+                break;
+            case self::XIEHUO_TYPE_MIDWAY:
+                return "中途卸货";
+                break;
+            default:
+                return '';
+                break;
+        }
+    }
 }

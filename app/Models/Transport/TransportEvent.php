@@ -46,6 +46,16 @@ class TransportEvent extends Model {
         'event_detail' => 'json'
     ];
 
+    public static $eventType = [
+        ['key'=>1,'value'=>'交通拥堵'],
+        ['key'=>2,'value'=>'汽车抛锚'],
+        ['key'=>3,'value'=>'交通事故'],
+        ['key'=>4,'value'=>'交通管制'],
+        ['key'=>5,'value'=>'车辆故障'],
+        ['key'=>6,'value'=>'APP问题'],
+        ['key'=>7,'value'=>'其它事件'],
+    ];
+
     /**
      * Get the transportMain relation.
      *
@@ -58,5 +68,16 @@ class TransportEvent extends Model {
 
     public function transportSub() {
         return $this->belongsTo('App\Models\Transport\TransportSub');
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormatEventType()
+    {
+        foreach (self::$eventType as $event) {
+            if ($event['key'] == $this->event_type) return $event['value'];
+        }
+        return '';
     }
 }

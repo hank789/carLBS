@@ -47,6 +47,8 @@ Route::group([
         // User
         Route::get('/', [MainController::class, 'show'])->name('main.show');
         Route::get('sublist', [MainController::class, 'getSubList'])->name('main.sublist');
+        Route::get('eventlist', [MainController::class, 'getEventList'])->name('main.eventlist');
+        Route::get('xiehuolist', [MainController::class, 'getXiehuoList'])->name('main.xiehuolist');
 
 
         // Status
