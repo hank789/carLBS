@@ -145,7 +145,7 @@ class MainController extends Controller
         foreach ($list as $item) {
             $images = '';
             foreach ($item->transport_goods['shipping_documents'] as $image) {
-                $images = '<image src="'.$image.'" style="height:300px;width:300px" >';
+                $images .= '<image src="'.$image.'" style="height:300px;width:300px" >';
             }
             $data[] = [
                 $item->apiUser->name,
