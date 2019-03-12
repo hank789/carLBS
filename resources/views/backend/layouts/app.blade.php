@@ -45,8 +45,8 @@
                 </div><!--animated-->
             </div><!--container-fluid-->
         </main><!--main-->
+        <!-- backend.includes.aside -->
 
-        @include('backend.includes.aside')
     </div><!--app-body-->
 
     @include('backend.includes.footer')

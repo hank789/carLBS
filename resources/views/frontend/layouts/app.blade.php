@@ -39,7 +39,5 @@
         {!! script(mix('js/vendor.js')) !!}
         {!! script(mix('js/frontend.js')) !!}
         @stack('after-scripts')
-
-        @include('includes.partials.ga')
     </body>
 </html>
