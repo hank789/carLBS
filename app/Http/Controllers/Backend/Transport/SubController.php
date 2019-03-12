@@ -57,6 +57,9 @@ class SubController extends Controller
                 'bg_color' => $xiehuo->xiehuo_type == TransportXiehuo::XIEHUO_TYPE_MIDWAY ? 'navy-bg':'blue-bg'
             ];
         }
+        if ($timeline) {
+            krsort($timeline);
+        }
 
         return view('backend.transport.sub.show')
             ->with('main',$main)->with('sub',$sub)->with('timeline',$timeline);
