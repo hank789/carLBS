@@ -36,7 +36,7 @@ class SubController extends Controller
             $eventType[$e['key']] = $e['value'];
         }
         foreach ($events as $event) {
-            $timeline[$event->created_at] = [
+            $timeline[(string)$event->created_at] = [
                 'title' => '突发事件',
                 'place' => $event->event_detail['event_place'],
                 'desc'  => ''.$eventType[$event->event_type].','.$event->event_detail['description'],
@@ -47,7 +47,7 @@ class SubController extends Controller
             ];
         }
         foreach ($xiehuos as $xiehuo) {
-            $timeline[$xiehuo->created_at] = [
+            $timeline[(string)$xiehuo->created_at] = [
                 'title' => $xiehuo->xiehuo_type == TransportXiehuo::XIEHUO_TYPE_MIDWAY ? '中途卸货':'目的地卸货',
                 'place' => $xiehuo->transport_goods['transport_end_place'],
                 'desc'  => '车牌号：'.$xiehuo->transport_goods['car_number'].';货物：'.$xiehuo->transport_goods['transport_goods'],
