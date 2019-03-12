@@ -221,11 +221,13 @@
                                                                         <span class="vertical-date">
                                                                             {{ $item['created_at'] }} <br/>
                                                                             <small>{{ $item['place'] }}</small>
+                                                                            <p>
                                                                             @foreach($item['images'] as $image)
                                                                                 <a target="_blank" href="{{ $image }}">
-                                                                                    <img src="{{ $image }}" style="width: 100px;height: 100px;">
+                                                                                    <img src="{{ $image }}" style="width: 100px;height: 100px;margin: 5px;">
                                                                                 </a>
                                                                             @endforeach
+                                                                            </p>
                                                                         </span>
                                                                     </div>
                                                                 </div>
