@@ -19,3 +19,10 @@ Breadcrumbs::for('admin.transport.main.edit', function ($trail, $id) {
     $trail->parent('admin.transport.main.index');
     $trail->push('修改行程', route('admin.transport.main.edit',$id));
 });
+
+
+Breadcrumbs::for('admin.transport.sub.show', function ($trail, $id) {
+    $sub = \App\Models\Transport\TransportSub::find($id);
+    $trail->parent('admin.transport.main.show',$sub->transport_main_id);
+    $trail->push('司机行程查看', route('admin.transport.sub.show', $id));
+});

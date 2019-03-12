@@ -1,10 +1,6 @@
 @extends('backend.layouts.app')
 
-@section('title', __('labels.backend.access.users.management') . ' | ' . __('labels.backend.access.users.view'))
-
-@section('breadcrumb-links')
-    @include('backend.auth.user.includes.breadcrumb-links')
-@endsection
+@section('title', '行程管理 | 查看行程')
 
 @section('head-script')
     {{ style(('css/plugins/dataTables/datatables.min.css')) }}
@@ -22,7 +18,9 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="m-b-md">
-                                        <a href="#" class="btn btn-white btn-xs float-right">编辑行程</a>
+                                        @if ($main->transport_status <= 0)
+                                            <a href="{{ route('admin.transport.main.edit',$main->id) }}" class="btn btn-white btn-xs float-right">编辑行程</a>
+                                        @endif
                                         <h2>行程ID：{{$main->transport_number}}</h2>
                                     </div>
 
@@ -194,8 +192,8 @@
         <div class="row">
             <div class="col">
                 <small class="float-right text-muted">
-                    <strong>@lang('labels.backend.access.users.tabs.content.overview.created_at'):</strong> {{ timezone()->convertToLocal($main->created_at) }} ({{ $main->created_at->diffForHumans() }}),
-                    <strong>@lang('labels.backend.access.users.tabs.content.overview.last_updated'):</strong> {{ timezone()->convertToLocal($main->updated_at) }} ({{ $main->updated_at->diffForHumans() }})
+                    <strong>@lang('labels.backend.access.users.tabs.content.overview.created_at'):</strong> {{ $main->created_at }} ({{ $main->created_at->diffForHumans() }}),
+                    <strong>@lang('labels.backend.access.users.tabs.content.overview.last_updated'):</strong> {{ $main->updated_at }} ({{ $main->updated_at->diffForHumans() }})
                 </small>
             </div><!--col-->
         </div><!--row-->
