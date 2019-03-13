@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\Api\ExceptionNotify;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -77,17 +78,13 @@ class SendPhoneMessage implements ShouldQueue
                     ],
                 ])
                 ->request();
-            print_r($result->toArray());
+            if ($result['Code'] != 'OK') {
+                event(new ExceptionNotify('短信验证码发送失败：'.$result['Code'].';'.$result['Message']));
+            }
         } catch (ClientException $e) {
-            echo $e->getErrorMessage() . PHP_EOL;
+            event(new ExceptionNotify('短信验证码发送失败：'.$e->getErrorMessage()));
         } catch (ServerException $e) {
-            echo $e->getErrorMessage() . PHP_EOL;
-        }
-
-        if ($result && $result->success == true) {
-            // 发送成功～
-        }else{
-            //Log::error('短信验证码发送失败',[$this->type,$result, $sub_code, $sub_msg]);
+            event(new ExceptionNotify('短信验证码发送失败：'.$e->getErrorMessage()));
         }
     }
 

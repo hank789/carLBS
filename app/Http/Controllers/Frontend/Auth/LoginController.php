@@ -60,7 +60,7 @@ class LoginController extends Controller
             throw new GeneralException('访问频率限制');
         }
         //验证手机验证码
-        $code_cache = Cache::get(SendPhoneMessage::getCacheKey('login',$credentials['mobile']));
+        $code_cache = Cache::get(SendPhoneMessage::getCacheKey('backend_login',$credentials['mobile']));
         if($code_cache != $credentials['phoneCode']){
             throw new GeneralException('验证码错误');
         }
