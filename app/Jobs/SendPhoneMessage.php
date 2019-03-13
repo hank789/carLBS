@@ -49,26 +49,13 @@ class SendPhoneMessage implements ShouldQueue
      */
     public function handle()
     {
-        $freeSignName = config('alidayu.sign_name');
-
         switch($this->type){
             case 'login':
-            case 'register':
-                $templateId = config('alidayu.verify_template_id');
-                //$params = ['code' => $code]
-                break;
-            case '201802-happy-activity':
+            case 'backend_login':
                 $templateId = 'SMS_124425049';
                 //$params = ['name' => $code]
                 break;
-            case 'invite_address_book_user':
-                $templateId = 'SMS_134500006';
-                break;
-            case 'article_pending_alert':
-                $templateId = 'SMS_143705956';
-                break;
             default:
-                $templateId = config('alidayu.verify_template_id');
                 break;
         }
         AlibabaCloud::accessKeyClient(config('aliyun.accessKeyId'), config('aliyun.accessSecret'))
@@ -84,9 +71,9 @@ class SendPhoneMessage implements ShouldQueue
                 ->options([
                     'query' => [
                         'PhoneNumbers' => $this->phone,
-                        'SignName' => '',//短信签名
-                        'TemplateCode' => '',//模板id
-                        'TemplateParam' => '',//模板变量替换
+                        'SignName' => '中讯智慧',//短信签名
+                        'TemplateCode' => 'SMS_160200656',//模板id
+                        'TemplateParam' => json_encode($this->params),//模板变量替换
                     ],
                 ])
                 ->request();
