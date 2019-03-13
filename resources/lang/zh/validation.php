@@ -115,6 +115,7 @@ return [
     'uploaded'             => ':attribute 上传失败。',
     'url'                  => ':attribute 格式不正确。',
     'uuid' => 'The :attribute must be a valid UUID.',
+    'cn_phone' => '手机号不正确',
 
     /*
     |--------------------------------------------------------------------------
@@ -130,6 +131,8 @@ return [
     'custom' => [
         'attribute-name' => [
             'rule-name' => '定制信息',
+            'mobile' => '手机号',
+            'phoneCode' => '验证码'
         ],
     ],
 

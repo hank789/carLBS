@@ -21,8 +21,7 @@ class CreateUsersTable extends Migration
             $table->uuid('uuid')->unique();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
-            $table->string('email')->unique();
-            $table->string('mobile',24)->nullable();  //登录手机
+            $table->string('mobile')->unique();
             $table->string('avatar_type')->default('gravatar');
             $table->string('avatar_location')->nullable();
             $table->string('password')->nullable();

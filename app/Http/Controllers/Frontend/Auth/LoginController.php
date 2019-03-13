@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Frontend\Auth;
 
 use App\Helpers\Auth\Auth;
+use App\Jobs\SendPhoneMessage;
+use App\Models\Auth\User;
+use App\Services\RateLimiter;
 use Illuminate\Http\Request;
 use App\Exceptions\GeneralException;
 use App\Http\Controllers\Controller;
@@ -11,7 +14,7 @@ use App\Events\Frontend\Auth\UserLoggedIn;
 use App\Events\Frontend\Auth\UserLoggedOut;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Repositories\Frontend\Auth\UserSessionRepository;
-
+use Illuminate\Support\Facades\Cache;
 /**
  * Class LoginController.
  */
@@ -36,6 +39,37 @@ class LoginController extends Controller
     {
         return view('frontend.auth.login')
             ->withSocialiteLinks((new Socialite)->getSocialLinks());
+    }
+
+    //验证码登陆
+    public function codeLogin(Request $request) {
+        $validateRules = [
+            'mobile' => 'required|cn_phone',
+            'phoneCode' => 'required'
+        ];
+
+        $this->validate($request,$validateRules);
+
+        /*只接收mobile和phoneCode的值*/
+        $credentials = $request->only('mobile', 'phoneCode');
+        $isNewUser = 0;
+        if(RateLimiter::instance()->increase('userLogin',$credentials['mobile'],3,1)){
+            throw new GeneralException('访问频率限制');
+        }
+        if(RateLimiter::instance()->increase('userLoginCount',$credentials['mobile'],60,30)){
+            throw new GeneralException('访问频率限制');
+        }
+        //验证手机验证码
+        $code_cache = Cache::get(SendPhoneMessage::getCacheKey('login',$credentials['mobile']));
+        if($code_cache != $credentials['phoneCode']){
+            throw new GeneralException('验证码错误');
+        }
+        $user = User::where('mobile',$credentials['mobile'])->first();
+        if (!$user) {
+            throw new GeneralException('手机号不存在');
+        }
+        auth()->login($user,true);
+        return redirect()->intended($this->redirectPath());
     }
 
     /**

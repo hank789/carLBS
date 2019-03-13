@@ -8,6 +8,7 @@ use App\Exceptions\ApiException;
 use App\Http\Controllers\Api\Controller;
 use App\Jobs\SendPhoneMessage;
 use App\Models\Auth\ApiUser;
+use App\Models\Auth\User;
 use App\Models\Auth\UserDevice;
 use App\Services\RateLimiter;
 use App\Services\Registrar;
@@ -26,7 +27,7 @@ class AuthController extends Controller
     {
         $validateRules = [
             'mobile' => 'required|cn_phone',
-            'type'   => 'required|in:register,login,change,change_phone'
+            'type'   => 'required|in:backend_login,login'
         ];
 
         $this->validate($request,$validateRules);
@@ -35,23 +36,18 @@ class AuthController extends Controller
         if(RateLimiter::instance()->increase('sendPhoneCode:'.$type,$mobile,60,1)){
             throw new ApiException(ApiException::VISIT_LIMIT);
         }
-        $user = ApiUser::where('mobile',$mobile)->first();
         switch($type){
-            case 'register':
-                if($user){
-                    throw new ApiException(ApiException::USER_PHONE_EXIST);
-                }
-                break;
-            case 'change_phone':
-                //换绑手机号
-                break;
             case 'login':
                 //登陆
                 break;
-            default:
+            case 'backend_login':
+                //后台验证码登陆
+                $user = User::where('mobile',$mobile)->first();
                 if(!$user){
                     throw new ApiException(ApiException::USER_NOT_FOUND);
                 }
+                break;
+            default:
                 break;
         }
 

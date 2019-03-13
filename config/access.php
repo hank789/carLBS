@@ -15,7 +15,7 @@ return [
     /*
      * Whether or not registration is enabled
      */
-    'registration' => env('ENABLE_REGISTRATION', true),
+    'registration' => env('ENABLE_REGISTRATION', false),
 
     /*
      * Table names for access tables
@@ -58,7 +58,7 @@ return [
         /*
          * Login username to be used by the controller.
          */
-        'username' => 'email',
+        'username' => 'mobile',
 
         /*
          * Session Database Driver Only

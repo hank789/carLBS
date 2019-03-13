@@ -27,8 +27,6 @@
                         @can('view backend')
                             <a href="{{ route('admin.dashboard') }}" class="dropdown-item">@lang('navs.frontend.user.administration')</a>
                         @endcan
-
-                        <a href="{{ route('frontend.user.account') }}" class="dropdown-item {{ active_class(Active::checkRoute('frontend.user.account')) }}">@lang('navs.frontend.user.account')</a>
                         <a href="{{ route('frontend.auth.logout') }}" class="dropdown-item">@lang('navs.general.logout')</a>
                     </div>
                 </li>
@@ -43,8 +41,8 @@
                 <div class="footer-down">
                     <div class="footer-iphone">
                         <p class="down-txt">下载车百讯 App</p>
-                        <a href="http://a.app.qq.com/o/simple.jsp?pkgname=com.unnoo.quan"><span class="andriod">安卓版下载</span></a>
-                        <a href="https://itunes.apple.com/cn/app/xiao-mi-quan/id904106920?l=cn&amp;mt=8"><span class="ios">iOS 版下载</span></a>
+                        <a href="#"><span class="andriod">安卓版下载</span></a>
+                        <a href="#"><span class="ios">iOS 版下载</span></a>
                     </div>
                     <div class="footer-qrcode">
                         <img src="{{ asset('img/qrcode@2x.png') }}" width="100" height="100">
