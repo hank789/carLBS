@@ -11,6 +11,8 @@
     <title>@yield('title', app_display_name())</title>
     <meta name="description" content="@yield('meta_description', app_display_name())">
     <meta name="author" content="@yield('meta_author', app_display_name())">
+    <link rel="shortcut icon" href="{{ asset('img/favicon_32.ico') }}">
+    <link rel="icon" href="{{ asset('img/favicon_32.ico') }}">
     @yield('meta')
 
     {{-- See https://laravel.com/docs/5.5/blade#stacks for usage --}}
