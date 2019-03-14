@@ -65,8 +65,8 @@ return [
         ],
         'oss' => [
             'driver'        => 'oss',
-            'access_id'     => env('OSS_ACCESS_KEY_ID',''),
-            'access_key'    => env('OSS_ACCESS_KEY_SECRET',''),
+            'access_id'     => env('ALIYUN_KEYID',''),
+            'access_key'    => env('ALIYUN_SECRET',''),
             'bucket'        => env('OSS_BUCKET'),
             'endpoint'      => env('OSS_ENDPOINT'),
             'endpoint_internal' => env('OSS_ENDPOINT_INTERNAL',''),

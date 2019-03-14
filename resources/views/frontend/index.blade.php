@@ -5,16 +5,16 @@
     <title>车百讯</title>
     <meta name="description" content="车百讯">
     <meta name="keywords" content="车百讯">
-    <link rel="shortcut icon" href="{{ asset('img/favicon_32.ico') }}">
-    <link rel="icon" href="{{ asset('img/favicon_32.ico') }}">
-    <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
+    <link rel="shortcut icon" href="{{ asset('img/favicon_32.ico',config('app.use_ssl')) }}">
+    <link rel="icon" href="{{ asset('img/favicon_32.ico',config('app.use_ssl')) }}">
+    <link rel="stylesheet" href="{{ asset('css/landing.css',config('app.use_ssl')) }}">
 
 </head>
 
 <body>
 <div class="header">
     <div class="header-con">
-        <h1 class="logo"><a href="https://www.zsxq.com/">车百讯</a></h1>
+        <h1 class="logo"><a href="#">车百讯</a></h1>
         <div class="menu">
             @guest
             <a href="{{route('frontend.auth.login')}}" class="href-dweb">@lang('navs.frontend.login')</a>
@@ -45,7 +45,7 @@
                         <a href="#"><span class="ios">iOS 版下载</span></a>
                     </div>
                     <div class="footer-qrcode">
-                        <img src="{{ asset('img/qrcode@2x.png') }}" width="100" height="100">
+                        <img src="{{ asset('img/qrcode@2x.png',config('app.use_ssl')) }}" width="100" height="100">
                     </div>
                 </div>
                 <div class="banner-tips">
@@ -55,7 +55,7 @@
                 </div>
             </div>
             <div class="banner-right">
-                <img src="{{ asset('img/iphone-x@2x.png') }}" width="562" height="572">
+                <img src="{{ asset('img/iphone-x@2x.png',config('app.use_ssl')) }}" width="562" height="572">
             </div>
         </div>
     </div>

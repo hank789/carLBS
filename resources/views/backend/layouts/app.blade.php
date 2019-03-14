@@ -11,8 +11,8 @@
     <title>@yield('title', app_display_name())</title>
     <meta name="description" content="@yield('meta_description', app_display_name())">
     <meta name="author" content="@yield('meta_author', app_display_name())">
-    <link rel="shortcut icon" href="{{ asset('img/favicon_32.ico') }}">
-    <link rel="icon" href="{{ asset('img/favicon_32.ico') }}">
+    <link rel="shortcut icon" href="{{ asset('img/favicon_32.ico',config('app.use_ssl')) }}">
+    <link rel="icon" href="{{ asset('img/favicon_32.ico',config('app.use_ssl')) }}">
     @yield('meta')
 
     {{-- See https://laravel.com/docs/5.5/blade#stacks for usage --}}
@@ -20,7 +20,7 @@
 
     <!-- Check if the language is set to RTL, so apply the RTL layouts -->
     <!-- Otherwise apply the normal LTR layouts -->
-    {{ style(mix('css/backend.css')) }}
+    {{ style(mix('css/backend.css'),[],config('app.use_ssl')) }}
 
     @stack('after-styles')
     @yield('head-script')
@@ -55,9 +55,9 @@
 
     <!-- Scripts -->
     @stack('before-scripts')
-    {!! script(mix('js/manifest.js')) !!}
-    {!! script(mix('js/vendor.js')) !!}
-    {!! script(mix('js/backend.js')) !!}
+    {!! script(mix('js/manifest.js'),[],config('app.use_ssl')) !!}
+    {!! script(mix('js/vendor.js'),[],config('app.use_ssl')) !!}
+    {!! script(mix('js/backend.js'),[],config('app.use_ssl')) !!}
     @stack('after-scripts')
     @yield('script')
 </body>

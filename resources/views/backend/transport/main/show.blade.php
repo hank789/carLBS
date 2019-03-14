@@ -3,7 +3,7 @@
 @section('title', '行程管理 | 查看行程')
 
 @section('head-script')
-    {{ style(('css/plugins/dataTables/datatables.min.css')) }}
+    {{ style(('css/plugins/dataTables/datatables.min.css'),[],config('app.use_ssl')) }}
 @endsection
 
 @section('content')
@@ -202,8 +202,8 @@
 @endsection
 
 @section('script')
-    {!! script(('js/plugins/dataTables/datatables.min.js')) !!}
-    {!! script(('js/plugins/dataTables/dataTables.bootstrap4.min.js')) !!}
+    {!! script(('js/plugins/dataTables/datatables.min.js'),[],config('app.use_ssl')) !!}
+    {!! script(('js/plugins/dataTables/dataTables.bootstrap4.min.js'),[],config('app.use_ssl')) !!}
     <script type="text/javascript">
         $(document).ready(function() {
             $('#table_transport_subs').DataTable({

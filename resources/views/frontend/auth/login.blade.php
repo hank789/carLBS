@@ -9,8 +9,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>@yield('title', app_display_name())</title>
-        <link rel="shortcut icon" href="{{ asset('img/favicon_32.ico') }}">
-        <link rel="icon" href="{{ asset('img/favicon_32.ico') }}">
+        <link rel="shortcut icon" href="{{ asset('img/favicon_32.ico',config('app.use_ssl')) }}">
+        <link rel="icon" href="{{ asset('img/favicon_32.ico',config('app.use_ssl')) }}">
         <meta name="description" content="@yield('meta_description', app_display_name())">
         <meta name="author" content="@yield('meta_author', app_display_name())">
     @yield('meta')
@@ -20,8 +20,8 @@
 
     <!-- Check if the language is set to RTL, so apply the RTL layouts -->
         <!-- Otherwise apply the normal LTR layouts -->
-        {{ style(mix('css/backend.css')) }}
-        {{ style(('css/plugins/toastr/toastr.min.css')) }}
+        {{ style(mix('css/backend.css'),[],config('app.use_ssl')) }}
+        {{ style(('css/plugins/toastr/toastr.min.css'),[],config('app.use_ssl')) }}
 
         @stack('after-styles')
         @yield('head-script')
@@ -83,8 +83,8 @@
             </div>
         </div>
     </div>
-    {!! script(('js/plugins/jquery-3.1.1.min.js')) !!}
-    {!! script(('js/plugins/toastr/toastr.min.js')) !!}
+    {!! script(('js/plugins/jquery-3.1.1.min.js'),[],config('app.use_ssl')) !!}
+    {!! script(('js/plugins/toastr/toastr.min.js'),[],config('app.use_ssl')) !!}
 
     <script type="application/javascript">
         function sendYzm() {

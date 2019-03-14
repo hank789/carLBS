@@ -7,7 +7,6 @@
 5. 执行`php artisan db:seed`
 6. 执行`php artisan jwt:secret`
 7. 执行`php artisan storage:link`
-8. 执行`queue:failed-table`
 
 ##百度鹰眼前端
 1. cd map

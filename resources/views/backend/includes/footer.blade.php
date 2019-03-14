@@ -1,7 +1,5 @@
 <footer class="app-footer">
-    <div>
-        <strong>Copyright &copy; {{ date('Y') }} <a href="http://laravel-boilerplate.com"></a></strong> @lang('strings.backend.general.all_rights_reserved')
+    <div class="ml-auto">
+        <strong>Copyright &copy; {{ date('Y') }} <a href="#">中讯智慧物联信息科技(苏州)有限公司</a></strong> @lang('strings.backend.general.all_rights_reserved')
     </div>
-
-    <div class="ml-auto">Powered by <a href="http://coreui.io"></a></div>
 </footer>

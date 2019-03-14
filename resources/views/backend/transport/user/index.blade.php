@@ -20,8 +20,8 @@
                 <form name="searchForm" class="form-horizontal" action="{{ route('admin.transport.user.index') }}">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="filter" value="{{ $filter['filter']??'' }}">
-                    <div class="form-group row">
-                        <div class="col-6">
+                    <div class="form-group row float-right">
+                        <div class="col-8">
                             <input type="text" class="form-control" name="nameOrMobile" placeholder="姓名或手机号" value="{{ $filter['nameOrMobile']??'' }}"/>
                         </div>
                         <div class="col-4">

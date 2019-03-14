@@ -18,7 +18,7 @@
 
         <!-- Check if the language is set to RTL, so apply the RTL layouts -->
         <!-- Otherwise apply the normal LTR layouts -->
-        {{ style(mix('css/frontend.css')) }}
+        {{ style(mix('css/frontend.css'),[],config('app.use_ssl')) }}
 
         @stack('after-styles')
     </head>
@@ -35,9 +35,9 @@
 
         <!-- Scripts -->
         @stack('before-scripts')
-        {!! script(mix('js/manifest.js')) !!}
-        {!! script(mix('js/vendor.js')) !!}
-        {!! script(mix('js/frontend.js')) !!}
+        {!! script(mix('js/manifest.js'),[],config('app.use_ssl')) !!}
+        {!! script(mix('js/vendor.js'),[],config('app.use_ssl')) !!}
+        {!! script(mix('js/frontend.js'),[],config('app.use_ssl')) !!}
         @stack('after-scripts')
     </body>
 </html>
