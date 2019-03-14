@@ -4,7 +4,7 @@
     </button>
     <a class="navbar-brand" href="#">
         <span class="navbar-brand-full">{{app_display_name()}}管理后台</span>
-        <img class="navbar-brand-minimized" src="{{ asset('img/backend/brand/sygnet.svg') }}" width="30" height="30" alt="CoreUI Logo">
+        <img class="navbar-brand-minimized" src="{{ asset('img/backend/brand/sygnet.svg',config('app.use_ssl')) }}" width="30" height="30" alt="Logo">
     </a>
     <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" data-toggle="sidebar-lg-show">
         <span class="navbar-toggler-icon"></span>
