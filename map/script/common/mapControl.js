@@ -20,13 +20,13 @@ window.mapControl = {
     initMap: function() {
         let that = this;
         let infoBoxScript = document.createElement('script');
-        infoBoxScript.src = 'http://api.map.baidu.com/library/InfoBox/1.2/src/InfoBox_min.js';
+        infoBoxScript.src = 'https://api.map.baidu.com/library/InfoBox/1.2/src/InfoBox_min.js';
         document.getElementsByTagName('head')[0].appendChild(infoBoxScript);
         let canvasScript = document.createElement('script');
         canvasScript.src = __uri('/static/javascript/CanvasLayer.js');
         document.getElementsByTagName('head')[0].appendChild(canvasScript);
         let mapvScript = document.createElement('script');
-        mapvScript.src = 'http://mapv.baidu.com/build/mapv.js';
+        mapvScript.src = 'https://mapv.baidu.com/build/mapv.js';
         document.getElementsByTagName('head')[0].appendChild(mapvScript);
         mapvScript.onload = function () {
             that.initBoundsearch();
