@@ -28,7 +28,7 @@ var Monitorofflinepage = React.createClass({
     componentDidMount: function () {
         TrackStore.listen(this.onStatusChange);
         // todo 循环加载 暂时先关闭
-        setInterval(() => {TrackAction.searchofflineentity();},10000);
+        setInterval(() => {TrackAction.searchofflineentity();},20000);
     }, 
     onStatusChange: function (type,data) {
         switch (type){

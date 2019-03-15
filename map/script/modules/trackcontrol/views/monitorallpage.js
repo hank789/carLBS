@@ -31,12 +31,12 @@ var Monitorallpage = React.createClass({
     componentDidMount: function () {
         TrackStore.listen(this.onStatusChange);
         // todo 循环加载 暂时先关闭
-        setInterval(() => {TrackAction.searchallentity();},10000);
+        setInterval(() => {TrackAction.searchallentity();},20000);
         setInterval(() => {
             if (map.getZoom() >= 14) {
                 TrackAction.boundsearchentity();
             }
-        }, 10000);
+        }, 20000);
     }, 
     onStatusChange: function (type,data) {
         switch (type){
