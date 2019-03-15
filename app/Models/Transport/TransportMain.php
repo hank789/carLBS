@@ -147,4 +147,8 @@ class TransportMain extends Model {
     public function getTransportXiehuoCount() {
         return TransportXiehuo::where('transport_main_id',$this->id)->count();
     }
+
+    public function getTransportSubCount() {
+        return TransportSub::where('transport_main_id',$this->id)->count();
+    }
 }

@@ -57,11 +57,11 @@ class StartTransportSub implements ShouldQueue
             'transport_end_place' => $sub->transport_end_place,
             'transport_goods' => str_limit($sub->transport_goods['transport_goods'],125)
         ];
-
+        $apiUser = $sub->apiUser;
         if ($entity->entity_status != 1) {
-            $res = BaiduTrace::instance()->addEntity($entity_name,$sub->apiUser->name,$entity_custom_fields);
+            $res = BaiduTrace::instance()->addEntity($entity_name,$apiUser->name,$entity_custom_fields);
             if (!$res) {
-                $res = BaiduTrace::instance()->addEntity($entity_name,$sub->apiUser->name,$entity_custom_fields);
+                $res = BaiduTrace::instance()->addEntity($entity_name,$apiUser->name,$entity_custom_fields);
                 if (!$res) {
                     $sub->transport_status = TransportSub::TRANSPORT_STATUS_PENDING;
                     $sub->save();
@@ -70,11 +70,13 @@ class StartTransportSub implements ShouldQueue
             }
             $entity->entity_status = 1;
         } else {
-            BaiduTrace::instance()->updateEntity($entity_name,$sub->apiUser->name,$entity_custom_fields);
+            BaiduTrace::instance()->updateEntity($entity_name,$apiUser->name,$entity_custom_fields);
         }
+        $apiUser->trip_number += 1;
+        $apiUser->save();
         $entity_info = $entity->entity_info;
         $entity_info['lastSub'] = [
-            'username' => $sub->apiUser->name,
+            'username' => $apiUser->name,
             'sub_id' => $sub->id,
             'start_time' => date('Y-m-d H:i:s'),
             'goods_info' => $sub->transport_goods['transport_goods']

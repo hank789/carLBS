@@ -67,7 +67,7 @@
                                 <td>{{ $item->transport_end_place }}</td>
                                 <td>{{ $item->transport_contact_people }}</td>
                                 <td>{{ $item->transport_contact_phone }}</td>
-                                <td>0</td>
+                                <td>{{ $item->getTransportSubCount() }}</td>
                                 <td>{{ $item->transport_start_time }}</td>
                                 <td>{{ str_limit($item->transport_goods['transport_goods'],50) }}</td>
                                 <td>{{ $item->systemUser->fullname }}</td>

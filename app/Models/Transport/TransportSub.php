@@ -80,9 +80,9 @@ class TransportSub extends Model {
 
     public function saveLastPosition(array $lastPosition) {
         $transportGoods = $this->transport_goods;
-        $oldLastPosition = $transportGoods['lastPosition']??'';
+        $oldLastPosition = $transportGoods['lastPosition']??[];
         $transportGoods['lastPosition'] = BaiduTrace::instance()->formatGeoLocation($lastPosition,true,true);
-        $timeDiff = $transportGoods['lastPosition']['loc_time'] - $oldLastPosition['loc_time'];
+        $timeDiff = $transportGoods['lastPosition']['loc_time'] - ($oldLastPosition['loc_time']??0);
         if (empty($transportGoods['lastPosition']['speed']) && $oldLastPosition && $timeDiff>0 && $timeDiff <= 60*5) {
             $distance = getDistanceByLatLng($transportGoods['lastPosition']['longitude'],$transportGoods['lastPosition']['latitude'],$oldLastPosition['longitude'],$oldLastPosition['latitude']);
             $transportGoods['lastPosition']['speed'] = $distance/$timeDiff * 3.6;
