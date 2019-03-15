@@ -22,3 +22,4 @@ Breadcrumbs::for('admin.version.edit', function ($trail, $id) {
 require __DIR__.'/auth.php';
 require __DIR__.'/log-viewer.php';
 require __DIR__.'/transport.php';
+require __DIR__.'/company.php';

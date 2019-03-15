@@ -8,8 +8,8 @@
             </tr>
 
             <tr>
-                <th>手机号</th>
-                <td>{{ $user->mobile }}</td>
+                <th>@lang('labels.backend.access.users.tabs.content.overview.email')</th>
+                <td>{{ $user->email }}</td>
             </tr>
 
             <tr>

@@ -29,12 +29,21 @@
                 </a>
             </li>
 
-
-            <li class="nav-title">
-                @lang('menus.backend.sidebar.system')
-            </li>
-
             @if ($logged_in_user->isAdmin())
+            <li class="nav-title">
+                权限管理
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ active_class(Active::checkUriPattern('admin/company/user*')) }}" href="{{ route('admin.company.user.index') }}">
+                    <i class="nav-icon icon-user"></i> 账户管理
+                </a>
+            </li>
+            @endif
+
+            @if ($logged_in_user->isSuperAdmin())
+                <li class="nav-title">
+                    @lang('menus.backend.sidebar.system')
+                </li>
                 <li class="nav-item nav-dropdown {{ active_class(Active::checkUriPattern('admin/auth*'), 'open') }}">
                     <a class="nav-link nav-dropdown-toggle {{ active_class(Active::checkUriPattern('admin/auth*')) }}" href="#">
                         <i class="nav-icon icon-user"></i> @lang('menus.backend.access.title')
@@ -66,28 +75,28 @@
                         <i class="nav-icon fa fa-file"></i> App版本管理
                     </a>
                 </li>
+
+                <li class="divider"></li>
+
+                <li class="nav-item nav-dropdown {{ active_class(Active::checkUriPattern('admin/log-viewer*'), 'open') }}">
+                    <a class="nav-link nav-dropdown-toggle {{ active_class(Active::checkUriPattern('admin/log-viewer*')) }}" href="#">
+                        <i class="nav-icon icon-list"></i> @lang('menus.backend.log-viewer.main')
+                    </a>
+
+                    <ul class="nav-dropdown-items">
+                        <li class="nav-item">
+                            <a class="nav-link {{ active_class(Active::checkUriPattern('admin/log-viewer')) }}" href="{{ route('log-viewer::dashboard') }}">
+                                <i class="nav-icon fa fa-circle-notch"></i> @lang('menus.backend.log-viewer.dashboard')
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ active_class(Active::checkUriPattern('admin/log-viewer/logs*')) }}" href="{{ route('log-viewer::logs.list') }}">
+                                <i class="nav-icon fa fa-circle-notch"></i> @lang('menus.backend.log-viewer.logs')
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             @endif
-
-            <li class="divider"></li>
-
-            <li class="nav-item nav-dropdown {{ active_class(Active::checkUriPattern('admin/log-viewer*'), 'open') }}">
-                <a class="nav-link nav-dropdown-toggle {{ active_class(Active::checkUriPattern('admin/log-viewer*')) }}" href="#">
-                    <i class="nav-icon icon-list"></i> @lang('menus.backend.log-viewer.main')
-                </a>
-
-                <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                        <a class="nav-link {{ active_class(Active::checkUriPattern('admin/log-viewer')) }}" href="{{ route('log-viewer::dashboard') }}">
-                            <i class="nav-icon fa fa-circle-notch"></i> @lang('menus.backend.log-viewer.dashboard')
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ active_class(Active::checkUriPattern('admin/log-viewer/logs*')) }}" href="{{ route('log-viewer::logs.list') }}">
-                            <i class="nav-icon fa fa-circle-notch"></i> @lang('menus.backend.log-viewer.logs')
-                        </a>
-                    </li>
-                </ul>
-            </li>
         </ul>
     </nav>
 

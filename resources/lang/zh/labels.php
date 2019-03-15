@@ -79,7 +79,9 @@ return [
                     'full_name' => '姓名',
                     'other_permissions' => '其它权限',
                     'abilities' => '能力',
-                    'permissions' => '权限'
+                    'permissions' => '权限',
+                    'last_name' => '姓',
+                    'first_name' => '名'
                 ],
 
                 'tabs' => [

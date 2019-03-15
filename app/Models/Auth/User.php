@@ -2,6 +2,7 @@
 
 namespace App\Models\Auth;
 
+use App\Models\Auth\Traits\Attribute\UserCompanyAttribute;
 use App\Models\Traits\Uuid;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
@@ -101,6 +102,7 @@ class User extends Authenticatable
         SendUserPasswordReset,
         SoftDeletes,
         UserAttribute,
+        UserCompanyAttribute,
         UserMethod,
         UserRelationship,
         UserScope,

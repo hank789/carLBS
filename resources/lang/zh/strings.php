@@ -19,6 +19,7 @@ return [
                 'delete_user_confirm'  => '您确定要永久删除此用户吗？引用此用户ID的应用程序中的任何地方都很可能是错误。继续自行承担风险。这不能被撤消。',
                 'if_confirmed_off'     => '(已确认则无效)',
                 'restore_user_confirm' => '将此用户恢复到其原始状态？',
+                'no_deactivated' => '没有数据'
             ],
         ],
 

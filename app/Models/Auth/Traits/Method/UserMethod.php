@@ -75,6 +75,11 @@ trait UserMethod
         return $this->hasRole(config('access.users.admin_role'));
     }
 
+    //超级管理员
+    public function isSuperAdmin() {
+        return $this->id == 1;
+    }
+
     /**
      * @return bool
      */
