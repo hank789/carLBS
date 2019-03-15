@@ -292,7 +292,6 @@ trait UserAttribute
 			<div class="dropdown-menu" aria-labelledby="userActions">
 			  '.$this->clear_session_button.'
 			  '.$this->login_as_button.'
-			  '.$this->change_password_button.'
 			  '.$this->status_button.'
 			  '.$this->confirmed_button.'
 			  '.$this->delete_button.'

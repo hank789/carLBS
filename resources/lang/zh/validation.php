@@ -132,8 +132,9 @@ return [
         'attribute-name' => [
             'rule-name' => '定制信息',
             'mobile' => '手机号',
-            'phoneCode' => '验证码'
-        ],
+            'phoneCode' => '验证码',
+            'roles' => '角色'
+        ]
     ],
 
     /*
@@ -148,7 +149,8 @@ return [
     */
 
     'attributes' => [
-
+        'mobile' => '手机号',
+        'roles' => '角色',
         'backend' => [
             'access' => [
                 'permissions' => [

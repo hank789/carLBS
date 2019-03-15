@@ -49,35 +49,13 @@
                         </div><!--form-group-->
 
                         <div class="form-group row">
-                            {{ html()->label(__('validation.attributes.backend.access.users.email'))->class('col-md-2 form-control-label')->for('email') }}
+                            {{ html()->label('手机号')->class('col-md-2 form-control-label')->for('mobile') }}
 
                             <div class="col-md-10">
-                                {{ html()->email('email')
+                                {{ html()->text('mobile')
                                     ->class('form-control')
-                                    ->placeholder(__('validation.attributes.backend.access.users.email'))
+                                    ->placeholder('手机号')
                                     ->attribute('maxlength', 191)
-                                    ->required() }}
-                            </div><!--col-->
-                        </div><!--form-group-->
-
-                        <div class="form-group row">
-                            {{ html()->label(__('validation.attributes.backend.access.users.password'))->class('col-md-2 form-control-label')->for('password') }}
-
-                            <div class="col-md-10">
-                                {{ html()->password('password')
-                                    ->class('form-control')
-                                    ->placeholder(__('validation.attributes.backend.access.users.password'))
-                                    ->required() }}
-                            </div><!--col-->
-                        </div><!--form-group-->
-
-                        <div class="form-group row">
-                            {{ html()->label(__('validation.attributes.backend.access.users.password_confirmation'))->class('col-md-2 form-control-label')->for('password_confirmation') }}
-
-                            <div class="col-md-10">
-                                {{ html()->password('password_confirmation')
-                                    ->class('form-control')
-                                    ->placeholder(__('validation.attributes.backend.access.users.password_confirmation'))
                                     ->required() }}
                             </div><!--col-->
                         </div><!--form-group-->
@@ -104,7 +82,7 @@
                             </div><!--col-->
                         </div><!--form-group-->
 
-                        @if(! config('access.users.requires_approval'))
+                        @if(! config('access.users.requires_approval') && false)
                             <div class="form-group row">
                                 {{ html()->label(__('validation.attributes.backend.access.users.send_confirmation_email') . '<br/>' . '<small>' .  __('strings.backend.access.users.if_confirmed_off') . '</small>')->class('col-md-2 form-control-label')->for('confirmation_email') }}
 

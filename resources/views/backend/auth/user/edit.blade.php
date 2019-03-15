@@ -48,12 +48,12 @@
                     </div><!--form-group-->
 
                     <div class="form-group row">
-                        {{ html()->label(__('validation.attributes.backend.access.users.email'))->class('col-md-2 form-control-label')->for('email') }}
+                        {{ html()->label('手机号')->class('col-md-2 form-control-label')->for('mobile') }}
 
                         <div class="col-md-10">
-                            {{ html()->email('email')
+                            {{ html()->text('mobile')
                                 ->class('form-control')
-                                ->placeholder(__('validation.attributes.backend.access.users.email'))
+                                ->placeholder('手机号')
                                 ->attribute('maxlength', 191)
                                 ->required() }}
                         </div><!--col-->

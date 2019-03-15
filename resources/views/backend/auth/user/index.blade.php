@@ -28,7 +28,7 @@
                         <thead>
                         <tr>
                             <th>@lang('labels.backend.access.users.table.full_name')</th>
-                            <th>@lang('labels.backend.access.users.table.email')</th>
+                            <th>手机号</th>
                             <th>@lang('labels.backend.access.users.table.confirmed')</th>
                             <th>@lang('labels.backend.access.users.table.roles')</th>
                             <th>@lang('labels.backend.access.users.table.other_permissions')</th>
@@ -40,7 +40,7 @@
                         @foreach($users as $user)
                             <tr>
                                 <td>{{ $user->last_name.$user->first_name }}</td>
-                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->mobile }}</td>
                                 <td>{!! $user->confirmed_label !!}</td>
                                 <td>{!! $user->roles_label !!}</td>
                                 <td>{!! $user->permissions_label !!}</td>

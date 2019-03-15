@@ -103,8 +103,8 @@ class UserRepository extends BaseRepository
             $user = parent::create([
                 'first_name' => $data['first_name'],
                 'last_name' => $data['last_name'],
-                'email' => $data['email'],
-                'password' => $data['password'],
+                'mobile' => $data['mobile'],
+                'password' => $data['password']??time(),
                 'active' => isset($data['active']) && $data['active'] == '1' ? 1 : 0,
                 'confirmation_code' => md5(uniqid(mt_rand(), true)),
                 'confirmed' => isset($data['confirmed']) && $data['confirmed'] == '1' ? 1 : 0,
@@ -150,7 +150,7 @@ class UserRepository extends BaseRepository
      */
     public function update(User $user, array $data) : User
     {
-        $this->checkUserByEmail($user, $data['email']);
+        $this->checkUserByMobile($user, $data['mobile']);
 
         // See if adding any additional permissions
         if (! isset($data['permissions']) || ! count($data['permissions'])) {
@@ -161,7 +161,7 @@ class UserRepository extends BaseRepository
             if ($user->update([
                 'first_name' => $data['first_name'],
                 'last_name' => $data['last_name'],
-                'email' => $data['email'],
+                'mobile' => $data['mobile'],
             ])) {
                 // Add selected roles/permissions
                 $user->syncRoles($data['roles']);
@@ -353,6 +353,17 @@ class UserRepository extends BaseRepository
             //Check to see if email exists
             if ($this->model->where('email', '=', $email)->first()) {
                 throw new GeneralException(trans('exceptions.backend.access.users.email_error'));
+            }
+        }
+    }
+
+    protected function checkUserByMobile(User $user, $mobile)
+    {
+        //Figure out if email is not the same
+        if ($user->mobile != $mobile) {
+            //Check to see if email exists
+            if ($this->model->where('mobile', '=', $mobile)->first()) {
+                throw new GeneralException('手机号已存在');
             }
         }
     }
