@@ -73,10 +73,7 @@ var urls = {
     params.timeStamp = new Date().getTime();
     fail = fail || function () { };
     after = after || function () { };
-    // 严重推荐自己编写代理服务，将service_id和ak隐藏！！通过service_id和ak可以
-    // 拿到该服务的所有数据，一旦泄露，后果严重!!!
-    params.ak = Commonfun.getQueryString('ak');
-    params.service_id = Commonfun.getQueryString('service_id');
+
     $.ajax({
       type: 'GET',
       url: url,
@@ -106,8 +103,8 @@ var urls = {
             before();
         }
         params.timeStamp = new Date().getTime();
-        params.ak = 'ow9qY3Q7NSYvI0y7IQYrQyG3ggIiw1OO';
-        params.service_id = 208547;
+        params.ak = '5wVEwreqidWac7GyZu2wBeWj9tmIvj6P';
+        params.service_id = 210186;
         url = url + '?';
         for (let i in params) {
             url = url + i + '=' + params[i] + '&';

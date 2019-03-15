@@ -61,6 +61,11 @@
                         </li>
                     </ul>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ active_class(Active::checkUriPattern('admin/version*')) }}" href="{{ route('admin.version.index') }}">
+                        <i class="nav-icon fa fa-file"></i> App版本管理
+                    </a>
+                </li>
             @endif
 
             <li class="divider"></li>

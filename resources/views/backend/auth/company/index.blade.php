@@ -1,10 +1,6 @@
 @extends('backend.layouts.app')
 
-@section('title', app_display_name() . ' | 司机管理')
-
-@section('breadcrumb-links')
-    @include('backend.transport.user.includes.breadcrumb-links')
-@endsection
+@section('title', app_display_name() . ' | 公司管理')
 
 @section('content')
 <div class="card">
@@ -12,17 +8,17 @@
         <div class="row">
             <div class="col-sm-5">
                 <h4 class="card-title mb-0">
-                    司机管理 <small class="text-muted">管理司机信息</small>
+                    公司管理 <small class="text-muted">管理公司信息</small>
                 </h4>
             </div><!--col-->
 
             <div class="col-sm-7">
-                <form name="searchForm" class="form-horizontal" action="{{ route('admin.transport.user.index') }}">
+                <form name="searchForm" class="form-horizontal" action="{{ route('admin.transport.company.index') }}">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="filter" value="{{ $filter['filter']??'' }}">
                     <div class="form-group row float-right">
                         <div class="col-8">
-                            <input type="text" class="form-control" name="nameOrMobile" placeholder="姓名或手机号" value="{{ $filter['nameOrMobile']??'' }}"/>
+                            <input type="text" class="form-control" name="name" placeholder="公司名称" value="{{ $filter['name']??'' }}"/>
                         </div>
                         <div class="col-4">
                             <button type="submit" class="btn btn-primary">搜索</button>

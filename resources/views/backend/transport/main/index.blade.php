@@ -1,6 +1,6 @@
 @extends('backend.layouts.app')
 
-@section('title', app_name() . ' | 行程管理')
+@section('title', app_display_name() . ' | 行程管理')
 
 @section('breadcrumb-links')
     @include('backend.transport.main.includes.breadcrumb-links')

@@ -1,6 +1,6 @@
 @extends('backend.layouts.app')
 
-@section('title', app_name() . ' | '. __('labels.backend.access.roles.management'))
+@section('title', app_display_name() . ' | '. __('labels.backend.access.roles.management'))
 
 @section('content')
 <div class="card">
