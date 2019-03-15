@@ -137,7 +137,7 @@ var TrackStore = Reflux.createStore({
         this.trigger('switchmanagetab', index);
     },
     onGetservicename: function() {
-        this.trigger('servicename', '示例DEMO');
+        this.trigger('servicename', '车辆位置');
         // 车辆行业0，
         this.trigger('servicetype', 0);
     },
