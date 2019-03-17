@@ -283,6 +283,9 @@ class BaiduTrace
         } else {
             RateLimiter::instance()->lock_acquire('baiduyingyan-other',59,1);
             $url = $this->url .$this->version.'/'. $uri;
+            if ($params) {
+                \Log::info($uri,$params);
+            }
             $data = $this->_curl($url,$params);
         }
         return json_decode($data,true);
@@ -294,7 +297,6 @@ class BaiduTrace
      */
     private function _curl($url,$postData = NULL){
         $ch = curl_init();
-        \Log::info('baidutrace',$postData);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         //https请求
