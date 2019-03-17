@@ -294,7 +294,7 @@ class BaiduTrace
      */
     private function _curl($url,$postData = NULL){
         $ch = curl_init();
-        var_dump($postData);
+        \Log::info('baidutrace',$postData);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         //https请求
