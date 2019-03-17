@@ -278,7 +278,11 @@ class BaiduTrace
             foreach ($params as $key => $v) {
                 $url .="&{$key}=" . urlencode($v);
             }
-            \Log::info('test',[$url]);
+            if (in_array($uri,['analysis/drivingbehavior','analysis/staypoint'])) {
+                RateLimiter::instance()->lock_acquire('baiduyingyan-analysis',29,1);
+            } else {
+                RateLimiter::instance()->lock_acquire('baiduyingyan-query',29,1);
+            }
             $data = $this->_curl($url);
         } else {
             RateLimiter::instance()->lock_acquire('baiduyingyan-other',59,1);

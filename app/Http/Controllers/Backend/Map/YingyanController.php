@@ -93,6 +93,11 @@ class YingyanController extends Controller
 
     //获取自定义字段列表:yingyan.baidu.com/api/v3/entity/listcolumn
     public function columnsList(ManageYingyanRequest $request) {
+        return response()->json([
+            'status' => 0,
+            'message' => '成功',
+            'columns' => []
+        ]);
         $params = $request->all();
         unset($params['callback']);
         $res = BaiduTrace::instance()->columnsList($params);
