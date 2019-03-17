@@ -20,12 +20,14 @@ class BaiduTrace
     private  $check = 0;//请求校验方式 为 sn 校验方式时需改为1
     private  $sk = 'KvUw3VwjD7xtIeFl15tKbciV2x2qqdiEj'; //请求校验方式 为 sn 校验方式时需填写
     private  $method = 'GET';
-    private  $url = 'http://yingyan.baidu.com/api/v3/';
+    private  $url = 'http://yingyan.baidu.com/api/';
+    private $version = 'v3';
 
     public function __construct()
     {
         $this->ak = config('map.baidu.ak');
         $this->serviceId = config('map.baidu.service_id');
+        $this->version = 'v3';
     }
 
     public static function instance(){
@@ -33,6 +35,11 @@ class BaiduTrace
             self::$instance = new self();
         }
         return self::$instance;
+    }
+
+    public function setVersion($version) {
+        $this->version = $version;
+        return $this;
     }
 
     //注册设备
@@ -175,6 +182,90 @@ class BaiduTrace
         return $item;
     }
 
+    public function boundsearchEntity(array $params) {
+        $this->method = 'GET';
+        $params['ak'] = $this->ak;
+        $params['service_id'] = $this->serviceId;
+        $res = $this->_sendHttp('entity/boundsearch',$params);
+        if ($res['status'] != 0) {
+            event(new ExceptionNotify('boundsearchEntity失败:'.$res['message']));
+            return false;
+        }
+        return $res;
+    }
+
+    public function getDistance(array $params) {
+        $this->method = 'GET';
+        $params['ak'] = $this->ak;
+        $params['service_id'] = $this->serviceId;
+        $res = $this->_sendHttp('track/getdistance',$params);
+        if ($res['status'] != 0) {
+            event(new ExceptionNotify('getDistance失败:'.$res['message']));
+            return false;
+        }
+        return $res;
+    }
+
+    public function getTrack(array $params) {
+        $this->method = 'GET';
+        $params['ak'] = $this->ak;
+        $params['service_id'] = $this->serviceId;
+        $res = $this->_sendHttp('track/gettrack',$params);
+        if ($res['status'] != 0) {
+            event(new ExceptionNotify('getTrack失败:'.$res['message']));
+            return false;
+        }
+        return $res;
+    }
+
+    public function columnsList(array $params) {
+        $this->method = 'GET';
+        $params['ak'] = $this->ak;
+        $params['service_id'] = $this->serviceId;
+        $res = $this->_sendHttp('entity/listcolumn',$params);
+        if ($res['status'] != 0) {
+            event(new ExceptionNotify('entity/listcolumn失败:'.$res['message']));
+            return false;
+        }
+        return $res;
+    }
+
+    public function trackList(array $params) {
+        $this->method = 'GET';
+        $params['ak'] = $this->ak;
+        $params['service_id'] = $this->serviceId;
+        $res = $this->_sendHttp('track/gethistory',$params);
+        if ($res['status'] != 0) {
+            event(new ExceptionNotify('track/gethistory失败:'.$res['message']));
+            return false;
+        }
+        return $res;
+    }
+
+    public function getstaypoint(array $params) {
+        $this->method = 'GET';
+        $params['ak'] = $this->ak;
+        $params['service_id'] = $this->serviceId;
+        $res = $this->_sendHttp('analysis/staypoint',$params);
+        if ($res['status'] != 0) {
+            event(new ExceptionNotify('analysis/staypoint失败:'.$res['message']));
+            return false;
+        }
+        return $res;
+    }
+
+    public function getBehaviorAnalysis(array $params) {
+        $this->method = 'GET';
+        $params['ak'] = $this->ak;
+        $params['service_id'] = $this->serviceId;
+        $res = $this->_sendHttp('analysis/drivingbehavior',$params);
+        if ($res['status'] != 0) {
+            event(new ExceptionNotify('analysis/drivingbehavior失败:'.$res['message']));
+            return false;
+        }
+        return $res;
+    }
+
     /**
      * 生成URL
      * @param  string $uri
@@ -182,7 +273,7 @@ class BaiduTrace
      */
     private function _sendHttp($uri,$params){
         if($this->method === 'GET'){
-            $url = $this->url . $uri . '?ak=' . $this->ak;
+            $url = $this->url .$this->version.'/'. $uri . '?ak=' . $this->ak;
             unset($params['ak']);
             foreach ($params as $key => $v) {
                 $url .="&{$key}=" . urlencode($v);
@@ -191,7 +282,7 @@ class BaiduTrace
             $data = $this->_curl($url);
         } else {
             RateLimiter::instance()->lock_acquire('baiduyingyan-other',59,1);
-            $url = $this->url . $uri;
+            $url = $this->url .$this->version.'/'. $uri;
             $data = $this->_curl($url,$params);
         }
         return json_decode($data,true);

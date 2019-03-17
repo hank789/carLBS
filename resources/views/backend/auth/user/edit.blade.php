@@ -35,7 +35,7 @@
                                 ->required() }}
                         </div><!--col-->
                     </div><!--form-group-->
-                    
+
                     <div class="form-group row">
                     {{ html()->label(__('validation.attributes.backend.access.users.first_name'))->class('col-md-2 form-control-label')->for('first_name') }}
 

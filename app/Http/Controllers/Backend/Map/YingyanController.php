@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Backend\Map\ManageYingyanRequest;
 use App\Models\Transport\TransportEntity;
 use App\Models\Transport\TransportSub;
+use App\Services\BaiduMap;
+use App\Services\BaiduTrace;
 
 class YingyanController extends Controller
 {
@@ -64,4 +66,70 @@ class YingyanController extends Controller
             return response()->json($return);
         }
     }
+
+    // 矩形区域检索entity:yingyan.baidu.com/api/v3/entity/boundsearch
+    public function boundsearchEntity(ManageYingyanRequest $request) {
+        $params = $request->all();
+        unset($params['callback']);
+        $res = BaiduTrace::instance()->boundsearchEntity($params);
+        return response()->json($res);
+    }
+
+    //获取track的distance:yingyan.baidu.com/api/v3/track/getdistance
+    public function getDistance(ManageYingyanRequest $request) {
+        $params = $request->all();
+        unset($params['callback']);
+        $res = BaiduTrace::instance()->getDistance($params);
+        return response()->json($res);
+    }
+
+    //获取track信息:yingyan.baidu.com/api/v3/track/gettrack
+    public function getTrack(ManageYingyanRequest $request) {
+        $params = $request->all();
+        unset($params['callback']);
+        $res = BaiduTrace::instance()->getTrack($params);
+        return response()->json($res);
+    }
+
+    //获取自定义字段列表:yingyan.baidu.com/api/v3/entity/listcolumn
+    public function columnsList(ManageYingyanRequest $request) {
+        $params = $request->all();
+        unset($params['callback']);
+        $res = BaiduTrace::instance()->columnsList($params);
+        return response()->json($res);
+    }
+
+    //获取track列表:yingyan.baidu.com/api/v2/track/gethistory
+    public function trackList(ManageYingyanRequest $request) {
+        $params = $request->all();
+        unset($params['callback']);
+        $res = BaiduTrace::instance()->setVersion('v2')->trackList($params);
+        return response()->json($res);
+    }
+
+    //获取停留点:yingyan.baidu.com/api/v3/analysis/staypoint
+    public function getstaypoint(ManageYingyanRequest $request) {
+        $params = $request->all();
+        unset($params['callback']);
+        $res = BaiduTrace::instance()->getstaypoint($params);
+        return response()->json($res);
+    }
+
+    //获取驾驶行为分析信息:yingyan.baidu.com/api/v3/analysis/drivingbehavior
+    public function getBehaviorAnalysis(ManageYingyanRequest $request) {
+        $params = $request->all();
+        unset($params['callback']);
+        $res = BaiduTrace::instance()->getBehaviorAnalysis($params);
+        return response()->json($res);
+    }
+
+    //经纬度解析:api.map.baidu.com/geocoder/v2/
+    public function getAddress(ManageYingyanRequest $request) {
+        $params = $request->all();
+        unset($params['callback']);
+        $location = explode(',',$params['location']);
+        $res = BaiduMap::instance()->geocoder($location[0],$location[1]);
+        return response()->json($res);
+    }
+
 }

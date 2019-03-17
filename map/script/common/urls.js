@@ -5,25 +5,25 @@
 import Commonfun from 'commonfun'
 var urls = {
     // 矩形区域检索entity
-    boundsearchEntity: '//yingyan.baidu.com/api/v3/entity/boundsearch',
+    boundsearchEntity: '/admin/map/entity/boundsearch',
     // 获取track的distance
-    getDistance: '//yingyan.baidu.com/api/v3/track/getdistance',
+    getDistance: '/admin/map/track/getdistance',
     // 获取track信息
-    getTrack: '//yingyan.baidu.com/api/v3/track/gettrack',
+    getTrack: '/admin/map/track/gettrack',
 
     // 获取自定义字段列表
-    columnsList: '//yingyan.baidu.com/api/v3/entity/listcolumn',
+    columnsList: '/admin/map/entity/listcolumn',
     // 经纬度解析
-    getAddress: '//api.map.baidu.com/geocoder/v2/',
+    getAddress: '/admin/map/getAddress',
     // 通过新的search接口获取数据，包括所有entity、模糊搜索entity、在线entity、离线entity
     // searchEntity: '//yingyan.baidu.com/api/v3/entity/search',
     searchEntity: '/admin/map/entity/search',
     // 获取track列表
-    trackList: '//yingyan.baidu.com/api/v2/track/gethistory',
+    trackList: '/admin/map/track/gethistory',
     // 获取停留点
-    getstaypoint: '//yingyan.baidu.com/api/v3/analysis/staypoint',
+    getstaypoint: '/admin/map/analysis/staypoint',
     // 获取驾驶行为分析信息
-    getBehaviorAnalysis: '//yingyan.baidu.com/api/v3/analysis/drivingbehavior',
+    getBehaviorAnalysis: '/admin/map/analysis/drivingbehavior',
 
     /**
      * Jquery AJAX GET
@@ -94,17 +94,15 @@ var urls = {
      * @param {function} before 请求前函数
      */
     jsonp: function (url, params, callback, before) {
-        if (url === this.searchEntity) {
-            this.get(url, params,callback,before);
-            return;
-        }
+        this.get(url, params,callback,before);
+        return;
         var that = this;
         if (before) {
             before();
         }
         params.timeStamp = new Date().getTime();
-        params.ak = '5wVEwreqidWac7GyZu2wBeWj9tmIvj6P';
-        params.service_id = 210186;
+        params.ak = '';
+        params.service_id = 0;
         url = url + '?';
         for (let i in params) {
             url = url + i + '=' + params[i] + '&';
