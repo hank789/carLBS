@@ -16,7 +16,6 @@
                     <div class="row">
                         <div class="col col-sm-4 order-1 order-sm-2  mb-4">
                             <div class="card mb-4 bg-light">
-                                <img class="card-img-top" src="{{ $logged_in_user->picture }}" alt="Profile Picture">
 
                                 <div class="card-body">
                                     <h4 class="card-title">
@@ -36,7 +35,7 @@
                                             <i class="fas fa-user-circle"></i> @lang('navs.frontend.user.account')
                                         </a>
 
-                                        @can('view backend')
+                                        @can('后台登陆')
                                             &nbsp;<a href="{{ route('admin.dashboard')}}" class="btn btn-danger btn-sm mb-1">
                                                 <i class="fas fa-user-secret"></i> @lang('navs.frontend.user.administration')
                                             </a>

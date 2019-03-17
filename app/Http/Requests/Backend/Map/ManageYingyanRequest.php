@@ -16,7 +16,7 @@ class ManageYingyanRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->isAdmin();
+        return $this->user()->can('在线车辆');
     }
 
     /**

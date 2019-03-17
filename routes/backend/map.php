@@ -8,8 +8,7 @@ use App\Http\Controllers\Backend\Map\YingyanController;
 Route::group([
     'prefix'     => 'map',
     'as'         => 'map.',
-    'namespace'  => 'Map',
-    'middleware' => 'role:'.config('access.users.admin_role'),
+    'namespace'  => 'Map'
 ], function () {
 
     //获取终端实例

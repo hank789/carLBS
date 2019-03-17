@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use App\Services\Registrar;
 use Illuminate\Console\Command;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class Test extends Command
 {
@@ -38,6 +40,20 @@ class Test extends Command
      */
     public function handle()
     {
+        $permission = Permission::find(1);
+        $permission->name = '后台登陆';
+        $permission->save();
+        $role = Role::find(2);
+        $role->name = '行程管理员';
+        $role->save();
+        $permissions = ['行程管理','在线车辆','司机管理'];
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission]);
+        }
+        $admin = Role::find(1);
+        $admin->givePermissionTo(Permission::all());
+
+        return;
         $registrar = new Registrar();
         for ($i=1;$i<=100;$i++) {
             $registrar->create([

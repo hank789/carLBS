@@ -79,11 +79,8 @@ class UserController extends Controller
                 event(new UserReactivated($user));
                 break;
         }
+        $user->save();
 
-        if ($user->save()) {
-            return $user;
-        }
-
-        return redirect()->route(url()->previous())->withFlashSuccess(__('alerts.backend.users.updated'));
+        return $this->success(url()->previous(),__('alerts.backend.users.updated'));
     }
 }

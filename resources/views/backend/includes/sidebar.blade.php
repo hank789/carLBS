@@ -13,22 +13,27 @@
             <li class="nav-title">
                 车队管理
             </li>
+            @can('司机管理')
             <li class="nav-item">
                 <a class="nav-link {{ active_class(Active::checkUriPattern('admin/transport/user*')) }}" href="{{ route('admin.transport.user.index') }}">
                     <i class="nav-icon icon-people"></i> 司机管理
                 </a>
             </li>
+            @endcan
+            @can('行程管理')
             <li class="nav-item">
                 <a class="nav-link {{ active_class(Active::checkUriPattern('admin/transport/main*') || Active::checkUriPattern('admin/transport/sub*')) }}" href="{{ route('admin.transport.main.index') }}">
                     <i class="nav-icon fa fa-car"></i> 行程管理
                 </a>
             </li>
+            @endcan
+            @can('在线车辆')
             <li class="nav-item">
                 <a class="nav-link" href="/manager.html" target="_blank">
                     <i class="nav-icon icon-location-pin"></i> 在线车辆
                 </a>
             </li>
-
+            @endcan
             @if ($logged_in_user->isAdmin())
             <li class="nav-title">
                 权限管理

@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', app_display_name())</title>
+    <title>@yield('title', '长江智慧物流')</title>
     <meta name="description" content="@yield('meta_description', app_display_name())">
     <meta name="author" content="@yield('meta_author', app_display_name())">
     <link rel="shortcut icon" href="{{ asset('img/favicon_32.ico',config('app.use_ssl')) }}">
@@ -50,8 +50,6 @@
         <!-- backend.includes.aside -->
 
     </div><!--app-body-->
-
-    @include('backend.includes.footer')
 
     <!-- Scripts -->
     @stack('before-scripts')

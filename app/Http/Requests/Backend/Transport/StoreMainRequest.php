@@ -16,7 +16,7 @@ class StoreMainRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->isAdmin();
+        return $this->user()->can('行程管理');
     }
 
     /**

@@ -11,8 +11,7 @@ use App\Http\Controllers\Backend\Transport\SubController;
 Route::group([
     'prefix'     => 'transport',
     'as'         => 'transport.',
-    'namespace'  => 'Transport',
-    'middleware' => 'role:'.config('access.users.admin_role'),
+    'namespace'  => 'Transport'
 ], function () {
     /*
      * User Management
