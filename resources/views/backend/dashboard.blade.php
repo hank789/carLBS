@@ -10,7 +10,7 @@
                     <strong>@lang('strings.backend.dashboard.welcome') {{ $logged_in_user->name }}!</strong>
                 </div><!--card-header-->
                 <div class="card-body">
-                    欢迎来到长江智慧物流管理后台！
+                    欢迎来到长江智链管理后台！
                 </div><!--card-body-->
             </div><!--card-->
         </div><!--col-->

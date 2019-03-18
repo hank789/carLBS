@@ -11,7 +11,7 @@ var Title = React.createClass({
     	var logo = __uri('/static/images/logo_2x.png');
         return (
             <div className="title">
-                <span className="headName">长江智慧物流</span>
+                <span className="headName">长江智链</span>
             </div>
         )
     }

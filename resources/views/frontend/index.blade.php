@@ -2,9 +2,9 @@
 <!-- saved from url=(0021)https://www.zsxq.com/ -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <title>车百讯</title>
-    <meta name="description" content="车百讯">
-    <meta name="keywords" content="车百讯">
+    <title>长江智链</title>
+    <meta name="description" content="长江智链">
+    <meta name="keywords" content="长江智链">
     <link rel="shortcut icon" href="{{ asset('img/favicon_32.ico',config('app.use_ssl')) }}">
     <link rel="icon" href="{{ asset('img/favicon_32.ico',config('app.use_ssl')) }}">
     <link rel="stylesheet" href="{{ asset('css/landing.css',config('app.use_ssl')) }}">
@@ -14,7 +14,7 @@
 <body>
 <div class="header">
     <div class="header-con">
-        <h1 class="logo"><a href="#">车百讯</a></h1>
+        <h1 class="logo"><a href="#">长江智链</a></h1>
         <div class="menu">
             @guest
             <a href="{{route('frontend.auth.login')}}" class="href-dweb">@lang('navs.frontend.login')</a>
@@ -40,7 +40,7 @@
             <div class="banner-left">
                 <div class="footer-down">
                     <div class="footer-iphone">
-                        <p class="down-txt">下载车百讯 App</p>
+                        <p class="down-txt">下载长江智链 App</p>
                         <a href="#"><span class="andriod">安卓版下载</span></a>
                         <a href="#"><span class="ios">iOS 版下载</span></a>
                     </div>
@@ -66,7 +66,7 @@
             <ul class="protocol">
 
             </ul>
-            <p class="copyright">版权所有©车百讯&nbsp;中讯智慧物联信息科技(苏州)有限公司&nbsp;&nbsp;<a href="http://www.miitbeian.gov.cn/" target="_blank">苏ICP备19008789号-1</a></p>
+            <p class="copyright">版权所有©长江智链 &nbsp;中讯智慧物联信息科技(苏州)有限公司&nbsp;&nbsp;<a href="http://www.miitbeian.gov.cn/" target="_blank">苏ICP备19008789号-1</a></p>
         </div>
     </div>
 </div>
