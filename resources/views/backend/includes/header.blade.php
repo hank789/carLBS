@@ -36,7 +36,7 @@
             <span class="d-md-down-none">{{ $logged_in_user->full_name }}</span>
           </a>
           <div class="dropdown-menu dropdown-menu-right">
-            <a class="dropdown-item" href="{{ route('admin.auth.user.show',$logged_in_user) }}">
+            <a class="dropdown-item" href="{{ route('admin.company.user.show',$logged_in_user) }}">
               <i class="fa fa-user"></i> 个人信息
             </a>
             <div class="divider"></div>

@@ -75,7 +75,7 @@
                     <div class="card text-white bg-primary py-5 d-md-down-none" style="width:44%">
                         <div class="card-body text-center">
                             <div>
-                                <p><img class="navbar-brand-full" src="{{ asset('img/backend/brand/logo.svg') }}" width="150" height="150" alt="CoreUI Logo"></p>
+                                <p><img class="navbar-brand-full" src="{{ asset('img/logo.png') }}" width="150" height="150" alt="CoreUI Logo"></p>
                             </div>
                         </div>
                     </div>
