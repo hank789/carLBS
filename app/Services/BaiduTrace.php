@@ -124,6 +124,7 @@ class BaiduTrace
 
     //上报多条位置信息
     public function trackBatch($entity_name, array $positionList, array $customerFields = []) {
+        if (empty($positionList) || count($positionList) <= 0) return true;
         $this->method = 'post';
         $params = [];
         $params['ak'] = $this->ak;
