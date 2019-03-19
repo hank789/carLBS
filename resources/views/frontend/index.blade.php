@@ -41,8 +41,8 @@
                 <div class="footer-down">
                     <div class="footer-iphone">
                         <p class="down-txt">下载长江智链 App</p>
-                        <a href="#"><span class="andriod">安卓版下载</span></a>
-                        <a href="#"><span class="ios">iOS 版下载</span></a>
+                        <a href="https://www.pgyer.com/c8n3" target="_blank"><span class="andriod">安卓版下载</span></a>
+                        <a href="#"><span class="ios">iOS 版下载(审核中)</span></a>
                     </div>
                     <div class="footer-qrcode">
                         <img src="{{ asset('img/qrcode@2x.png',config('app.use_ssl')) }}" width="100" height="100">
