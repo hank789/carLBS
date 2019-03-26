@@ -3,7 +3,7 @@
 @section('title', '行程管理 | 添加行程')
 
 @section('head-script')
-    <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=YC6A8W3HV3y6Xox8rFRkdThj8VGKk8Dt"></script>
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=oOBCAkeREzlDTnhp6MT1BcEiovp51S1l"></script>
 @endsection
 
 @section('content')

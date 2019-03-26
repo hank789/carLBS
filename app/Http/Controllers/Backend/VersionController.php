@@ -66,7 +66,7 @@ class VersionController extends Controller
 
         if($version){
             $message = '发布成功,等待管理员审核! ';
-            return $this->success(route('backend.version.index'),$message);
+            return $this->success(route('admin.version.index'),$message);
         }
 
         return  $this->error(route('admin.version.index'),"发布失败，请稍后再试");
