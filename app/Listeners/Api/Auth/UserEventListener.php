@@ -21,7 +21,7 @@ class UserEventListener implements ShouldQueue
      */
     public function onLoggedIn($event)
     {
-        Slack::instance()->to(config('slack.activity_channel'))->send('用户登录: '.formatSlackUser($event->user).';设备:'.$event->loginFrom);
+        Slack::instance()->to(config('slack.activity_channel'))->send('用户登录: '.formatSlackUser($event->user));
     }
 
     /**
@@ -29,11 +29,11 @@ class UserEventListener implements ShouldQueue
      */
     public function onLoggedOut($event)
     {
-        Slack::instance()->to(config('slack.activity_channel'))->send('用户登出: '.formatSlackUser($event->user).';设备:'.$event->from);
+        Slack::instance()->to(config('slack.activity_channel'))->send('用户登出: '.formatSlackUser($event->user));
     }
 
     /**
-     * @param UserRegistered $event
+     * @param $event
      */
     public function onRegistered($event)
     {
