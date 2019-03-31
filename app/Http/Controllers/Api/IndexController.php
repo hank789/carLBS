@@ -35,10 +35,10 @@ class IndexController extends Controller {
         $android_force_update_url = 'https://www.pgyer.com/mpKs';
 
         if(config('app.env') == 'production'){
-            $ios_force_update_url = 'itms-apps://itunes.apple.com/cn/app/inwehub/id1244660980?l=zh&mt=8';//正式环境换成苹果商店的地址
+            $ios_force_update_url = 'itms-apps://itunes.apple.com/cn/app/长江智链/id1457673059?l=zh&ls=1&mt=8';//正式环境换成苹果商店的地址
             //https://a.app.qq.com/o/simple.jsp?pkgname=com.inwehub.InwehubApp
             //market://details?id=com.inwehub.InwehubApp
-            $android_force_update_url = 'market://details?id=com.inwehub.InwehubApp';//正式环境换成android商店的地址
+            $android_force_update_url = 'https://www.pgyer.com/c8n3';//正式环境换成android商店的地址
         }
         $app_version = $last->app_version??'1.0.0';
         $is_ios_force = $last->is_ios_force??0;
