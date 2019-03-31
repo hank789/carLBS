@@ -45,7 +45,7 @@
                         <a href="https://itunes.apple.com/us/app/长江智链/id1457673059?l=zh&ls=1&mt=8"><span class="ios">iOS 版下载</span></a>
                     </div>
                     <div class="footer-qrcode">
-                        <img src="{{ asset('img/qrcode@2x.png',config('app.use_ssl')) }}" width="100" height="100">
+                        <img src="{{ asset('img/qrcode@2x.png',config('app.use_ssl')) }}?v=20190331" width="100" height="100">
                     </div>
                 </div>
                 <div class="banner-tips">
