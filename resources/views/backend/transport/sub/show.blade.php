@@ -189,6 +189,21 @@
                                 </div>
                             </div>
 
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <dl class="row mb-0">
+                                        <div class="col-sm-2 text-sm-right">
+                                            <dt>货物信息:</dt>
+                                        </div>
+                                        <div class="col-sm-10 text-sm-left">
+                                            <dd>
+                                                {{ $sub->transport_goods['transport_goods'] }}
+                                            </dd>
+                                        </div>
+                                    </dl>
+                                </div>
+                            </div>
+
                             <div class="row m-t-sm">
                                 <div class="col-lg-12">
                                     <div class="panel blank-panel">

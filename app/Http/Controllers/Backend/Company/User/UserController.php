@@ -42,7 +42,7 @@ class UserController extends Controller
         $users = User::with('roles', 'permissions', 'providers')
             ->active()
             ->where('id','!=',1)
-            ->orderBy('id', 'asc')
+            ->orderBy('id', 'desc')
             ->paginate(25);
         return view('backend.company.user.index')
             ->withUsers($users);
