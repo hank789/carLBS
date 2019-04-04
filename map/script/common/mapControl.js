@@ -500,7 +500,7 @@ window.mapControl = {
             '<div class="carInfoWindow">',
                 '<div class="carInfoHeader' + data.entity_status + '">',
                     '<abbr title="' + data.entity_print + '">',
-                    data.entity_print,
+                    data.entity_print + ' ' + data.entity_owner,
                     '</abbr>',
                 '</div>',
                 '<div class="carInfoContent">'
@@ -521,6 +521,9 @@ window.mapControl = {
         let infoContentNextArr = [
             '</div>',
             '<div class="infoControl">',
+                '<div class="infoDistanceDesc">',
+                data.distanceDesc,
+                '</div>',
                 '<div class="infoGoTrack" id="monitorInfoZoomIn">',
                     '轨迹',
                 '</div>',

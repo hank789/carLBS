@@ -1162,6 +1162,20 @@ abbr{
     padding-left: 20px;
 }
 
+.infoDistanceDesc {
+    /*display: none;*/
+    height: 100%;
+    line-height: 40px;
+    background-position: left center;
+    background-repeat: no-repeat;
+    width: 35px;
+    font-size: 12px;
+    color: #666;
+    cursor: pointer;
+    text-align: left;
+    padding-left: 20px;
+}
+
 .infoZoomIn {
     background-size: 15px 15px;
     background-image: url(static/images/zoominicon.png);

@@ -56,11 +56,13 @@ class YingyanController extends Controller
                     $end_place = coordinate_bd_encrypt($entity->entity_info['lastSub']['transport_end_place_longitude'],$entity->entity_info['lastSub']['transport_end_place_latitude']);
                 }
                 $distance = getDistanceByLatLng($entity->entity_info['lastPosition']['longitude'],$entity->entity_info['lastPosition']['latitude'],$end_place['bd_lon'],$end_place['bd_lat']);
-                $distanceDesc = '<br>距离目的地：约'.distanceFormat($distance);
+                $distanceDesc = '距目的地约'.distanceFormat($distance);
             }
             $list[] = [
                 'entity_name' => $entity->car_number,
-                'entity_desc' => '司机：'.($entity->entity_info['lastSub']['username']??'').' '.($entity->entity_info['lastSub']['phone']??'').'<br>目的地：'.($entity->entity_info['lastSub']['transport_end_place']??'').$distanceDesc.'<br>货物：'.($entity->entity_info['lastSub']['goods_info']??''),
+                'entity_owner' => ($entity->entity_info['lastSub']['username']??'').' '.($entity->entity_info['lastSub']['phone']??''),
+                'distance' => $distanceDesc,
+                'entity_desc' => '目的地：'.($entity->entity_info['lastSub']['transport_end_place']??'').'<br>货物：'.($entity->entity_info['lastSub']['goods_info']??''),
                 'create_time' => $entity->entity_info['lastSub']['start_time']??(string)$entity->created_at,
                 'modify_time' => (string)$entity->last_loc_time,
                 'latest_location' => $entity->entity_info['lastPosition']??[]
