@@ -588,7 +588,7 @@ var TrackStore = Reflux.createStore({
                             if (entityOption === 'byname' || entityOption === undefined) {
                                 that.data.selectCompleteEntities[index]['entity_print'] = item.entity_name;
                                 if (!!item.entity_desc) {
-                                    that.data.selectCompleteEntities[index]['infor'].unshift(['描述', item.entity_desc]);
+                                    that.data.selectCompleteEntities[index]['infor'].push(['描述', item.entity_desc]);
                                 }
                             } else if (entityOption === 'bydesc') {
                                 that.data.selectCompleteEntities[index]['entity_print'] = item.entity_desc ? item.entity_desc : '无';

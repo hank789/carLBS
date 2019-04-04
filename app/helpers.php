@@ -248,14 +248,14 @@ if (!function_exists('getDistanceByLatLng')) {
 }
 
 if (!function_exists('distanceFormat')) {
-    function distanceFormat($distance) {
+    function distanceFormat($distance,$xiaoshudian=2) {
         if (floatval($distance) <= 0) {
             return '0.1m';
         }
         if ($distance < 1000) {
             return $distance.'m';
         } else {
-            return ($distance/1000).'km';
+            return round($distance/1000,2).'km';
         }
     }
 }
