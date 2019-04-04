@@ -1052,7 +1052,7 @@ abbr{
 }
 
 .carInfoBox{
-    height: 221px;
+    height: 321px;
     width: 313px;
     background:url('static/images/infobox.png');
 }
@@ -1078,7 +1078,7 @@ abbr{
 }
 
 .carInfoContent{
-    height: 110px;
+    height: 210px;
     width: 100%;
     font-size: 12px;
     overflow-y: scroll;
