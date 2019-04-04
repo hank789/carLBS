@@ -19,9 +19,11 @@ class HomeController extends Controller
 
     public function appLanding($name) {
         switch ($name) {
+            case 'chjzhl':
             case '长江智链':
                 return view('frontend.landing.chjzhl');
                 break;
         }
+        return 'welcome';
     }
 }
