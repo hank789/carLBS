@@ -47,8 +47,7 @@ class YingyanController extends Controller
         $list = [];
         $return = [];
         foreach ($entities as $entity) {
-            if (isset($entity->entity_info['lastPosition'])) {
-                $distanceDesc = '';
+            if (isset($entity->entity_info['lastPosition']) && isset($entity->entity_info['lastSub']['transport_end_place_longitude'])) {
                 $end_place = [];
                 $end_place['bd_lon'] = $entity->entity_info['lastSub']['transport_end_place_longitude'];
                 $end_place['bd_lat'] = $entity->entity_info['lastSub']['transport_end_place_latitude'];
