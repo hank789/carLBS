@@ -16,4 +16,12 @@ class HomeController extends Controller
     {
         return view('frontend.index');
     }
+
+    public function appLanding($name) {
+        switch ($name) {
+            case '长江智链':
+                return view('frontend.landing.chjzhl');
+                break;
+        }
+    }
 }

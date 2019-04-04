@@ -57,6 +57,17 @@ a {
     margin-top: 26px;
     font-weight: normal;
 }
+
+.logoHome{
+    font-size: 22px;
+    display: inline-block;
+    background: url(../img/chebaixun.png) no-repeat;
+    background-size: 28px 28px;
+    padding-left: 44px;
+    margin-top: 26px;
+    font-weight: normal;
+}
+
 .menu{
     display: flex;
     margin-top: 20px;
