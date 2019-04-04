@@ -574,12 +574,13 @@ var TrackStore = Reflux.createStore({
                             that.data.selectCompleteEntities[index] = {
                                 point: [item.latest_location.longitude, item.latest_location.latitude],
                                 direction:item.latest_location.direction,
-                                entity_owner: item.latest_location.entity_owner,
-                                distanceDesc: item.latest_location.distance,
+                                entity_owner: item.entity_owner,
+                                distanceDesc: item.distance,
                                 status: Commonfun.getInfoWindowStatus(item.latest_location.speed, item.latest_location.loc_time, item.latest_location.direction),
                                 infor: [
                                     ['状态:', Commonfun.getInfoWindowStatus(item.latest_location.speed, item.latest_location.loc_time, item.latest_location.direction)],
                                     ['地址:', address],
+                                    ['目的地:',item.end_place]
                                     ['时间:', Commonfun.getLocalTime(item.latest_location.loc_time)]
                                 ].concat(temp)
                             };
