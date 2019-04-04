@@ -1164,11 +1164,8 @@ abbr{
 
 .infoDistanceDesc {
     /*display: none;*/
-    height: 100%;
     line-height: 40px;
-    background-position: left center;
-    background-repeat: no-repeat;
-    width: 35px;
+    width: 200px;
     font-size: 12px;
     color: #666;
     cursor: pointer;
