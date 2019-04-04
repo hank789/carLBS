@@ -126,6 +126,7 @@ class TransportController extends Controller {
 
         $entity_info['lastSub'] = [
             'username' => $user->name,
+            'phone' => $user->mobile,
             'sub_id' => $sub->id,
             'goods_info' => $request->input('transport_goods')
         ];
