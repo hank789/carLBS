@@ -580,7 +580,7 @@ var TrackStore = Reflux.createStore({
                                 infor: [
                                     ['状态:', Commonfun.getInfoWindowStatus(item.latest_location.speed, item.latest_location.loc_time, item.latest_location.direction)],
                                     ['地址:', address],
-                                    ['目的地:',item.end_place]
+                                    ['目的地:', item.end_place],
                                     ['时间:', Commonfun.getLocalTime(item.latest_location.loc_time)]
                                 ].concat(temp)
                             };
