@@ -63,6 +63,8 @@ class TransportController extends Controller {
         $data = $sub->toArray();
         $data['transport_contact_people'] = $main->transport_contact_people;
         $data['transport_contact_phone'] = $main->transport_contact_phone;
+        $data['transport_contact_vendor_people'] = $main->transport_contact_vendor_people;
+        $data['transport_contact_vendor_phone'] = $main->transport_contact_vendor_phone;
         $data['transport_number'] = $main->transport_number;
         $data['transport_start_time'] = date('Y-m-d H:i',strtotime($data['transport_start_time']));
         $data['need_upload_positions'] = false;
