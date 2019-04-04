@@ -80,6 +80,11 @@ class StartTransportSub implements ShouldQueue
             'phone' => $apiUser->mobile,
             'sub_id' => $sub->id,
             'start_time' => date('Y-m-d H:i:s'),
+            'transport_start_place' => $sub->transport_start_place,
+            'transport_end_place' => $sub->transport_end_place,
+            'transport_end_place_longitude'=> $sub->transport_goods['transport_end_place_longitude'],
+            'transport_end_place_latitude'=> $sub->transport_goods['transport_end_place_latitude'],
+            'transport_end_place_coordsType' => $sub->transport_goods['transport_end_place_coordsType'],
             'goods_info' => $sub->transport_goods['transport_goods']
         ];
         $entity->entity_info = $entity_info;

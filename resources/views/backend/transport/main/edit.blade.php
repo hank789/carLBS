@@ -75,14 +75,46 @@
                     </div><!--form-group-->
 
                     <div class="form-group row">
-                        {{ html()->label('联系人')
+                        {{ html()->label('供应商联系人')
+                            ->class('col-md-2 form-control-label')
+                            ->for('transport_contact_vendor_people') }}
+
+                        <div class="col-md-10">
+                            {{ html()->text('transport_contact_vendor_people')
+                                ->class('form-control')
+                                ->placeholder('供应商联系人')
+                                ->attribute('maxlength', 191)
+                                ->required()
+                                ->value($main->transport_contact_vendor_people)
+                            }}
+                        </div><!--col-->
+                    </div><!--form-group-->
+
+                    <div class="form-group row">
+                        {{ html()->label('供应商联系人电话')
+                            ->class('col-md-2 form-control-label')
+                            ->for('transport_contact_vendor_phone') }}
+
+                        <div class="col-md-10">
+                            {{ html()->text('transport_contact_vendor_phone')
+                                ->class('form-control')
+                                ->placeholder('供应商联系人电话')
+                                ->type('number')
+                                ->required()
+                                ->value($main->transport_contact_vendor_phone)
+                            }}
+                        </div><!--col-->
+                    </div><!--form-group-->
+
+                    <div class="form-group row">
+                        {{ html()->label('目的地联系人')
                             ->class('col-md-2 form-control-label')
                             ->for('transport_contact_people') }}
 
                         <div class="col-md-10">
                             {{ html()->text('transport_contact_people')
                                 ->class('form-control')
-                                ->placeholder('联系人')
+                                ->placeholder('目的地联系人')
                                 ->attribute('maxlength', 191)
                                 ->required()
                                 ->value($main->transport_contact_people)
@@ -91,14 +123,14 @@
                     </div><!--form-group-->
 
                     <div class="form-group row">
-                        {{ html()->label('联系人电话')
+                        {{ html()->label('目的地联系人电话')
                             ->class('col-md-2 form-control-label')
                             ->for('transport_contact_phone') }}
 
                         <div class="col-md-10">
                             {{ html()->text('transport_contact_phone')
                                 ->class('form-control')
-                                ->placeholder('联系人电话')
+                                ->placeholder('目的地联系人电话')
                                 ->type('number')
                                 ->required()
                                 ->value($main->transport_contact_phone)

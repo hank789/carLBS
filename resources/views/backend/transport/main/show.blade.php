@@ -54,18 +54,18 @@
 
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
-                                            <dt>行程联系人:</dt>
+                                            <dt>目的地联系人:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
-                                            <dd class="mb-1">{{ $main->transport_contact_people }}</dd>
+                                            <dd class="mb-1">{{ $main->transport_contact_people.'('.$main->transport_contact_phone.')' }}</dd>
                                         </div>
                                     </dl>
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
-                                            <dt>行程联系人电话:</dt>
+                                            <dt>供应商联系人:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
-                                            <dd class="mb-1">{{ $main->transport_contact_phone }}</dd>
+                                            <dd class="mb-1">{{ $main->transport_contact_vendor_people.'('.$main->transport_contact_vendor_phone.')' }}</dd>
                                         </div>
                                     </dl>
                                     <dl class="row mb-0">

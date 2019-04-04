@@ -212,6 +212,8 @@ class MainController extends Controller
             'transport_end_place' => $request->input('transport_end_place'),
             'transport_contact_people' => $request->input('transport_contact_people'),
             'transport_contact_phone' => $request->input('transport_contact_phone'),
+            'transport_contact_vendor_people' => $request->input('transport_contact_vendor_people'),
+            'transport_contact_vendor_phone' => $request->input('transport_contact_vendor_phone'),
             'transport_start_time' => $request->input('transport_start_time'),
             'transport_goods' => [
                 'transport_goods'=>$request->input('transport_goods'),
@@ -243,6 +245,8 @@ class MainController extends Controller
             'transport_end_place' => $request->input('transport_end_place'),
             'transport_contact_people' => $request->input('transport_contact_people'),
             'transport_contact_phone' => $request->input('transport_contact_phone'),
+            'transport_contact_vendor_people' => $request->input('transport_contact_vendor_people'),
+            'transport_contact_vendor_phone' => $request->input('transport_contact_vendor_phone'),
             'transport_start_time' => $request->input('transport_start_time'),
             'transport_goods' => [
                 'transport_goods'=>$request->input('transport_goods'),

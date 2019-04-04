@@ -48,8 +48,8 @@
                             <th>行程ID</th>
                             <th>出发地</th>
                             <th>目的地</th>
-                            <th>联系人</th>
-                            <th>联系电话</th>
+                            <th>目的地联系人</th>
+                            <th>供应商联系人</th>
                             <th>车辆数</th>
                             <th>开始时间</th>
                             <th>货物</th>
@@ -65,8 +65,8 @@
                                 <td>{{ $item->transport_number }}</td>
                                 <td>{{ $item->transport_start_place }}</td>
                                 <td>{{ $item->transport_end_place }}</td>
-                                <td>{{ $item->transport_contact_people }}</td>
-                                <td>{{ $item->transport_contact_phone }}</td>
+                                <td>{{ $item->transport_contact_people.'('.$item->transport_contact_phone.')' }}</td>
+                                <td>{{ $item->transport_contact_vendor_people.'('.$item->transport_contact_vendor_phone.')' }}</td>
                                 <td>{{ $item->getTransportSubCount() }}</td>
                                 <td>{{ $item->transport_start_time }}</td>
                                 <td>{{ str_limit($item->transport_goods['transport_goods'],50) }}</td>

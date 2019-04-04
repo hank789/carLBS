@@ -128,6 +128,10 @@ class TransportController extends Controller {
             'username' => $user->name,
             'phone' => $user->mobile,
             'sub_id' => $sub->id,
+            'transport_end_place' => $request->input('transport_end_place'),
+            'transport_end_place_longitude'=> $request->input('transport_end_place_longitude'),
+            'transport_end_place_latitude'=> $request->input('transport_end_place_latitude'),
+            'transport_end_place_coordsType' => $request->input('transport_end_place_coordsType'),
             'goods_info' => $request->input('transport_goods')
         ];
         $entity->entity_info = $entity_info;
