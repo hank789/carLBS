@@ -60,7 +60,7 @@ class YingyanController extends Controller
             }
             $list[] = [
                 'entity_name' => $entity->car_number,
-                'entity_desc' => '司机：'.($entity->entity_info['lastSub']['username']??'').' '.($entity->entity_info['lastSub']['phone']??'').'<br>目的地：'.($entity->entity_info['lastSub']['transport_end_place']).$distanceDesc.'<br>货物：'.($entity->entity_info['lastSub']['goods_info']),
+                'entity_desc' => '司机：'.($entity->entity_info['lastSub']['username']??'').' '.($entity->entity_info['lastSub']['phone']??'').'<br>目的地：'.($entity->entity_info['lastSub']['transport_end_place']??'').$distanceDesc.'<br>货物：'.($entity->entity_info['lastSub']['goods_info']??''),
                 'create_time' => $entity->entity_info['lastSub']['start_time']??(string)$entity->created_at,
                 'modify_time' => (string)$entity->last_loc_time,
                 'latest_location' => $entity->entity_info['lastPosition']??[]
