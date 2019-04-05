@@ -35,6 +35,15 @@ class SubController extends Controller
         foreach (TransportEvent::$eventType as $e) {
             $eventType[$e['key']] = $e['value'];
         }
+        $timeline[(string)$sub->created_at] = [
+            'title' => '行程开始',
+            'place' => $sub->transport_start_place,
+            'desc'  => '',
+            'images' => $sub->transport_goods['transport_goods_images']??[],
+            'created_at' => $sub->transport_goods['transport_start_real_time'],
+            'icon' => 'fa-clock',
+            'bg_color' => 'lazur-bg'
+        ];
         foreach ($events as $event) {
             $timeline[(string)$event->created_at] = [
                 'title' => '突发事件',

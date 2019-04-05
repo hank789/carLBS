@@ -171,7 +171,26 @@ class TransportController extends Controller {
             throw new ApiException(ApiException::TRANSPORT_SUB_EXIST_PROCESSING_SAME_CAR);
         }
 
+        $images = [];
+        for ($i=0;$i<=8;$i++) {
+            $image_file = 'image'.$i;
+            if($request->hasFile($image_file)){
+                $file_0 = $request->file($image_file);
+                $extension = strtolower($file_0->getClientOriginalExtension());
+                $extArray = array('png', 'gif', 'jpeg', 'jpg');
+                if(in_array($extension, $extArray)){
+                    $file_name = 'transport/'.date('Y').'/'.date('m').'/'.time().str_random(7).'.'.$extension;
+                    dispatch((new UploadFile($file_name,base64_encode(File::get($file_0)))));
+                    //Storage::disk('oss')->put($file_name,File::get($file_0));
+                    $images[] = Storage::disk('oss')->url($file_name);
+                }
+            }
+        }
         $position = $request->input('position');
+        if ($images) {
+            $position = json_decode($position,true);
+        }
+
         $sub->transport_start_place = $position['address']['city'].$position['address']['district'].($position['address']['street']??'').($position['address']['streetNum']??'');
         $sub->transport_status = TransportSub::TRANSPORT_STATUS_PROCESSING;
         $goodsInfo = $sub->transport_goods;
@@ -179,6 +198,7 @@ class TransportController extends Controller {
         $goodsInfo['transport_start_place_latitude'] = $position['coords']['latitude'];
         $goodsInfo['transport_start_place_coordsType'] = $position['coordsType'];
         $goodsInfo['transport_start_real_time'] = date('Y-m-d H:i:s');
+        $goodsInfo['transport_goods_images'] = $images;
         $sub->transport_goods = $goodsInfo;
         $sub->save();
         $this->dispatch(new StartTransportSub($sub->id, $position));
