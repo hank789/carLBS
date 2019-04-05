@@ -142,7 +142,12 @@ class BaiduTrace
         $params['point_list'] = json_encode($point_list);
         $res = $this->_sendHttp('track/addpoints',$params);
         if ($res['status'] != 0) {
-            event(new ExceptionNotify('批量轨迹上传失败:'.$res['message']));
+            $fields = [];
+            $fields[] = [
+                'title'=>'轨迹',
+                'value'=>json_encode($params)
+            ];
+            event(new ExceptionNotify('批量轨迹上传失败:'.$res['message'],$fields));
             return false;
         }
         return true;
@@ -176,9 +181,9 @@ class BaiduTrace
         $item['longitude'] = $longitude;//经度
         $item['loc_time'] = strlen($position['timestamp'])>10?intval($position['timestamp']/1000):$position['timestamp'];//定位时设备的时间,Unix时间戳
         $item['coord_type_input'] = $coordsType;//坐标类型
-        $item['speed'] = $position['coords']['speed'] * 3.6;//速度，单位：km/h
-        $item['direction'] = $position['coords']['heading']?:0;//方向
-        $item['height'] = ($position['coords']['altitude']<1)?0:$position['coords']['altitude'];//高度,单位：米
+        $item['speed'] = number_format($position['coords']['speed'] * 3.6,6);//速度，单位：km/h
+        $item['direction'] = (int)($position['coords']['heading']?:0);//方向
+        $item['height'] = number_format((($position['coords']['altitude']<1)?0:$position['coords']['altitude']),6);//高度,单位：米
         $item['radius'] = $position['coords']['accuracy'];//定位精度，GPS或定位SDK返回的值,单位：米
         return $item;
     }
