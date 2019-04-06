@@ -177,6 +177,22 @@
                     </div><!--form-group-->
 
                     <div class="form-group row">
+                        {{ html()->label('司机手机号列表(多个以逗号隔开)')
+                            ->class('col-md-2 form-control-label')
+                            ->for('transport_phone_list') }}
+
+                        <div class="col-md-10">
+                            {{ html()->textarea('transport_phone_list')
+                                ->class('form-control')
+                                ->attribute('rows',9)
+                                ->placeholder('司机手机号列表，以逗号隔开(如：15050378283,15050458789)，行程开始后会以短信通知司机')
+                                ->required()
+                                ->value($main->transport_goods['transport_phone_list']??'')
+                            }}
+                        </div><!--col-->
+                    </div><!--form-group-->
+
+                    <div class="form-group row">
                         {{ html()->label('货物信息')
                             ->class('col-md-2 form-control-label')
                             ->for('transport_goods') }}

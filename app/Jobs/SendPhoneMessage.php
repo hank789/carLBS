@@ -53,8 +53,11 @@ class SendPhoneMessage implements ShouldQueue
         switch($this->type){
             case 'login':
             case 'backend_login':
-                $templateId = 'SMS_124425049';
+                $templateId = 'SMS_160200656';
                 //$params = ['name' => $code]
+                break;
+            case 'notify_transport_start':
+                $templateId = 'SMS_162737211';
                 break;
             default:
                 break;
@@ -73,7 +76,7 @@ class SendPhoneMessage implements ShouldQueue
                     'query' => [
                         'PhoneNumbers' => $this->phone,
                         'SignName' => '中讯智慧',//短信签名
-                        'TemplateCode' => 'SMS_160200656',//模板id
+                        'TemplateCode' => $templateId,//模板id
                         'TemplateParam' => json_encode($this->params),//模板变量替换
                     ],
                 ])

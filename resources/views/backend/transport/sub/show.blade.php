@@ -95,6 +95,21 @@
                                 <div class="col-lg-12">
                                     <dl class="row mb-0">
                                         <div class="col-sm-2 text-sm-right">
+                                            <dt>司机手机号信息:</dt>
+                                        </div>
+                                        <div class="col-sm-10 text-sm-left">
+                                            <dd>
+                                                {{ $main->transport_goods['transport_phone_list']??'' }}
+                                            </dd>
+                                        </div>
+                                    </dl>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <dl class="row mb-0">
+                                        <div class="col-sm-2 text-sm-right">
                                             <dt>货物信息:</dt>
                                         </div>
                                         <div class="col-sm-10 text-sm-left">

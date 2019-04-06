@@ -6,6 +6,7 @@ use App\Exceptions\GeneralException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Backend\Transport\ManageMainRequest;
 use App\Http\Requests\Backend\Transport\StoreMainRequest;
+use App\Jobs\SendPhoneMessage;
 use App\Models\Auth\ApiUser;
 use App\Models\Transport\TransportEvent;
 use App\Models\Transport\TransportMain;
@@ -175,9 +176,16 @@ class MainController extends Controller
 
         //todo 进行中的行程如果要取消，需要判断是否有在途的司机
         switch ($status) {
-            case 0:
+            case TransportMain::TRANSPORT_STATUS_PENDING:
                 break;
-            case 1:
+            case TransportMain::TRANSPORT_STATUS_PROCESSING:
+                $phoneList = $main->transport_goods['transport_phone_list']??'';
+                if ($phoneList) {
+                    $phoneArr = explode(',',$phoneList);
+                    foreach ($phoneArr as $phone) {
+                        $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start'));
+                    }
+                }
                 break;
         }
         $main->save();
@@ -205,7 +213,8 @@ class MainController extends Controller
     {
         $transportNumber = NumberUuid::instance()->get_uuid_number();
         $coordinate = coordinate_bd_decrypt($request->input('transport_end_place_longitude'),$request->input('transport_end_place_latitude'));
-        TransportMain::create([
+        $phoneList = str_replace('，',',',$request->input('transport_phone_list'));
+        $main = TransportMain::create([
             'user_id' => $request->user()->id,
             'transport_number' => $transportNumber,
             'transport_start_place' => $request->input('transport_start_place'),
@@ -220,9 +229,16 @@ class MainController extends Controller
                 'transport_end_place_longitude'=> $coordinate['gg_lon'],
                 'transport_end_place_latitude'=> $coordinate['gg_lat'],
                 'transport_end_place_coordsType' => 'gcj02',
+                'transport_phone_list' => $phoneList
             ],
             'transport_status' => $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING)
         ]);
+        if ($phoneList && $main->transport_status == TransportMain::TRANSPORT_STATUS_PROCESSING) {
+            $phoneArr = explode(',',$phoneList);
+            foreach ($phoneArr as $phone) {
+                $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start'));
+            }
+        }
         return redirect()->route('admin.transport.main.index')->withFlashSuccess('行程添加成功');
     }
 
@@ -240,6 +256,8 @@ class MainController extends Controller
         if ($main->transport_end_place != $request->input('transport_end_place')) {
             $coordinate = coordinate_bd_decrypt($request->input('transport_end_place_longitude'),$request->input('transport_end_place_latitude'));
         }
+        $phoneList = str_replace('，',',',$request->input('transport_phone_list'));
+        $oldStatus = $main->transport_status;
         $main->update([
             'transport_start_place' => $request->input('transport_start_place'),
             'transport_end_place' => $request->input('transport_end_place'),
@@ -253,10 +271,16 @@ class MainController extends Controller
                 'transport_end_place_longitude'=> $coordinate['gg_lon']??$main->transport_goods['transport_end_place_longitude'],
                 'transport_end_place_latitude'=> $coordinate['gg_lat']??$main->transport_goods['transport_end_place_latitude'],
                 'transport_end_place_coordsType' => 'gcj02',
+                'transport_phone_list' => $phoneList
             ],
             'transport_status' => $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING)
         ]);
-
+        if ($phoneList && in_array($oldStatus,[TransportMain::TRANSPORT_STATUS_PENDING,TransportMain::TRANSPORT_STATUS_CANCEL]) && $main->transport_status == TransportMain::TRANSPORT_STATUS_PROCESSING) {
+            $phoneArr = explode(',',$phoneList);
+            foreach ($phoneArr as $phone) {
+                $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start'));
+            }
+        }
         return redirect()->route('admin.transport.main.index')->withFlashSuccess('行程修改成功');
     }
 
