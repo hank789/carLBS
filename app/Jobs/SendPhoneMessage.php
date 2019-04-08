@@ -57,10 +57,10 @@ class SendPhoneMessage implements ShouldQueue
                 //$params = ['name' => $code]
                 break;
             case 'notify_transport_start':
-                $templateId = 'SMS_162737211';
+                $templateId = 'SMS_162738471';
                 break;
             case 'notify_app_download':
-                $templateId = 'SMS_162738333';
+                $templateId = 'SMS_162733414';
                 break;
             default:
                 break;
@@ -80,16 +80,12 @@ class SendPhoneMessage implements ShouldQueue
                         'PhoneNumbers' => $this->phone,
                         'SignName' => '中讯智慧',//短信签名
                         'TemplateCode' => $templateId,//模板id
-                        'TemplateParam' => json_encode($this->params),//模板变量替换
+                        //'TemplateParam' => json_encode($this->params),//模板变量替换
                     ],
                 ])
                 ->request();
             if ($result['Code'] != 'OK') {
                 event(new ExceptionNotify('短信验证码发送失败：'.$result['Code'].';'.$result['Message']));
-            } else {
-                if ($this->type == 'notify_transport_start') {
-                    (new SendPhoneMessage($this->phone,[],'notify_app_download'))->handle();
-                }
             }
         } catch (ClientException $e) {
             event(new ExceptionNotify('短信验证码发送失败：'.$e->getErrorMessage()));
