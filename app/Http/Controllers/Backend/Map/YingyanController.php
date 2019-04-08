@@ -24,7 +24,7 @@ class YingyanController extends Controller
         $service_id = $request->input('service_id');
         $callback = $request->input('callback');
         \Log::info('test',$request->all());
-        $queryModel = TransportEntity::query();
+        $queryModel = TransportEntity::where('entity_status',1);
         if ($query) {
             $queryModel = $queryModel->where('car_number','like','%'.$query.'%');
         }
