@@ -59,6 +59,9 @@ class SendPhoneMessage implements ShouldQueue
             case 'notify_transport_start':
                 $templateId = 'SMS_162737211';
                 break;
+            case 'notify_app_download':
+                $templateId = 'SMS_162738333';
+                break;
             default:
                 break;
         }
@@ -83,6 +86,10 @@ class SendPhoneMessage implements ShouldQueue
                 ->request();
             if ($result['Code'] != 'OK') {
                 event(new ExceptionNotify('短信验证码发送失败：'.$result['Code'].';'.$result['Message']));
+            } else {
+                if ($this->type == 'notify_transport_start') {
+                    (new SendPhoneMessage($this->phone,[],'notify_app_download'))->handle();
+                }
             }
         } catch (ClientException $e) {
             event(new ExceptionNotify('短信验证码发送失败：'.$e->getErrorMessage()));
