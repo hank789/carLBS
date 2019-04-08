@@ -58,6 +58,10 @@ class YingyanController extends Controller
                 $distance = getDistanceByLatLng($entity->entity_info['lastPosition']['longitude'],$entity->entity_info['lastPosition']['latitude'],$end_place['bd_lon'],$end_place['bd_lat']);
                 $distanceDesc = '距目的地约'.distanceFormat($distance);
             }
+            $latest_location = $entity->entity_info['lastPosition']??[];
+            if (isset($latest_location['speed'])) {
+                $latest_location['speed'] = round($latest_location['speed'],2);
+            }
             $list[] = [
                 'entity_name' => $entity->car_number,
                 'entity_owner' => ($entity->entity_info['lastSub']['username']??'').' '.($entity->entity_info['lastSub']['phone']??''),
@@ -66,7 +70,7 @@ class YingyanController extends Controller
                 'entity_desc' => ($entity->entity_info['lastSub']['goods_info']??''),
                 'create_time' => $entity->entity_info['lastSub']['start_time']??(string)$entity->created_at,
                 'modify_time' => (string)$entity->last_loc_time,
-                'latest_location' => $entity->entity_info['lastPosition']??[]
+                'latest_location' => $latest_location
             ];
         }
         $return['entities'] = $list;
