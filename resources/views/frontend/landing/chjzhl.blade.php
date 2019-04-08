@@ -5,6 +5,7 @@
     <title>长江智链</title>
     <meta name="description" content="长江智链">
     <meta name="keywords" content="长江智链">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1">
     <link rel="shortcut icon" href="{{ asset('img/favicon_32.ico',config('app.use_ssl')) }}">
     <link rel="icon" href="{{ asset('img/favicon_32.ico',config('app.use_ssl')) }}">
     <link rel="stylesheet" href="{{ asset('css/landing.css',config('app.use_ssl')) }}">
