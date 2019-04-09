@@ -187,6 +187,21 @@ class MainController extends Controller
                     }
                 }
                 break;
+            case TransportMain::TRANSPORT_STATUS_CANCEL:
+                $phoneList = $main->transport_goods['transport_phone_list']??'';
+                $phoneArr = [];
+                if ($phoneList) {
+                    $phoneArr = explode(',',$phoneList);
+                }
+                $list = TransportSub::where('transport_main_id',$id)->orderBy('id','desc')->get();
+                foreach ($list as $sub) {
+                    $phoneArr[] = $sub->apiUser->mobile;
+                }
+                $phoneArr = array_unique($phoneArr);
+                foreach ($phoneArr as $phone) {
+                    $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number,'phone' => $main->transport_contact_vendor_phone],'notify_transport_cancel'));
+                }
+                break;
         }
         $main->save();
 
@@ -229,7 +244,8 @@ class MainController extends Controller
                 'transport_end_place_longitude'=> $coordinate['gg_lon'],
                 'transport_end_place_latitude'=> $coordinate['gg_lat'],
                 'transport_end_place_coordsType' => 'gcj02',
-                'transport_phone_list' => $phoneList
+                'transport_phone_list' => $phoneList,
+                'transport_vendor_company' => $request->input('transport_vendor_company','')
             ],
             'transport_status' => $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING)
         ]);
@@ -271,7 +287,8 @@ class MainController extends Controller
                 'transport_end_place_longitude'=> $coordinate['gg_lon']??$main->transport_goods['transport_end_place_longitude'],
                 'transport_end_place_latitude'=> $coordinate['gg_lat']??$main->transport_goods['transport_end_place_latitude'],
                 'transport_end_place_coordsType' => 'gcj02',
-                'transport_phone_list' => $phoneList
+                'transport_phone_list' => $phoneList,
+                'transport_vendor_company' => $request->input('transport_vendor_company','')
             ],
             'transport_status' => $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING)
         ]);
@@ -279,6 +296,21 @@ class MainController extends Controller
             $phoneArr = explode(',',$phoneList);
             foreach ($phoneArr as $phone) {
                 $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start'));
+            }
+        }
+        if ($main->transport_status == TransportMain::TRANSPORT_STATUS_CANCEL) {
+            $phoneList = $main->transport_goods['transport_phone_list']??'';
+            $phoneArr = [];
+            if ($phoneList) {
+                $phoneArr = explode(',',$phoneList);
+            }
+            $list = TransportSub::where('transport_main_id',$id)->orderBy('id','desc')->get();
+            foreach ($list as $sub) {
+                $phoneArr[] = $sub->apiUser->mobile;
+            }
+            $phoneArr = array_unique($phoneArr);
+            foreach ($phoneArr as $phone) {
+                $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number,'phone' => $main->transport_contact_vendor_phone],'notify_transport_cancel'));
             }
         }
         return redirect()->route('admin.transport.main.index')->withFlashSuccess('行程修改成功');

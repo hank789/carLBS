@@ -46,9 +46,9 @@
                         <thead>
                         <tr>
                             <th>行程ID</th>
-                            <th>出发地</th>
                             <th>目的地</th>
                             <th>目的地联系人</th>
+                            <th>供应商</th>
                             <th>供应商联系人</th>
                             <th>车辆数</th>
                             <th>开始时间</th>
@@ -63,9 +63,9 @@
                         @foreach($list as $item)
                             <tr>
                                 <td>{{ $item->transport_number }}</td>
-                                <td>{{ $item->transport_start_place }}</td>
                                 <td>{{ $item->transport_end_place }}</td>
                                 <td>{{ $item->transport_contact_people.'('.$item->transport_contact_phone.')' }}</td>
+                                <td>{{ $item->transport_goods['transport_vendor_company']??'' }}</td>
                                 <td>{{ $item->transport_contact_vendor_people.'('.$item->transport_contact_vendor_phone.')' }}</td>
                                 <td>{{ $item->getTransportSubCount() }}</td>
                                 <td>{{ $item->transport_start_time }}</td>

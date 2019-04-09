@@ -75,6 +75,22 @@
                     </div><!--form-group-->
 
                     <div class="form-group row">
+                        {{ html()->label('供应商')
+                            ->class('col-md-2 form-control-label')
+                            ->for('transport_vendor_company') }}
+
+                        <div class="col-md-10">
+                            {{ html()->text('transport_vendor_company')
+                                ->class('form-control')
+                                ->placeholder('供应商')
+                                ->attribute('maxlength', 255)
+                                ->required()
+                                ->value($main->transport_goods['transport_vendor_company']??'')
+                            }}
+                        </div><!--col-->
+                    </div><!--form-group-->
+
+                    <div class="form-group row">
                         {{ html()->label('供应商联系人')
                             ->class('col-md-2 form-control-label')
                             ->for('transport_contact_vendor_people') }}
@@ -293,9 +309,6 @@
                 map.addOverlay(mk);
                 map.panTo(r.point);
                 map.enableScrollWheelZoom(true);
-            }
-            else {
-                alert('failed' + this.getStatus());
             }
         }, {enableHighAccuracy: true});
 

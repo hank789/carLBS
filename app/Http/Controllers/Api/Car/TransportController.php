@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\Car;
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Api\Controller;
+use App\Jobs\SendPhoneMessage;
 use App\Jobs\StartTransportSub;
 use App\Jobs\UploadFile;
 use App\Models\Transport\TransportEntity;
@@ -10,6 +11,7 @@ use App\Models\Transport\TransportMain;
 use App\Models\Transport\TransportSub;
 use App\Models\Transport\TransportXiehuo;
 use App\Services\GeoHash;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -138,6 +140,15 @@ class TransportController extends Controller {
         ];
         $entity->entity_info = $entity_info;
         $entity->save();
+        $timeDiff = strtotime($sub->transport_start_time) - time();
+        if ($timeDiff >= 60) {
+            if ($timeDiff >= 600) {
+                $delay = 600;
+            } else {
+                $delay = 60;
+            }
+            $this->dispatch((new SendPhoneMessage($sub->apiUser->mobile,['code'=>$main->transport_number,'minutes'=>(int)($delay/60)],'notify_transport_start_soon'))->delay(Carbon::now()->addSeconds($timeDiff-$delay)));
+        }
         return self::createJsonData(true,$sub->toArray());
     }
 
