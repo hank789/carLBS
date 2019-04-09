@@ -21,7 +21,17 @@ class HomeController extends Controller
         switch ($name) {
             case 'chjzhl':
             case '长江智链':
-                return view('frontend.landing.chjzhl');
+                return view('frontend.landing.chjzhl')->with('appSchema','');
+                break;
+        }
+        return 'welcome';
+    }
+
+    public function openApp($name) {
+        switch ($name) {
+            case 'chjzhl':
+            case '长江智链':
+                return view('frontend.landing.chjzhl')->with('appSchema','carlbschjzhlapp://abc');
                 break;
         }
         return 'welcome';

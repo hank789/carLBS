@@ -71,6 +71,12 @@
         </div>
     </div>
 </div>
-
+<script type="application/javascript">
+    window.onload = function(){
+        @if($appSchema)
+            window.location.href = '{{ $appSchema }}';
+        @endif
+    }
+</script>
 </body>
 </html>
