@@ -282,9 +282,6 @@
                 map.panTo(r.point);
                 map.enableScrollWheelZoom(true);
             }
-            else {
-                alert('failed' + this.getStatus());
-            }
         }, {enableHighAccuracy: true});
 
 
