@@ -147,6 +147,7 @@ class BaiduTrace
                 'title'=>'轨迹',
                 'value'=>json_encode($params)
             ];
+            \Log::info('trackBatchError',['msg'=>$res,'fields'=>$fields]);
             event(new ExceptionNotify('批量轨迹上传失败:'.$res['message'],$fields));
             return false;
         }
