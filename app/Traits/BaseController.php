@@ -20,7 +20,7 @@ trait BaseController {
         $data['transport_sub_status'] = '';
         $data['need_upload_positions'] = false;
         $data['isManager'] = false;
-        $systemUser = User::where('mobile',$user)->where('active',1)->first();
+        $systemUser = User::where('mobile',$user->mobile)->where('active',1)->first();
         if ($systemUser) {
             $data['isManager'] = true;
         }
