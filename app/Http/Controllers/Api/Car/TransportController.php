@@ -478,7 +478,7 @@ class TransportController extends Controller {
                 'end_place' => ($entity->entity_info['lastSub']['transport_end_place']??''),
                 'entity_desc' => ($entity->entity_info['lastSub']['goods_info']??''),
                 'create_time' => $entity->entity_info['lastSub']['start_time']??(string)$entity->created_at,
-                'modify_time' => (string)$entity->last_loc_time,
+                'modify_time' => Carbon::createFromTimestamp(strtotime($entity->last_loc_time))->diffForHumans(),
                 'latest_location' => $latest_location
             ];
         }
