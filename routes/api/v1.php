@@ -55,5 +55,7 @@ Route::group(['prefix' => 'car','namespace'=>'Car','middleware' => ['auth:api','
     Route::post('transport/eventReport','TransportController@eventReport');
     //上传验收单
     Route::post('transport/uploadFile','TransportController@uploadFile');
+    //查询车辆
+    Route::post('transport/searchCar','TransportController@searchCar');
 
 });
