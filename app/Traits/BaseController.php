@@ -7,6 +7,7 @@
 
 
 use App\Models\Auth\ApiUser;
+use App\Models\Auth\User;
 use App\Models\Transport\TransportLbs;
 use App\Models\Transport\TransportSub;
 
@@ -18,6 +19,11 @@ trait BaseController {
         $data['transport_sub_id'] = '';
         $data['transport_sub_status'] = '';
         $data['need_upload_positions'] = false;
+        $data['isManager'] = false;
+        $systemUser = User::where('mobile',$user)->where('active',1)->first();
+        if ($systemUser) {
+            $data['isManager'] = true;
+        }
         //每60秒上传一次轨迹信息
         $data['upload_positions_limit_time'] = 30;
         //每8秒监控一次位置信息
