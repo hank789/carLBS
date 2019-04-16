@@ -549,7 +549,8 @@ class TransportController extends Controller {
             'transport_number' => $main->transport_number,
             'car_number' => $entity->car_number,
             'mobile' => $sub->apiUser->mobile,
-            'name' => $sub->apiUser->name
+            'name' => $sub->apiUser->name,
+            'desc' => $sub->getStatusDescName()
         ];
         return self::createJsonData(true,['timeline'=>$timeline,'info'=>$info,'images'=>$images]);
     }

@@ -131,6 +131,26 @@ class TransportSub extends Model {
         }
     }
 
+    public function getStatusDescName() {
+        switch ($this->transport_status) {
+            case self::TRANSPORT_STATUS_PENDING:
+                return "未开始";
+                break;
+            case self::TRANSPORT_STATUS_PROCESSING:
+                return "运输中";
+                break;
+            case self::TRANSPORT_STATUS_FINISH:
+                return "已完成";
+                break;
+            case self::TRANSPORT_STATUS_CANCEL:
+                return "已取消";
+                break;
+            default:
+                break;
+        }
+        return '';
+    }
+
     /**
      * @return string
      */
