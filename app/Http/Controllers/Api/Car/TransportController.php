@@ -455,12 +455,12 @@ class TransportController extends Controller {
         $list = [];
         $return = $entities->toArray();
         foreach ($entities as $entity) {
-            $distanceDesc = '';
-            if (isset($entity->entity_info['lastSub']['sub_id'])) {
-                $sub = TransportSub::find($entity->entity_info['lastSub']['sub_id']);
-                $distanceDesc = $sub->getStatusDescName();
+            if (!isset($entity->entity_info['lastSub']['sub_id'])) {
+                continue;
             }
-            if ($distanceDesc == '运输中' && isset($entity->entity_info['lastPosition']) && isset($entity->entity_info['lastSub']['transport_end_place_longitude'])) {
+            $sub = TransportSub::find($entity->entity_info['lastSub']['sub_id']);
+            $distanceDesc = $sub->getStatusDescName();
+            if ($sub->transport_status == TransportSub::TRANSPORT_STATUS_PROCESSING && isset($entity->entity_info['lastPosition']) && isset($entity->entity_info['lastSub']['transport_end_place_longitude'])) {
                 $end_place = [];
                 $end_place['bd_lon'] = $entity->entity_info['lastSub']['transport_end_place_longitude'];
                 $end_place['bd_lat'] = $entity->entity_info['lastSub']['transport_end_place_latitude'];
@@ -475,7 +475,7 @@ class TransportController extends Controller {
                 $latest_location['speed'] = round($latest_location['speed'],2);
             }
             $list[] = [
-                'id' => $entity->id,
+                'id' => $sub->id,
                 'entity_name' => $entity->car_number,
                 'entity_owner' => ($entity->entity_info['lastSub']['username']??'').' '.($entity->entity_info['lastSub']['phone']??''),
                 'distance' => $distanceDesc,
