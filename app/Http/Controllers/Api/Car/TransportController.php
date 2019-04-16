@@ -506,7 +506,8 @@ class TransportController extends Controller {
             'place' => $sub->transport_start_place,
             'desc'  => '行程号：'.$main->transport_number.'；车牌号：'.$entity->car_number.'；司机：'.$sub->apiUser->name.'；手机号：'.$sub->apiUser->mobile,
             'images' => $sub->transport_goods['transport_goods_images']??[],
-            'created_at' => $sub->transport_goods['transport_start_real_time'],
+            'created_at_date' => date('Y/m/d',strtotime($sub->transport_goods['transport_start_real_time'])),
+            'created_at_time' => date('H:i',strtotime($sub->transport_goods['transport_start_real_time'])),
             'icon' => 'fa-clock',
             'bg_color' => 'lazur-bg'
         ];
@@ -516,7 +517,8 @@ class TransportController extends Controller {
                 'place' => $event->event_detail['event_place'],
                 'desc'  => ''.$eventType[$event->event_type].','.$event->event_detail['description'],
                 'images' => $event->event_detail['images'],
-                'created_at' => (string)$event->created_at,
+                'created_at_date' => date('Y/m/d',strtotime($event->created_at)),
+                'created_at_time' => date('H:i',strtotime($event->created_at)),
                 'icon' => 'fa-exclamation-circle',
                 'bg_color' => 'yellow-bg'
             ];
@@ -527,7 +529,8 @@ class TransportController extends Controller {
                 'place' => $xiehuo->transport_goods['transport_end_place'],
                 'desc'  => '车牌号：'.$xiehuo->transport_goods['car_number'].';货物：'.$xiehuo->transport_goods['transport_goods'],
                 'images' => $xiehuo->transport_goods['shipping_documents'],
-                'created_at' => (string)$xiehuo->created_at,
+                'created_at_date' => date('Y/m/d',strtotime($xiehuo->created_at)),
+                'created_at_time' => date('H:i',strtotime($xiehuo->created_at)),
                 'icon' => $xiehuo->xiehuo_type == TransportXiehuo::XIEHUO_TYPE_MIDWAY ? 'fa-truck':'fa-flag-checkered',
                 'bg_color' => $xiehuo->xiehuo_type == TransportXiehuo::XIEHUO_TYPE_MIDWAY ? 'navy-bg':'blue-bg'
             ];
