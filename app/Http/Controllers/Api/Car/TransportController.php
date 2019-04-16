@@ -511,6 +511,7 @@ class TransportController extends Controller {
             'icon' => 'fa-clock',
             'bg_color' => 'lazur-bg'
         ];
+        $images = $sub->transport_goods['transport_goods_images']??[];
         foreach ($events as $event) {
             $timeline[(string)$event->created_at] = [
                 'title' => '突发事件',
@@ -522,6 +523,9 @@ class TransportController extends Controller {
                 'icon' => 'fa-exclamation-circle',
                 'bg_color' => 'yellow-bg'
             ];
+            if ($event->event_detail['images']) {
+                $images = array_merge($images,$event->event_detail['images']);
+            }
         }
         foreach ($xiehuos as $xiehuo) {
             $timeline[(string)$xiehuo->created_at] = [
@@ -534,6 +538,9 @@ class TransportController extends Controller {
                 'icon' => $xiehuo->xiehuo_type == TransportXiehuo::XIEHUO_TYPE_MIDWAY ? 'fa-truck':'fa-flag-checkered',
                 'bg_color' => $xiehuo->xiehuo_type == TransportXiehuo::XIEHUO_TYPE_MIDWAY ? 'navy-bg':'blue-bg'
             ];
+            if ($xiehuo->transport_goods['shipping_documents']) {
+                $images = array_merge($images,$xiehuo->transport_goods['shipping_documents']);
+            }
         }
         if ($timeline) {
             ksort($timeline);
@@ -544,7 +551,7 @@ class TransportController extends Controller {
             'mobile' => $sub->apiUser->mobile,
             'name' => $sub->apiUser->name
         ];
-        return self::createJsonData(true,['timeline'=>$timeline,'info'=>$info]);
+        return self::createJsonData(true,['timeline'=>$timeline,'info'=>$info,'images'=>$images]);
     }
 
 }
