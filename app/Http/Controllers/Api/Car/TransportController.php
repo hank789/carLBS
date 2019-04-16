@@ -460,7 +460,7 @@ class TransportController extends Controller {
                 $sub = TransportSub::find($entity->entity_info['lastSub']['sub_id']);
                 $distanceDesc = $sub->getStatusDescName();
             }
-            if (isset($entity->entity_info['lastPosition']) && isset($entity->entity_info['lastSub']['transport_end_place_longitude'])) {
+            if ($distanceDesc == '运输中' && isset($entity->entity_info['lastPosition']) && isset($entity->entity_info['lastSub']['transport_end_place_longitude'])) {
                 $end_place = [];
                 $end_place['bd_lon'] = $entity->entity_info['lastSub']['transport_end_place_longitude'];
                 $end_place['bd_lat'] = $entity->entity_info['lastSub']['transport_end_place_latitude'];
