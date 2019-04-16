@@ -67,7 +67,7 @@ class SubController extends Controller
             ];
         }
         if ($timeline) {
-            krsort($timeline);
+            ksort($timeline);
         }
 
         return view('backend.transport.sub.show')

@@ -57,5 +57,7 @@ Route::group(['prefix' => 'car','namespace'=>'Car','middleware' => ['auth:api','
     Route::post('transport/uploadFile','TransportController@uploadFile');
     //查询车辆
     Route::post('transport/searchCar','TransportController@searchCar');
+    //车辆行程信息
+    Route::get('transport/subTimeline/{id}','TransportController@subTimeline');
 
 });
