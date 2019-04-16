@@ -456,6 +456,10 @@ class TransportController extends Controller {
         $return = $entities->toArray();
         foreach ($entities as $entity) {
             $distanceDesc = '';
+            if (isset($entity->entity_info['lastSub']['sub_id'])) {
+                $sub = TransportSub::find($entity->entity_info['lastSub']['sub_id']);
+                $distanceDesc = $sub->getStatusDescName();
+            }
             if (isset($entity->entity_info['lastPosition']) && isset($entity->entity_info['lastSub']['transport_end_place_longitude'])) {
                 $end_place = [];
                 $end_place['bd_lon'] = $entity->entity_info['lastSub']['transport_end_place_longitude'];
@@ -464,7 +468,7 @@ class TransportController extends Controller {
                     $end_place = coordinate_bd_encrypt($entity->entity_info['lastSub']['transport_end_place_longitude'],$entity->entity_info['lastSub']['transport_end_place_latitude']);
                 }
                 $distance = getDistanceByLatLng($entity->entity_info['lastPosition']['longitude'],$entity->entity_info['lastPosition']['latitude'],$end_place['bd_lon'],$end_place['bd_lat']);
-                $distanceDesc = '距目的地约'.distanceFormat($distance);
+                $distanceDesc .= '，距目的地约'.distanceFormat($distance);
             }
             $latest_location = $entity->entity_info['lastPosition']??[];
             if (isset($latest_location['speed'])) {
