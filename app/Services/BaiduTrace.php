@@ -116,6 +116,12 @@ class BaiduTrace
         }
         $res = $this->_sendHttp('track/addpoint',$params);
         if ($res['status'] != 0) {
+            $fields = [];
+            $fields[] = [
+                'title'=>'轨迹',
+                'value'=>json_encode($params)
+            ];
+            \Log::info('trackSingle',['msg'=>$res,'fields'=>$fields]);
             event(new ExceptionNotify('单条轨迹上传失败:'.$res['message']));
             return false;
         }
