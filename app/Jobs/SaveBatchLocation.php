@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Transport\TransportLbs;
 use App\Models\Transport\TransportSub;
 use App\Services\BaiduTrace;
+use App\Services\RateLimiter;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -45,8 +46,9 @@ class SaveBatchLocation implements ShouldQueue
     {
         $sub = TransportSub::find($this->transport_sub_id);
         if ($sub->api_user_id != $this->user_id) return;
+        $lockKey = 'save-sub-location-'.$this->transport_sub_id;
+        RateLimiter::instance()->lock_acquire($lockKey,1);
         $time = new \DateTime();
-
         $lastLbs = TransportLbs::where('transport_sub_id',$sub->id)->orderBy('id','desc')->first();
         if ($lastLbs) {
             $last_lng = $lastLbs->address_detail['coords']['longitude'];
@@ -79,6 +81,7 @@ class SaveBatchLocation implements ShouldQueue
                 unset($this->data[$key]);
             }
         }
+        RateLimiter::instance()->lock_release($lockKey);
         $count = count($this->data);
         if ($count > 0) {
             foreach ($this->data as $item) {
