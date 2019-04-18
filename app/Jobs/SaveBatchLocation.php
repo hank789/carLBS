@@ -63,10 +63,10 @@ class SaveBatchLocation implements ShouldQueue
             $sub->saveLastPosition($lastPosition);
         }
 
-        foreach ($this->data as $key=>&$item) {
+        foreach ($this->data as $key=>$item) {
             //检查一下每个轨迹点的loc_time参数，管理台在绘制的时候，如果前后点loc_time间隔超过5分钟就不连线了
             $time->setTimestamp($item['timestamp']/1000);
-            if (((abs(bcsub($last_lat, $item['coords']['latitude'],10)) >= 0.0001 || abs(bcsub($last_lng, $item['coords']['longitude'],10)) >= 0.0001) && ($time->getTimestamp()-$lastDate>=10)) || ($time->getTimestamp()-$lastDate)>=260) {
+            if (((abs(bcsub($last_lat, $item['coords']['latitude'],10)) >= 0.0001 || abs(bcsub($last_lng, $item['coords']['longitude'],10)) >= 0.0001) && ($time->getTimestamp()-$lastDate>=8)) || ($time->getTimestamp()-$lastDate)>=260) {
                 TransportLbs::create([
                     'api_user_id' => $sub->api_user_id,
                     'transport_main_id' => $sub->transport_main_id,
