@@ -5,6 +5,7 @@ use App\Jobs\SaveBatchLocation;
 use App\Jobs\SaveSingleLocation;
 use App\Services\BaiduMap;
 use App\Services\GeoHash;
+use App\Services\RateLimiter;
 use Illuminate\Http\Request;
 
 /**
@@ -31,8 +32,18 @@ class LocationController extends Controller {
             'transport_sub_id' => 'required',
             'position_list' => 'required'
         ]);
-        $this->dispatch(new SaveBatchLocation($request->user()->id,$request->input('transport_sub_id'),$request->input('position_list')));
-        return self::createJsonData(true);
+        $deviceType = $request->input('﻿user_device');
+        $reload = false;
+        if ($deviceType == 'ios') {
+            $iosWatchPosition = RateLimiter::instance()->hGet('iosWatchPosition',$request->input('transport_sub_id'));
+            if ($iosWatchPosition === false) {
+                $reload = true;
+            }
+        }
+        \Log::info('saveBatch',['data'=>$request->all(),'reload'=>$reload]);
+        $this->dispatch(new SaveBatchLocation($request->user()->id,$request->input('transport_sub_id'),$request->input('position_list'),$deviceType));
+        //需要告诉前端是否要重启检测位置服务
+        return self::createJsonData(true,['reload'=>$reload]);
     }
 
 }

@@ -29,12 +29,15 @@ class SaveBatchLocation implements ShouldQueue
 
     public $user_id;
 
+    public $deviceType;
 
-    public function __construct($user_id, $transport_sub_id, array $positionList)
+
+    public function __construct($user_id, $transport_sub_id, array $positionList,$deviceType = '')
     {
         $this->user_id = $user_id;
         $this->transport_sub_id = $transport_sub_id;
         $this->data = $positionList;
+        $this->deviceType = $deviceType;
     }
 
     /**
@@ -57,15 +60,21 @@ class SaveBatchLocation implements ShouldQueue
         } else {
             $last_lng = $lastDate = $last_lat = '';
         }
-        var_dump(json_encode($this->data));
+
         if (count($this->data) >= 1) {
             $lastPosition = $this->data[count($this->data)-1];
             $sub->saveLastPosition($lastPosition);
+        }
+        if ($this->deviceType == 'ios') {
+            $iosWatchPosition = false;
         }
 
         foreach ($this->data as $key=>$item) {
             //检查一下每个轨迹点的loc_time参数，管理台在绘制的时候，如果前后点loc_time间隔超过5分钟就不连线了
             $time->setTimestamp($item['timestamp']/1000);
+            if (isset($item['watchPositionType']) && $item['watchPositionType'] == 1 && $this->deviceType == 'ios') {
+                $iosWatchPosition = true;
+            }
             if (((abs(bcsub($last_lat, $item['coords']['latitude'],10)) >= 0.0001 || abs(bcsub($last_lng, $item['coords']['longitude'],10)) >= 0.0001) && ($time->getTimestamp()-$lastDate>=10)) || ($time->getTimestamp()-$lastDate)>=260) {
                 TransportLbs::create([
                     'api_user_id' => $sub->api_user_id,
@@ -82,6 +91,9 @@ class SaveBatchLocation implements ShouldQueue
             }
         }
         RateLimiter::instance()->lock_release($lockKey);
+        if ($this->deviceType == 'ios') {
+            RateLimiter::instance()->hSet('iosWatchPosition',$this->transport_sub_id,$iosWatchPosition);
+        }
         $count = count($this->data);
         if ($count > 0) {
             foreach ($this->data as $item) {
