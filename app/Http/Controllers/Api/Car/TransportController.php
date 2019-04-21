@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers\Api\Car;
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Api\Controller;
+use App\Jobs\FinishTransport;
 use App\Jobs\SendPhoneMessage;
 use App\Jobs\StartTransportSub;
 use App\Jobs\UploadFile;
@@ -329,6 +330,7 @@ class TransportController extends Controller {
         if ($xiehuo_type == TransportXiehuo::XIEHUO_TYPE_END) {
             $sub->transport_status = TransportSub::TRANSPORT_STATUS_FINISH;
             $sub->save();
+            $this->dispatch(new FinishTransport($sub->transport_main_id));
         }
         return self::createJsonData(true);
     }
