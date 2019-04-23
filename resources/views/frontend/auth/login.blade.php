@@ -86,7 +86,7 @@
     {!! script(('js/plugins/jquery-3.1.1.min.js'),[],config('app.use_ssl')) !!}
     {!! script(('js/plugins/toastr/toastr.min.js'),[],config('app.use_ssl')) !!}
 
-    <script type="application/javascript">
+    <script type="text/javascript">
         function sendYzm() {
             $('#btn-yzm').attr('disabled','disabled');
             var phone = $('#mobile').val();
