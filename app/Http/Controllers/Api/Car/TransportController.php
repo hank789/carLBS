@@ -1,4 +1,5 @@
 <?php namespace App\Http\Controllers\Api\Car;
+use App\Events\Api\ExceptionNotify;
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Api\Controller;
 use App\Jobs\FinishTransport;
@@ -11,6 +12,7 @@ use App\Models\Transport\TransportLbs;
 use App\Models\Transport\TransportMain;
 use App\Models\Transport\TransportSub;
 use App\Models\Transport\TransportXiehuo;
+use App\Services\BaiduMap;
 use App\Services\GeoHash;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -279,7 +281,6 @@ class TransportController extends Controller {
             'transport_sub_id' => 'required',
             'xiehuo_type' => 'required|in:1,2',
             'car_number' => 'required',
-            'transport_end_place' => 'required',
             'transport_goods' => 'required',
             'position' => 'required',
         ]);
@@ -310,6 +311,18 @@ class TransportController extends Controller {
             $position = json_decode($position,true);
         }
         $xiehuo_type = $request->input('xiehuo_type',1);
+        $transport_end_place = $request->input('transport_end_place');
+        $transport_end_place_longitude = $request->input('transport_end_place_longitude');
+        $transport_end_place_latitude = $request->input('transport_end_place_latitude');
+        $transport_end_place_coordsType = $request->input('transport_end_place_coordsType');
+        if (!$transport_end_place && $transport_end_place_longitude) {
+            try {
+                $res = BaiduMap::instance()->geocoder($transport_end_place_latitude,$transport_end_place_longitude,0,$transport_end_place_coordsType);
+                $transport_end_place = $res['result']['formatted_address'];
+            } catch (\Exception $e) {
+                event(new ExceptionNotify('BaiduMap请求出错：'.$e->getMessage()));
+            }
+        }
         $xiehuo = TransportXiehuo::create([
             'api_user_id' => $user->id,
             'transport_main_id' => $sub->transport_main_id,
@@ -319,10 +332,10 @@ class TransportController extends Controller {
             'transport_goods' => [
                 'address_detail' => $position,
                 'car_number' => $request->input('car_number'),
-                'transport_end_place' => $request->input('transport_end_place'),
-                'transport_end_place_longitude'=> $request->input('transport_end_place_longitude'),
-                'transport_end_place_latitude'=> $request->input('transport_end_place_latitude'),
-                'transport_end_place_coordsType' => $request->input('transport_end_place_coordsType'),
+                'transport_end_place' => $transport_end_place,
+                'transport_end_place_longitude'=> $transport_end_place_longitude,
+                'transport_end_place_latitude'=> $transport_end_place_latitude,
+                'transport_end_place_coordsType' => $transport_end_place_coordsType,
                 'transport_goods' => $request->input('transport_goods'),
                 'shipping_documents' => $images
             ]
@@ -345,8 +358,7 @@ class TransportController extends Controller {
             'transport_sub_id' => 'required',
             'event_type' => 'required',
             'event_detail' => 'required',
-            'position' => 'required',
-            'event_place' => 'required'
+            'position' => 'required'
         ]);
         $sub = TransportSub::find($request->input('transport_sub_id'));
         if (!$sub) {
@@ -374,6 +386,19 @@ class TransportController extends Controller {
         if ($images) {
             $position = json_decode($position,true);
         }
+        $event_place = $request->input('event_place');
+        $event_place_latitude = $request->input('event_place_latitude');
+        $event_place_longitude = $request->input('event_place_longitude');
+        $event_place_coordsType = $request->input('event_place_coordsType');
+        if (!$event_place && $event_place_latitude) {
+            try {
+                $res = BaiduMap::instance()->geocoder($event_place_latitude,$event_place_longitude,0,$event_place_coordsType);
+                $event_place = $res['result']['formatted_address'];
+            } catch (\Exception $e) {
+                event(new ExceptionNotify('BaiduMap请求出错：'.$e->getMessage()));
+            }
+        }
+
         TransportEvent::create([
             'api_user_id' => $user->id,
             'transport_main_id' => $sub->transport_main_id,
@@ -382,10 +407,10 @@ class TransportController extends Controller {
             'geohash' => GeoHash::instance()->encode($request->input('event_place_latitude'),$request->input('event_place_longitude')),
             'event_detail' => [
                 'address_detail' => $position,
-                'event_place' => $request->input('event_place'),
-                'event_place_latitude' => $request->input('event_place_latitude'),
-                'event_place_longitude' => $request->input('event_place_longitude'),
-                'event_place_coordsType' => $request->input('event_place_coordsType'),
+                'event_place' => $event_place,
+                'event_place_latitude' => $event_place_latitude,
+                'event_place_longitude' => $event_place_longitude,
+                'event_place_coordsType' => $event_place_coordsType,
                 'images' => $images,
                 'description' => $request->input('event_detail')
             ]
