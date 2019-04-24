@@ -70,6 +70,7 @@ class YingyanController extends Controller
                 'entity_desc' => ($entity->entity_info['lastSub']['goods_info']??''),
                 'create_time' => $entity->entity_info['lastSub']['start_time']??(string)$entity->created_at,
                 'modify_time' => (string)$entity->last_loc_time,
+                'view_url' => route('admin.transport.sub.show', $entity->entity_info['lastSub']['sub_id']),
                 'latest_location' => $latest_location
             ];
         }

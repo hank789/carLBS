@@ -576,6 +576,7 @@ var TrackStore = Reflux.createStore({
                                 direction:item.latest_location.direction,
                                 entity_owner: item.entity_owner,
                                 distanceDesc: item.distance,
+                                viewUrl: item.view_url,
                                 status: Commonfun.getInfoWindowStatus(item.latest_location.speed, item.latest_location.loc_time, item.latest_location.direction),
                                 infor: [
                                     ['状态:', Commonfun.getInfoWindowStatus(item.latest_location.speed, item.latest_location.loc_time, item.latest_location.direction)],

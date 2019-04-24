@@ -499,9 +499,9 @@ window.mapControl = {
         let infoContentFrontArr = [
             '<div class="carInfoWindow">',
                 '<div class="carInfoHeader' + data.entity_status + '">',
-                    '<abbr title="' + data.entity_print + '">',
+                    '<a href="' + data.viewUrl +'" target="_blank"><abbr title="' + data.entity_print + '">',
                     data.entity_print + ' ' + data.entity_owner,
-                    '</abbr>',
+                    '</abbr></a>',
                 '</div>',
                 '<div class="carInfoContent">'
         ];
