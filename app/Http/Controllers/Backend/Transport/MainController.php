@@ -228,6 +228,9 @@ class MainController extends Controller
     {
         $transportNumber = NumberUuid::instance()->get_uuid_number();
         $coordinate = coordinate_bd_decrypt($request->input('transport_end_place_longitude'),$request->input('transport_end_place_latitude'));
+        if ($coordinate['gg_lon'] <=0 || $coordinate['gg_lat'] <= 0) {
+            throw new GeneralException('目的地地址有误，请重新选择');
+        }
         $phoneList = str_replace('，',',',$request->input('transport_phone_list'));
         $main = TransportMain::create([
             'user_id' => $request->user()->id,
@@ -271,6 +274,9 @@ class MainController extends Controller
         $main = TransportMain::find($id);
         if ($main->transport_end_place != $request->input('transport_end_place')) {
             $coordinate = coordinate_bd_decrypt($request->input('transport_end_place_longitude'),$request->input('transport_end_place_latitude'));
+            if ($coordinate['gg_lon'] <=0 || $coordinate['gg_lat'] <= 0) {
+                throw new GeneralException('目的地地址有误，请重新选择');
+            }
         }
         $phoneList = str_replace('，',',',$request->input('transport_phone_list'));
         $oldStatus = $main->transport_status;
