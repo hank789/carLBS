@@ -253,7 +253,7 @@ if (!function_exists('distanceFormat')) {
             return '0.1m';
         }
         if ($distance < 1000) {
-            return $distance.'m';
+            return round($distance,2).'m';
         } else {
             return round($distance/1000,2).'km';
         }
