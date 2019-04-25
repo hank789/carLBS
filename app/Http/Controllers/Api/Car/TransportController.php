@@ -504,7 +504,8 @@ class TransportController extends Controller {
             $list[] = [
                 'id' => $sub->id,
                 'entity_name' => $entity->car_number,
-                'entity_owner' => ($entity->entity_info['lastSub']['username']??'').' '.($entity->entity_info['lastSub']['phone']??''),
+                'entity_owner' => ($entity->entity_info['lastSub']['username']??''),
+                'contact_mobile' => ($entity->entity_info['lastSub']['phone']??''),
                 'distance' => $distanceDesc,
                 'end_place' => ($entity->entity_info['lastSub']['transport_end_place']??''),
                 'entity_desc' => ($entity->entity_info['lastSub']['goods_info']??''),
