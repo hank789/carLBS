@@ -507,6 +507,7 @@ class TransportController extends Controller {
                 'entity_owner' => ($entity->entity_info['lastSub']['username']??''),
                 'contact_mobile' => ($entity->entity_info['lastSub']['phone']??''),
                 'distance' => $distanceDesc,
+                'start_place' => ($entity->entity_info['lastSub']['transport_start_place']??''),
                 'end_place' => ($entity->entity_info['lastSub']['transport_end_place']??''),
                 'entity_desc' => ($entity->entity_info['lastSub']['goods_info']??''),
                 'create_time' => $entity->entity_info['lastSub']['start_time']??(string)$entity->created_at,
