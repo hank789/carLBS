@@ -40,7 +40,7 @@ class SubController extends Controller
             'place' => $sub->transport_start_place,
             'desc'  => '',
             'images' => $sub->transport_goods['transport_goods_images']??[],
-            'created_at' => $sub->transport_goods['transport_start_real_time'],
+            'created_at' => $sub->transport_goods['transport_start_real_time']??(string)$sub->created_at,
             'icon' => 'fa-clock',
             'bg_color' => 'lazur-bg'
         ];
