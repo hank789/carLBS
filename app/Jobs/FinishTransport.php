@@ -45,25 +45,18 @@ class FinishTransport implements ShouldQueue
         if ($phoneList) {
             $phoneArr = explode(',',$phoneList);
         }
-        $isFinish = true;
-        foreach ($phoneArr as $phone) {
-            $user = ApiUser::where('mobile',$phone)->first();
-            if (!$user) {
-                $isFinish = false;
-            } else {
-                $userSub = TransportSub::where('transport_main_id',$this->main_id)->where('api_user_id',$user->id)->first();
-                if (!$userSub || $userSub->transport_status != TransportSub::TRANSPORT_STATUS_FINISH) {
-                    $isFinish = false;
-                }
-            }
-            if ($isFinish === false) break;
+        $count = count($phoneArr);
+        $isFinish = false;
+        $countFinished = TransportSub::where('transport_main_id',$this->main_id)->where('transport_status',TransportSub::TRANSPORT_STATUS_FINISH)->count();
+        if ($countFinished >= $count) {
+            $isFinish = true;
         }
-        if ($isFinish) {
-            $count = TransportSub::where('transport_main_id',$this->main_id)->whereIn('transport_status',[TransportSub::TRANSPORT_STATUS_PENDING,TransportSub::TRANSPORT_STATUS_PROCESSING])->count();
-            if ($count) {
-                $isFinish = false;
-            }
+
+        $countUnfinished = TransportSub::where('transport_main_id',$this->main_id)->whereIn('transport_status',[TransportSub::TRANSPORT_STATUS_PENDING,TransportSub::TRANSPORT_STATUS_PROCESSING])->count();
+        if ($countUnfinished) {
+            $isFinish = false;
         }
+
         if ($isFinish) {
             $main->transport_status = TransportMain::TRANSPORT_STATUS_FINISH;
             $main->save();
