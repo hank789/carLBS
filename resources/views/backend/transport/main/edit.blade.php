@@ -254,6 +254,7 @@
                 <div id="r-result" style="width: 100%;">请输入:<input type="text" id="suggestId" size="20" value="百度" style="width:600px;" /></div>
                 <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
                 <div id='allmap' style='width: 100%; height: 400px;'></div>
+                <div id="rr-result" style="width: 100%;"></div>
 
             </div>
             <div class="modal-footer">
@@ -303,6 +304,7 @@
 
         var point = new BMap.Point(116.404412, 39.914714);
         map.centerAndZoom(point, 12); // 中心点
+        map.enableScrollWheelZoom();
         geolocation.getCurrentPosition(function (r) {
             if (this.getStatus() == BMAP_STATUS_SUCCESS) {
                 var mk = new BMap.Marker(r.point);
@@ -342,6 +344,27 @@
             G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
             document.getElementById('transport_end_place').value = myValue;
             setPlace();
+        });
+
+        $('#suggestId').bind('keydown',function(event){
+            if(event.keyCode == "13") {
+                map.clearOverlays();    //清除地图上所有覆盖物
+                var local = new BMap.LocalSearch(map, { //智能搜索
+                    onInfoHtmlSet: function(poi,html) {
+                        html.addEventListener("click", function(e) {
+                            if (confirm("确定选取该地址？")) {
+                                document.getElementById('transport_end_place_longitude').value = poi.marker.getPosition().lng;
+                                document.getElementById('transport_end_place_latitude').value = poi.marker.getPosition().lat;
+                                //alert("marker2的位置是" + poi.marker.getPosition().lng + "," + poi.marker.getPosition().lat);
+                                document.getElementById('transport_end_place').value = html.getElementsByTagName('td')[1].innerHTML.replace('&nbsp;','');
+                                //alert(html.getElementsByTagName('td')[1].innerHTML.replace('&nbsp;',''));
+                            }
+                        });
+                    },
+                    renderOptions: {map: map, panel: "rr-result"}
+                });
+                local.search($('#suggestId').val());
+            }
         });
 
         function setPlace(){
