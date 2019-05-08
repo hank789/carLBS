@@ -2,9 +2,13 @@
 
 namespace App\Jobs;
 
+use App\Models\Transport\TransportEvent;
 use App\Models\Transport\TransportLbs;
 use App\Models\Transport\TransportSub;
+use App\Services\BaiduMap;
 use App\Services\BaiduTrace;
+use App\Services\GeoHash;
+use App\Services\GPS;
 use App\Services\RateLimiter;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -103,6 +107,40 @@ class SaveBatchLocation implements ShouldQueue
             foreach ($dataList as $data) {
                 BaiduTrace::instance()->trackBatch($sub->getEntityName(),$data);
             }*/
+        }
+        //如果当前位置距离目的地1公里以内，系统自动结束行程
+        $autoFinishEvent = TransportEvent::where('transport_sub_id',$sub->id)->where('event_type',8)->first();
+        if ($autoFinishEvent) return;
+        $main = $sub->transportMain;
+        $last_lat = $lastPosition['coords']['latitude'];
+        $last_lng = $lastPosition['coords']['longitude'];
+        if ($this->deviceType == 'ios') {
+            $gcj_encrypt = GPS::instance()->gcj_encrypt($last_lat,$last_lng);
+            $last_lng = $gcj_encrypt['lon'];
+            $last_lat = $gcj_encrypt['lat'];
+        }
+        $distance = getDistanceByLatLng($last_lng,$last_lat,$main->transport_goods['transport_end_place_longitude'],$main->transport_goods['transport_end_place_latitude']);
+
+        if ($distance <= 1000) {
+            $res = BaiduMap::instance()->geocoder($last_lat,$last_lng,0,'gcj02');
+            $event_place = $res['result']['formatted_address'];
+            TransportEvent::create([
+                'api_user_id' => $sub->api_user_id,
+                'transport_main_id' => $sub->transport_main_id,
+                'transport_sub_id' => $sub->id,
+                'event_type' => 8,
+                'geohash' => GeoHash::instance()->encode($last_lat,$last_lng),
+                'event_detail' => [
+                    'address_detail' => $lastPosition,
+                    'event_place' => $event_place,
+                    'event_place_latitude' => $last_lat,
+                    'event_place_longitude' => $last_lng,
+                    'event_place_coordsType' => 'gcj02',
+                    'images' => [],
+                    'description' => '系统自动判定行程结束'
+                ]
+            ]);
+            (new FinishTransport($main->id))->handle();
         }
     }
 }

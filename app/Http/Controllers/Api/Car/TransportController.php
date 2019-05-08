@@ -29,6 +29,7 @@ class TransportController extends Controller {
 
     public function getEventType(Request $request) {
         $eventType = TransportEvent::$eventType;
+        unset($eventType[7]);
         return self::createJsonData(true,$eventType);
     }
 

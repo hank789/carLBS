@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Auth\ApiUser;
+use App\Models\Transport\TransportEvent;
 use App\Models\Transport\TransportMain;
 use App\Models\Transport\TransportSub;
 use Illuminate\Bus\Queueable;
@@ -46,18 +47,20 @@ class FinishTransport implements ShouldQueue
             $phoneArr = explode(',',$phoneList);
         }
         $count = count($phoneArr);
-        $isFinish = false;
-        $countFinished = TransportSub::where('transport_main_id',$this->main_id)->where('transport_status',TransportSub::TRANSPORT_STATUS_FINISH)->count();
-        if ($countFinished >= $count) {
-            $isFinish = true;
+        $finishCount = 0;
+        $subs = TransportSub::where('transport_main_id',$this->main_id)->get();
+        foreach ($subs as $sub) {
+            if ($sub->transport_status == TransportSub::TRANSPORT_STATUS_FINISH) {
+                $finishCount = $finishCount + 1;
+            } else {
+                $autoFinishEvent = TransportEvent::where('transport_sub_id',$sub->id)->where('event_type',8)->first();
+                if ($autoFinishEvent) {
+                    $finishCount = $finishCount + 1;
+                }
+            }
         }
 
-        $countUnfinished = TransportSub::where('transport_main_id',$this->main_id)->whereIn('transport_status',[TransportSub::TRANSPORT_STATUS_PENDING,TransportSub::TRANSPORT_STATUS_PROCESSING])->count();
-        if ($countUnfinished) {
-            $isFinish = false;
-        }
-
-        if ($isFinish) {
+        if ($finishCount == $count) {
             $main->transport_status = TransportMain::TRANSPORT_STATUS_FINISH;
             $main->save();
         }

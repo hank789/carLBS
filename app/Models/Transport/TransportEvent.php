@@ -54,6 +54,7 @@ class TransportEvent extends Model {
         ['key'=>5,'value'=>'车辆故障'],
         ['key'=>6,'value'=>'APP问题'],
         ['key'=>7,'value'=>'其它事件'],
+        ['key'=>8,'value'=>'系统自动结束行程'],
     ];
 
     /**
