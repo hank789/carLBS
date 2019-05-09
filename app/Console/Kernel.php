@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\Test::class,
+        Commands\Transport\AlertStartTransport::class
     ];
 
     /**
@@ -30,6 +31,8 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('backup:clean')->daily()->at('01:00');
         $schedule->command('backup:run')->daily()->at('02:00');
+        $schedule->command('alert:transport:start')->cron('55 7,8,9,10,11,12,13,14,15,16,17,18,19,20 * * *');
+
     }
 
     /**

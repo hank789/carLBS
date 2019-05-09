@@ -9,6 +9,7 @@
                 <a class="dropdown-item" href="{{ route('admin.transport.main.index',['filter'=>'processing']) }}">进行中行程</a>
                 <a class="dropdown-item" href="{{ route('admin.transport.main.index',['filter'=>'finished']) }}">已结束行程</a>
                 <a class="dropdown-item" href="{{ route('admin.transport.main.index',['filter'=>'canceled']) }}">已取消行程</a>
+                <a class="dropdown-item" href="{{ route('admin.transport.main.index',['filter'=>'overtime']) }}">超时自动结束行程</a>
             </div>
         </div><!--dropdown-->
 

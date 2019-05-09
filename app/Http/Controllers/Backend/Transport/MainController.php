@@ -43,6 +43,9 @@ class MainController extends Controller
                 case 'canceled':
                     $query = $query->where('transport_status',TransportMain::TRANSPORT_STATUS_CANCEL);
                     break;
+                case 'overtime':
+                    $query = $query->where('transport_status',TransportMain::TRANSPORT_STATUS_OVERTIME_FINISH);
+                    break;
                 case 'all':
                     break;
                 default:
@@ -232,6 +235,14 @@ class MainController extends Controller
             throw new GeneralException('目的地地址有误，请重新选择');
         }
         $phoneList = str_replace('，',',',$request->input('transport_phone_list'));
+        if ($phoneList) {
+            $phoneArr = explode(',',$phoneList);
+            foreach ($phoneArr as $phone) {
+                if (!preg_match('/^(\+?0?86\-?)?((13\d|14[57]|15[^4,\D]|17[35678]|18\d|19\d)\d{8}|170[059]\d{7})$/', $phone)) {
+                    throw new GeneralException('司机手机号有误，请检查司机手机号是否正确');
+                }
+            }
+        }
         $main = TransportMain::create([
             'user_id' => $request->user()->id,
             'transport_number' => $transportNumber,
@@ -279,6 +290,14 @@ class MainController extends Controller
             }
         }
         $phoneList = str_replace('，',',',$request->input('transport_phone_list'));
+        if ($phoneList) {
+            $phoneArr = explode(',',$phoneList);
+            foreach ($phoneArr as $phone) {
+                if (!preg_match('/^(\+?0?86\-?)?((13\d|14[57]|15[^4,\D]|17[35678]|18\d|19\d)\d{8}|170[059]\d{7})$/', $phone)) {
+                    throw new GeneralException('司机手机号有误，请检查司机手机号是否正确');
+                }
+            }
+        }
         $oldStatus = $main->transport_status;
         $main->update([
             'transport_start_place' => $request->input('transport_start_place'),

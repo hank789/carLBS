@@ -57,6 +57,7 @@ class TransportMain extends Model {
     const TRANSPORT_STATUS_PENDING = 0;
     const TRANSPORT_STATUS_PROCESSING = 1;
     const TRANSPORT_STATUS_FINISH = 2;
+    const TRANSPORT_STATUS_OVERTIME_FINISH = 3;
 
 
     protected $casts = [
@@ -81,6 +82,8 @@ class TransportMain extends Model {
             case self::TRANSPORT_STATUS_CANCEL:
                 return "<span class='badge badge-warning'>已取消</span>";
                 break;
+            case self::TRANSPORT_STATUS_OVERTIME_FINISH:
+                return "<span class='badge badge-warning'>超时自动结束</span>";
             default:
                 break;
         }
