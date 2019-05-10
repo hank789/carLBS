@@ -299,6 +299,7 @@ class MainController extends Controller
             }
         }
         $oldStatus = $main->transport_status;
+        $newStatus = $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING);
         $main->update([
             'transport_start_place' => $request->input('transport_start_place'),
             'transport_end_place' => $request->input('transport_end_place'),
@@ -315,15 +316,15 @@ class MainController extends Controller
                 'transport_phone_list' => $phoneList,
                 'transport_vendor_company' => $request->input('transport_vendor_company','')
             ],
-            'transport_status' => $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING)
+            'transport_status' => $newStatus
         ]);
-        if ($phoneList && in_array($oldStatus,[TransportMain::TRANSPORT_STATUS_PENDING,TransportMain::TRANSPORT_STATUS_CANCEL]) && $main->transport_status == TransportMain::TRANSPORT_STATUS_PROCESSING) {
+        if ($phoneList && in_array($oldStatus,[TransportMain::TRANSPORT_STATUS_PENDING,TransportMain::TRANSPORT_STATUS_CANCEL]) && $newStatus == TransportMain::TRANSPORT_STATUS_PROCESSING) {
             $phoneArr = explode(',',$phoneList);
             foreach ($phoneArr as $phone) {
                 $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start'));
             }
         }
-        if ($main->transport_status == TransportMain::TRANSPORT_STATUS_CANCEL) {
+        if ($newStatus == TransportMain::TRANSPORT_STATUS_CANCEL) {
             $phoneList = $main->transport_goods['transport_phone_list']??'';
             $phoneArr = [];
             if ($phoneList) {
