@@ -74,7 +74,11 @@ class TransportMain extends Model {
                 return "<span class='badge badge-secondary'>未发布</span>";
                 break;
             case self::TRANSPORT_STATUS_PROCESSING:
-                return "<span class='badge badge-info'>运输中</span>";
+                $subCount = $this->getTransportSubCount();
+                if ($subCount > 0) {
+                    return "<span class='badge badge-info'>运输中</span>";
+                }
+                return "<span class='badge badge-info'>司机尚未接单</span>";
                 break;
             case self::TRANSPORT_STATUS_FINISH:
                 return "<span class='badge badge-success'>已完成</span>";
