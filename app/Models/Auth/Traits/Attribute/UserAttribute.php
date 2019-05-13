@@ -97,7 +97,7 @@ trait UserAttribute
     public function getFullNameAttribute()
     {
         return $this->last_name
-            ? $this->first_name.' '.$this->last_name
+            ? $this->last_name.$this->first_name
             : $this->first_name;
     }
 
