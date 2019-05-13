@@ -44,6 +44,7 @@ class SystemEventListener implements ShouldQueue
      * @param ExceptionNotify $event
      */
     public function exceptionNotify($event) {
+        \Log::error('exceptionNotify',[$event->message]);
         Slack::instance()->to(config('slack.exception_channel'))
             ->attach(
                 [

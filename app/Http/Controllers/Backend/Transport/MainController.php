@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend\Transport;
 
+use App\Events\Api\ExceptionNotify;
 use App\Exceptions\GeneralException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Backend\Transport\ManageMainRequest;
@@ -232,6 +233,7 @@ class MainController extends Controller
         $transportNumber = NumberUuid::instance()->get_uuid_number();
         $coordinate = coordinate_bd_decrypt($request->input('transport_end_place_longitude'),$request->input('transport_end_place_latitude'));
         if ($coordinate['gg_lon'] <=0 || $coordinate['gg_lat'] <= 0) {
+            event(new ExceptionNotify('后台创建行程目的地失败:'.$request->input('transport_end_place_longitude').','.$request->input('transport_end_place_latitude')));
             throw new GeneralException('目的地地址有误，请重新选择');
         }
         $phoneList = str_replace('，',',',$request->input('transport_phone_list'));
