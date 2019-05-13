@@ -325,11 +325,18 @@
                     onInfoHtmlSet: function(poi,html) {
                         html.addEventListener("click", function(e) {
                             if (confirm("确定选取该地址？")) {
-                                document.getElementById('transport_end_place_longitude').value = poi.marker.getPosition().lng;
-                                document.getElementById('transport_end_place_latitude').value = poi.marker.getPosition().lat;
-                                //alert("marker2的位置是" + poi.marker.getPosition().lng + "," + poi.marker.getPosition().lat);
-                                document.getElementById('transport_end_place').value = html.getElementsByTagName('td')[1].innerHTML.replace('&nbsp;','');
-                                //alert(html.getElementsByTagName('td')[1].innerHTML.replace('&nbsp;',''));
+                                var pp = poi.marker.getPosition();
+                                console.log(JSON.stringify(pp));
+                                if (pp.lng) {
+                                    document.getElementById('transport_end_place_longitude').value = pp.lng;
+                                    document.getElementById('transport_end_place_latitude').value = pp.lat;
+
+                                    //alert("marker2的位置是" + poi.marker.getPosition().lng + "," + poi.marker.getPosition().lat);
+                                    document.getElementById('transport_end_place').value = html.getElementsByTagName('td')[1].innerHTML.replace('&nbsp;','');
+                                    //alert(html.getElementsByTagName('td')[1].innerHTML.replace('&nbsp;',''));
+                                } else {
+                                    alert("未能获取到地址，请刷新当前页面后再试~");
+                                }
                             }
                         });
                     },

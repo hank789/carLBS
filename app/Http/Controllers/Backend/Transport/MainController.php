@@ -239,11 +239,13 @@ class MainController extends Controller
         $phoneList = str_replace('，',',',$request->input('transport_phone_list'));
         if ($phoneList) {
             $phoneArr = explode(',',$phoneList);
-            foreach ($phoneArr as $phone) {
+            foreach ($phoneArr as &$phone) {
+                $phone = (int) $phone;
                 if (!preg_match('/^(\+?0?86\-?)?((13\d|14[57]|15[^4,\D]|17[35678]|18\d|19\d|16\d)\d{8}|170[059]\d{7})$/', $phone)) {
                     throw new GeneralException('司机手机号有误，请检查司机手机号是否正确');
                 }
             }
+            $phoneList = implode(',',$phoneArr);
         }
         $main = TransportMain::create([
             'user_id' => $request->user()->id,
@@ -266,7 +268,6 @@ class MainController extends Controller
             'transport_status' => $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING)
         ]);
         if ($phoneList && $main->transport_status == TransportMain::TRANSPORT_STATUS_PROCESSING) {
-            $phoneArr = explode(',',$phoneList);
             foreach ($phoneArr as $phone) {
                 $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start'));
             }
@@ -294,11 +295,13 @@ class MainController extends Controller
         $phoneList = str_replace('，',',',$request->input('transport_phone_list'));
         if ($phoneList) {
             $phoneArr = explode(',',$phoneList);
-            foreach ($phoneArr as $phone) {
+            foreach ($phoneArr as &$phone) {
+                $phone = (int) $phone;
                 if (!preg_match('/^(\+?0?86\-?)?((13\d|14[57]|15[^4,\D]|17[35678]|18\d|19\d|16\d)\d{8}|170[059]\d{7})$/', $phone)) {
                     throw new GeneralException('司机手机号有误，请检查司机手机号是否正确');
                 }
             }
+            $phoneList = implode(',',$phoneArr);
         }
         $oldStatus = $main->transport_status;
         $newStatus = $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING);
@@ -321,7 +324,6 @@ class MainController extends Controller
             'transport_status' => $newStatus
         ]);
         if ($phoneList && in_array($oldStatus,[TransportMain::TRANSPORT_STATUS_PENDING,TransportMain::TRANSPORT_STATUS_CANCEL]) && $newStatus == TransportMain::TRANSPORT_STATUS_PROCESSING) {
-            $phoneArr = explode(',',$phoneList);
             foreach ($phoneArr as $phone) {
                 $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start'));
             }
