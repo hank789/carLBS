@@ -304,6 +304,7 @@ class MainController extends Controller
             $phoneList = implode(',',$phoneArr);
         }
         $oldStatus = $main->transport_status;
+        $oldPhoneList = $main->transport_goods['transport_phone_list'];
         $newStatus = $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING);
         $main->update([
             'transport_start_place' => $request->input('transport_start_place'),
@@ -323,7 +324,7 @@ class MainController extends Controller
             ],
             'transport_status' => $newStatus
         ]);
-        if ($phoneList && in_array($oldStatus,[TransportMain::TRANSPORT_STATUS_PENDING,TransportMain::TRANSPORT_STATUS_CANCEL]) && $newStatus == TransportMain::TRANSPORT_STATUS_PROCESSING) {
+        if ($phoneList && (in_array($oldStatus,[TransportMain::TRANSPORT_STATUS_PENDING,TransportMain::TRANSPORT_STATUS_CANCEL]) || $oldPhoneList != $phoneList) && $newStatus == TransportMain::TRANSPORT_STATUS_PROCESSING) {
             foreach ($phoneArr as $phone) {
                 $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start'));
             }
