@@ -9,6 +9,7 @@ use App\Http\Requests\Backend\Transport\ManageMainRequest;
 use App\Http\Requests\Backend\Transport\StoreMainRequest;
 use App\Jobs\SendPhoneMessage;
 use App\Models\Auth\ApiUser;
+use App\Models\Auth\Company;
 use App\Models\Transport\TransportEvent;
 use App\Models\Transport\TransportMain;
 use App\Models\Transport\TransportSub;
@@ -29,7 +30,12 @@ class MainController extends Controller
     public function index(ManageMainRequest $request)
     {
         $filter =  $request->all();
-        $query = TransportMain::query();
+        $user = $request->user();
+        if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
+            $query = TransportMain::where('company_id',$user->company_id);
+        } else {
+            $query = TransportMain::where('vendor_company_id',$user->company_id);
+        }
         if (isset($filter['filter'])) {
             switch ($filter['filter']) {
                 case 'pending':
@@ -230,6 +236,7 @@ class MainController extends Controller
      */
     public function store(StoreMainRequest $request)
     {
+        $user = $request->user();
         $transportNumber = NumberUuid::instance()->get_uuid_number();
         $coordinate = coordinate_bd_decrypt($request->input('transport_end_place_longitude'),$request->input('transport_end_place_latitude'));
         if ($coordinate['gg_lon'] <=0 || $coordinate['gg_lat'] <= 0) {
@@ -247,8 +254,18 @@ class MainController extends Controller
             }
             $phoneList = implode(',',$phoneArr);
         }
+        if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
+            $company_id = $user->company_id;
+        } else {
+            $company_id = $request->input('company_id');
+            if (!$company_id) {
+                throw new GeneralException('请选择公司');
+            }
+        }
         $main = TransportMain::create([
             'user_id' => $request->user()->id,
+            'company_id' => $company_id,
+            'vendor_company_id' => $request->input('vendor_company_id',0),
             'transport_number' => $transportNumber,
             'transport_start_place' => $request->input('transport_start_place'),
             'transport_end_place' => $request->input('transport_end_place'),
@@ -286,6 +303,7 @@ class MainController extends Controller
     public function update(StoreMainRequest $request, $id)
     {
         $main = TransportMain::find($id);
+        $user = $request->user();
         if ($main->transport_end_place != $request->input('transport_end_place')) {
             $coordinate = coordinate_bd_decrypt($request->input('transport_end_place_longitude'),$request->input('transport_end_place_latitude'));
             if ($coordinate['gg_lon'] <=0 || $coordinate['gg_lat'] <= 0) {
@@ -306,7 +324,19 @@ class MainController extends Controller
         $oldStatus = $main->transport_status;
         $oldPhoneList = $main->transport_goods['transport_phone_list'];
         $newStatus = $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING);
+
+        if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
+            $company_id = $user->company_id;
+        } else {
+            $company_id = $request->input('company_id');
+            if (!$company_id) {
+                throw new GeneralException('请选择公司');
+            }
+        }
+
         $main->update([
+            'company_id' => $company_id,
+            'vendor_company_id' => $request->input('vendor_company_id',0),
             'transport_start_place' => $request->input('transport_start_place'),
             'transport_end_place' => $request->input('transport_end_place'),
             'transport_contact_people' => $request->input('transport_contact_people'),

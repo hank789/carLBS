@@ -41,16 +41,16 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\UserDevice whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\UserDevice whereUpdatedAt($value)
  */
-class VendorCompany extends Model {
+class CompanyRel extends Model {
 
-    protected $table = 'vendor_company';
-    protected $fillable = ['company_name','company_id','status'];
+    protected $table = 'company_rel';
+    protected $fillable = ['company_id','vendor_id','status'];
 
-    public function countUsers() {
-        return CompanyUser::where('company_id',$this->id)->where('company_type',CompanyUser::COMPANY_TYPE_VENDOR)->count();
+    public function vendor() {
+        return $this->belongsTo('App\Models\Auth\Company','vendor_id','id');
     }
 
     public function company() {
-        return $this->belongsTo('App\Models\Auth\Company');
+        return $this->belongsTo('App\Models\Auth\Company','company_id','id');
     }
 }

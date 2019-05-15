@@ -20,7 +20,7 @@ class ManageController extends Controller
     public function index(ManageRequest $request)
     {
         $filter =  $request->all();
-        $query = Company::query();
+        $query = Company::where('company_type',Company::COMPANY_TYPE_MAIN);
 
         if (isset($filter['company_name']) && $filter['company_name']) {
             $query = $query->where('company_name','like','%'.$filter['company_name'].'%');
@@ -68,6 +68,7 @@ class ManageController extends Controller
         }
         Company::create([
             'company_name' => $company_name,
+            'company_type' => Company::COMPANY_TYPE_MAIN,
             'status' => $status
         ]);
         return redirect()->route('admin.company.manage.index')->withFlashSuccess('公司添加成功');

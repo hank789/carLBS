@@ -46,7 +46,7 @@
                                 ->class('form-control')
                                 ->placeholder('')
                                 ->attribute('maxlength', 191)
-                                ->value($vendor->company->company_name)
+                                ->value($logged_in_user->company->company_name)
                                 ->readonly()
                             }}
                             </div>

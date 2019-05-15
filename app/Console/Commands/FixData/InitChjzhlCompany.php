@@ -3,10 +3,11 @@
 namespace App\Console\Commands\FixData;
 
 use App\Models\Auth\Company;
-use App\Models\Auth\CompanyUser;
+use App\Models\Auth\CompanyRel;
 use App\Models\Auth\User;
-use App\Models\Auth\VendorCompany;
+use App\Models\Transport\TransportEntity;
 use App\Models\Transport\TransportMain;
+use App\Models\Transport\TransportSub;
 use Illuminate\Console\Command;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -44,8 +45,15 @@ class InitChjzhlCompany extends Command
      */
     public function handle()
     {
+        $companyMain = Company::create([
+            'company_name' => '中讯智慧',
+            'company_type' => Company::COMPANY_TYPE_MAIN,
+            'company_logo' => '',
+            'status' => 1
+        ]);
         $company = Company::create([
             'company_name' => '长江智链',
+            'company_type' => Company::COMPANY_TYPE_MAIN,
             'company_logo' => '',
             'status' => 1
         ]);
@@ -64,14 +72,13 @@ class InitChjzhlCompany extends Command
 
         $users = User::all();
         foreach ($users as $user) {
-            CompanyUser::create([
-                'company_id' => $company->id,
-                'user_id' => $user->id,
-                'company_type' => CompanyUser::COMPANY_TYPE_MAIN,
-                'status' => 1
-            ]);
             if ($user->id >=4 ) {
+                $user->company_id = $company->id;
+                $user->save();
                 $user->syncRoles($role);
+            } else {
+                $user->company_id = $companyMain->id;
+                $user->save();
             }
         }
 
@@ -81,13 +88,31 @@ class InitChjzhlCompany extends Command
         $transportList = TransportMain::get();
         foreach ($transportList as $main) {
             if (isset($main->transport_goods['transport_vendor_company'])) {
-                $exist = VendorCompany::where('company_name',$main->transport_goods['transport_vendor_company'])->where('company_id',$company->id)->first();
-                if (!$exist) {
-                    VendorCompany::create([
+                $vendor = Company::where('company_name',$main->transport_goods['transport_vendor_company'])->first();
+                if (!$vendor) {
+                    $vendor = Company::create([
                         'company_name' => $main->transport_goods['transport_vendor_company'],
-                        'company_id' => $company->id
+                        'company_type' => Company::COMPANY_TYPE_VENDOR,
+                    ]);
+                    CompanyRel::create([
+                        'company_id' => $company->id,
+                        'vendor_id' => $vendor->id
                     ]);
                 }
+                $main->company_id = $company->id;
+                $main->vendor_company_id = $vendor->id;
+                $main->save();
+            }
+        }
+        $cars = TransportEntity::get();
+        foreach ($cars as $entity) {
+            if (isset($entity->entity_info['lastSub']['sub_id'])) {
+                $sub = TransportSub::find($entity->entity_info['lastSub']['sub_id']);
+                $transportMain = $sub->transportMain;
+                $entity->last_company_id = $transportMain->company_id;
+                $entity->last_vendor_company_id = $transportMain->vendor_company_id;
+                $entity->last_sub_status = $sub->transport_status;
+                $entity->save();
             }
         }
     }

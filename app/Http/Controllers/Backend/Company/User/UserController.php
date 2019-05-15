@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend\Company\User;
 
+use App\Models\Auth\CompanyRel;
 use App\Models\Auth\User;
 use App\Http\Controllers\Controller;
 use App\Events\Backend\Auth\User\UserDeleted;
@@ -37,9 +38,13 @@ class UserController extends Controller
      */
     public function index(ManageUserRequest $request)
     {
+        $user = $request->user();
+        $companyIds = CompanyRel::where('company_id',$user->company_id)->pluck('vendor_id')->toArray();
+        $companyIds[] = $user->company_id;
         $users = User::with('roles', 'permissions', 'providers')
             ->active()
             ->where('id','!=',1)
+            ->whereIn('company_id',$companyIds)
             ->orderBy('id', 'desc')
             ->paginate(25);
         return view('backend.company.user.index')

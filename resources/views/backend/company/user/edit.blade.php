@@ -60,7 +60,7 @@
                     </div><!--form-group-->
 
                     <div class="form-group row">
-                        {{ html()->label('Abilities')->class('col-md-2 form-control-label') }}
+                        {{ html()->label('权限设置')->class('col-md-2 form-control-label') }}
 
                         <div class="table-responsive col-md-10">
                             <table class="table">

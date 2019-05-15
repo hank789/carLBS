@@ -44,14 +44,17 @@ use Illuminate\Database\Eloquent\Model;
 class Company extends Model {
 
     protected $table = 'company';
-    protected $fillable = ['company_name','company_logo','status'];
+    protected $fillable = ['company_name','company_type','status'];
 
     const COMPANY_STATUS_PENDING = 0;
     const COMPANY_STATUS_VALID = 1;
     const COMPANY_STATUS_SUSPEND = 2;
 
+    const COMPANY_TYPE_MAIN = 1;
+    const COMPANY_TYPE_VENDOR = 2;
+
     public function countUsers() {
-        return CompanyUser::where('company_id',$this->id)->where('company_type',CompanyUser::COMPANY_TYPE_MAIN)->count();
+        return User::where('company_id',$this->id)->count();
     }
 
     /**

@@ -29,7 +29,8 @@
                         <tr>
                             <th>@lang('labels.backend.access.users.table.full_name')</th>
                             <th>手机号</th>
-                            <th>@lang('labels.backend.access.users.table.confirmed')</th>
+                            <th>公司</th>
+                            <th>状态</th>
                             <th>@lang('labels.backend.access.users.table.roles')</th>
                             <th>@lang('labels.backend.access.users.table.other_permissions')</th>
                             <th>@lang('labels.backend.access.users.table.last_updated')</th>
@@ -41,7 +42,8 @@
                             <tr>
                                 <td>{{ $user->last_name.$user->first_name }}</td>
                                 <td>{{ $user->mobile }}</td>
-                                <td>{!! $user->confirmed_label !!}</td>
+                                <td>{{ $user->company->company_name }}</td>
+                                <td>{!! $user->status_label !!}</td>
                                 <td>{!! $user->roles_label !!}</td>
                                 <td>{!! $user->permissions_label !!}</td>
                                 <td>{{ $user->updated_at->diffForHumans() }}</td>

@@ -118,6 +118,7 @@ class User extends Authenticatable
         'last_name',
         'email',
         'mobile',
+        'company_id',
         'avatar_type',
         'avatar_location',
         'password',

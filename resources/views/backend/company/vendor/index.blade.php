@@ -44,12 +44,12 @@
                         <tbody>
                         @foreach($companies as $company)
                             <tr>
-                                <td>{{ $company->company_name }}</td>
-                                <td>{{ $company->countUsers() }}</td>
-                                <td>{{ ($company->created_at) }}</td>
+                                <td>{{ $company->vendor->company_name }}</td>
+                                <td>{{ $company->vendor->countUsers() }}</td>
+                                <td>{{ ($company->vendor->created_at) }}</td>
                                 <td>
                                     <div class="btn-group-xs" >
-                                        <a class="btn btn-default" href="{{ route('admin.company.vendor.edit',['id'=>$company->id]) }}" data-toggle="tooltip" title="编辑"><i class="fa fa-edit"></i></a>
+                                        <a class="btn btn-default" href="{{ route('admin.company.vendor.edit',['id'=>$company->vendor_id]) }}" data-toggle="tooltip" title="编辑"><i class="fa fa-edit"></i></a>
                                     </div>
                                 </td>
                             </tr>
