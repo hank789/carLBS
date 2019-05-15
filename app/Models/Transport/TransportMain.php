@@ -51,6 +51,7 @@ class TransportMain extends Model {
 
     protected $table = 'transport_main';
     protected $fillable = ['user_id', 'transport_number','transport_start_place','transport_end_place',
+        'company_id','vendor_company_id',
         'transport_contact_people','transport_contact_phone','transport_contact_vendor_people','transport_contact_vendor_phone','transport_start_time','transport_goods','transport_status'];
 
     const TRANSPORT_STATUS_CANCEL = -1;

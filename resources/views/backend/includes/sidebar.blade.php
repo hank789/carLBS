@@ -34,7 +34,7 @@
                 </a>
             </li>
             @endcan
-            @if ($logged_in_user->isAdmin())
+            @can('账户管理')
             <li class="nav-title">
                 权限管理
             </li>
@@ -43,7 +43,23 @@
                     <i class="nav-icon icon-user"></i> 账户管理
                 </a>
             </li>
-            @endif
+            @endcan
+
+            @can('供应商管理')
+                <li class="nav-item">
+                <a class="nav-link {{ active_class(Active::checkUriPattern('admin/company/vendor*')) }}" href="{{ route('admin.company.vendor.index') }}">
+                    <i class="nav-icon icon-briefcase"></i> 供应商管理
+                </a>
+                </li>
+            @endcan
+
+            @can('公司管理')
+                <li class="nav-item">
+                <a class="nav-link {{ active_class(Active::checkUriPattern('admin/company/manage*')) }}" href="{{ route('admin.company.manage.index') }}">
+                    <i class="nav-icon icon-diamond"></i> 公司管理
+                </a>
+                </li>
+            @endcan
 
             @if ($logged_in_user->isSuperAdmin())
                 <li class="nav-title">

@@ -6,7 +6,6 @@
  */
 
 
-use App\Models\Relations\BelongsToSystemUserTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -43,9 +42,35 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\UserDevice whereUpdatedAt($value)
  */
 class Company extends Model {
-    use BelongsToSystemUserTrait;
 
     protected $table = 'company';
-    protected $fillable = ['name'];
+    protected $fillable = ['company_name','company_logo','status'];
 
+    const COMPANY_STATUS_PENDING = 0;
+    const COMPANY_STATUS_VALID = 1;
+    const COMPANY_STATUS_SUSPEND = 2;
+
+    public function countUsers() {
+        return CompanyUser::where('company_id',$this->id)->where('company_type',CompanyUser::COMPANY_TYPE_MAIN)->count();
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusLabelAttribute()
+    {
+        switch ($this->status) {
+            case self::COMPANY_STATUS_PENDING:
+                return "<span class='badge badge-secondary'>待认证</span>";
+                break;
+            case self::COMPANY_STATUS_VALID:
+                return "<span class='badge badge-success'>已认证</span>";
+                break;
+            case self::COMPANY_STATUS_SUSPEND:
+                return "<span class='badge badge-warning'>已禁止</span>";
+                break;
+            default:
+                break;
+        }
+    }
 }

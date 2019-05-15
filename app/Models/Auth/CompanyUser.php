@@ -6,7 +6,6 @@
  */
 
 
-use App\Models\Relations\BelongsToSystemUserTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -43,11 +42,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Auth\UserDevice whereUpdatedAt($value)
  */
 class CompanyUser extends Model {
-    use BelongsToSystemUserTrait;
 
-    protected $table = 'company_user';
-    protected $fillable = ['company_id','user_id','user_type'];
+    protected $table = 'company_user_rel';
+    protected $fillable = ['company_id','user_id','company_type','status'];
 
-    const USER_TYPE_SYSTEM = 1;
-    const USER_TYPE_APP = 2;
+    const COMPANY_TYPE_MAIN = 1;
+    const COMPANY_TYPE_VENDOR = 2;
 }

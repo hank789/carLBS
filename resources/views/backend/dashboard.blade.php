@@ -3,7 +3,7 @@
 @section('title', app_display_name() . ' | ' . __('strings.backend.dashboard.title'))
 
 @section('content')
-
+    @can('供应商管理')
             <div class="card">
                 <div class="card-body">
                     <div class="row">
@@ -74,7 +74,7 @@
 
                 </div><!--card-body-->
             </div><!--card-->
-
+    @endcan
 @endsection
 @section('script')
     {!! script(('js/plugins/chartjs/Chart.min.js'),[],config('app.use_ssl')) !!}

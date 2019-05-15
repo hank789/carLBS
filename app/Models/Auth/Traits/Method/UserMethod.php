@@ -80,6 +80,11 @@ trait UserMethod
         return $this->id == 1;
     }
 
+    //系统管理员，可以管理公司
+    public function isSystemAdmin() {
+        return $this->hasRole('系统管理员');
+    }
+
     /**
      * @return bool
      */

@@ -17,7 +17,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\Test::class,
-        Commands\Transport\AlertStartTransport::class
+        Commands\Transport\AlertStartTransport::class,
+        Commands\FixData\InitChjzhlCompany::class
     ];
 
     /**

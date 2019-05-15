@@ -8,9 +8,7 @@ use App\Events\Backend\Auth\User\UserDeleted;
 use App\Repositories\Backend\Auth\RoleRepository;
 use App\Repositories\Backend\Auth\UserRepository;
 use App\Repositories\Backend\Auth\PermissionRepository;
-use App\Http\Requests\Backend\Auth\User\StoreUserRequest;
-use App\Http\Requests\Backend\Auth\User\ManageUserRequest;
-use App\Http\Requests\Backend\Auth\User\UpdateUserRequest;
+use App\Http\Requests\Backend\Auth\Company\ManageUserRequest;
 
 /**
  * Class UserController.
@@ -68,7 +66,7 @@ class UserController extends Controller
      * @return mixed
      * @throws \Throwable
      */
-    public function store(StoreUserRequest $request)
+    public function store(ManageUserRequest $request)
     {
         $this->userRepository->create($request->only(
             'first_name',
@@ -123,7 +121,7 @@ class UserController extends Controller
      * @throws \App\Exceptions\GeneralException
      * @throws \Throwable
      */
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(ManageUserRequest $request, User $user)
     {
         $this->userRepository->update($user, $request->only(
             'first_name',

@@ -2,6 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Auth\Company;
+use App\Models\Auth\VendorCompany;
+use App\Models\Transport\TransportMain;
 use App\Services\Registrar;
 use Illuminate\Console\Command;
 use Spatie\Permission\Models\Permission;
@@ -40,6 +43,14 @@ class Test extends Command
      */
     public function handle()
     {
+        $admin = Role::find(1);
+        $admin->givePermissionTo(Permission::all());
+        return;
+        $permissions = ['账户管理'];
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission]);
+        }
+        return;
         $permission = Permission::find(1);
         $permission->name = '后台登陆';
         $permission->save();

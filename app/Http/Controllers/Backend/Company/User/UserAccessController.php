@@ -6,7 +6,7 @@ use App\Models\Auth\User;
 use App\Helpers\Auth\Auth;
 use App\Exceptions\GeneralException;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Backend\Auth\User\ManageUserRequest;
+use App\Http\Requests\Backend\Auth\Company\ManageUserRequest;
 
 /**
  * Class UserAccessController.

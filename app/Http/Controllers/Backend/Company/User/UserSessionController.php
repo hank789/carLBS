@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Backend\Company\User;
 use App\Models\Auth\User;
 use App\Http\Controllers\Controller;
 use App\Repositories\Backend\Auth\SessionRepository;
-use App\Http\Requests\Backend\Auth\User\ManageUserRequest;
+use App\Http\Requests\Backend\Auth\Company\ManageUserRequest;
 
 /**
  * Class UserSessionController.

@@ -2,6 +2,9 @@
 
 namespace App\Models\Auth\Traits\Attribute;
 
+use App\Models\Auth\Company;
+use App\Models\Auth\CompanyUser;
+use App\Models\Auth\VendorCompany;
 use Illuminate\Support\Facades\Hash;
 
 /**
@@ -10,7 +13,20 @@ use Illuminate\Support\Facades\Hash;
 trait UserCompanyAttribute
 {
 
-
+    public function company() {
+        $userCompany = CompanyUser::where('user_id',$this->id)->first();
+        if ($userCompany) {
+            switch ($userCompany->company_type) {
+                case CompanyUser::COMPANY_TYPE_MAIN:
+                    return Company::find($userCompany->company_id);
+                    break;
+                case CompanyUser::COMPANY_TYPE_VENDOR:
+                    return VendorCompany::find($userCompany->company_id);
+                    break;
+            }
+        }
+        return null;
+    }
 
     /**
      * @return string
