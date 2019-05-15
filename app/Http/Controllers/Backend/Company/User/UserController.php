@@ -39,14 +39,16 @@ class UserController extends Controller
     public function index(ManageUserRequest $request)
     {
         $user = $request->user();
-        $companyIds = CompanyRel::where('company_id',$user->company_id)->pluck('vendor_id')->toArray();
-        $companyIds[] = $user->company_id;
-        $users = User::with('roles', 'permissions', 'providers')
+        $query = User::with('roles', 'permissions', 'providers')
             ->active()
-            ->where('id','!=',1)
-            ->whereIn('company_id',$companyIds)
-            ->orderBy('id', 'desc')
-            ->paginate(25);
+            ->where('id','!=',1);
+        if ($user->company_id != 1) {
+            $companyIds = CompanyRel::where('company_id',$user->company_id)->pluck('vendor_id')->toArray();
+            $companyIds[] = $user->company_id;
+            $query = $query->whereIn('company_id',$companyIds);
+        }
+
+        $users = $query->orderBy('id', 'desc')->paginate(25);
         return view('backend.company.user.index')
             ->withUsers($users);
     }

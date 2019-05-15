@@ -49,7 +49,9 @@
                                 <td>{{ ($company->vendor->created_at) }}</td>
                                 <td>
                                     <div class="btn-group-xs" >
-                                        <a class="btn btn-default" href="{{ route('admin.company.vendor.edit',['id'=>$company->vendor_id]) }}" data-toggle="tooltip" title="编辑"><i class="fa fa-edit"></i></a>
+                                        @if ($logged_in_user->company_id != 1)
+                                            <a class="btn btn-default" href="{{ route('admin.company.vendor.edit',['id'=>$company->vendor_id]) }}" data-toggle="tooltip" title="编辑"><i class="fa fa-edit"></i></a>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>

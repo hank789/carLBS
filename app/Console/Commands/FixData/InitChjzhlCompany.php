@@ -102,6 +102,10 @@ class InitChjzhlCompany extends Command
                 $main->company_id = $company->id;
                 $main->vendor_company_id = $vendor->id;
                 $main->save();
+            } else {
+                $main->company_id = $company->id;
+                $main->vendor_company_id = 0;
+                $main->save();
             }
         }
         $cars = TransportEntity::get();
@@ -112,6 +116,11 @@ class InitChjzhlCompany extends Command
                 $entity->last_company_id = $transportMain->company_id;
                 $entity->last_vendor_company_id = $transportMain->vendor_company_id;
                 $entity->last_sub_status = $sub->transport_status;
+                $entity->save();
+            } else {
+                $entity->last_company_id = $company->id;
+                $entity->last_vendor_company_id = 0;
+                $entity->last_sub_status = 2;
                 $entity->save();
             }
         }
