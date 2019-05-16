@@ -26,13 +26,14 @@ class YingyanController extends Controller
         $ak = $request->input('ak');
         $service_id = $request->input('service_id');
         $callback = $request->input('callback');
-        \Log::info('test',$request->all());
+        //\Log::info('test',$request->all());
         $queryModel = TransportEntity::where('entity_status',1);
-
-        if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
-            $queryModel = $queryModel->where('last_company_id',$user->company_id);
-        } else {
-            $queryModel = $queryModel->where('last_vendor_company_id',$user->company_id);
+        if ($user->company_id != 1) {
+            if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
+                $queryModel = $queryModel->where('last_company_id',$user->company_id);
+            } else {
+                $queryModel = $queryModel->where('last_vendor_company_id',$user->company_id);
+            }
         }
 
         if ($query) {
@@ -117,12 +118,16 @@ class YingyanController extends Controller
             $midLat = ($LatLan1[0] + $LatLan2[0])/2;
 
             $hash = GeoHash::instance()->encode($midLat,$midLan);
-
-            if ($halfDistance <= 5000) {
+            if ($halfDistance <= 153) {
+                $hashLength = 7;
+            } elseif ($halfDistance <= 1200) {
+                //1公里以内
+                $hashLength = 6;
+            } elseif ($halfDistance <= 5000) {
                 //5公里以内
                 $hashLength = 5;
-            } elseif ($halfDistance <= 20000) {
-                //20公里以内
+            } elseif ($halfDistance <= 40000) {
+                //40公里以内
                 $hashLength = 4;
             } elseif ($halfDistance <= 156000) {
                 //156公里以内
@@ -133,6 +138,7 @@ class YingyanController extends Controller
             } else {
                 $hashLength = 1;
             }
+            //\Log::info('test',[$halfDistance,$hashLength]);
 
             $pre_hash = substr($hash, 0, $hashLength);
 
@@ -151,13 +157,15 @@ class YingyanController extends Controller
             $page_index = $request->input('page_index',1); //1
             $page_size = $request->input('page_size',10); //10
             $timeStamp = $request->input('timeStamp'); //1551715893257
-            \Log::info('test',$request->all());
+            //\Log::info('test',$request->all());
             $queryModel = TransportEntity::where('entity_status',1);
 
-            if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
-                $queryModel = $queryModel->where('last_company_id',$user->company_id);
-            } else {
-                $queryModel = $queryModel->where('last_vendor_company_id',$user->company_id);
+            if ($user->company_id != 1) {
+                if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
+                    $queryModel = $queryModel->where('last_company_id',$user->company_id);
+                } else {
+                    $queryModel = $queryModel->where('last_vendor_company_id',$user->company_id);
+                }
             }
 
             if ($query) {
@@ -182,9 +190,16 @@ class YingyanController extends Controller
             $entities = $queryModel->orderBy('last_loc_time','desc')->paginate($page_size,['*'],'page',$page_index);
             $list = [];
             $return = [];
+            $removeCount = 0;
             foreach ($entities as $entity) {
                 $distanceDesc = '';
                 if (isset($entity->entity_info['lastPosition']) && isset($entity->entity_info['lastSub']['transport_end_place_longitude'])) {
+                    $distanceDiff = getDistanceByLatLng($midLan,$midLat,$entity->entity_info['lastPosition']['longitude'],$entity->entity_info['lastPosition']['latitude']);
+
+                    if ($distanceDiff > $halfDistance) {
+                        $removeCount++;
+                        continue;
+                    }
                     $end_place = [];
                     $end_place['bd_lon'] = $entity->entity_info['lastSub']['transport_end_place_longitude'];
                     $end_place['bd_lat'] = $entity->entity_info['lastSub']['transport_end_place_latitude'];
@@ -193,6 +208,9 @@ class YingyanController extends Controller
                     }
                     $distance = getDistanceByLatLng($entity->entity_info['lastPosition']['longitude'],$entity->entity_info['lastPosition']['latitude'],$end_place['bd_lon'],$end_place['bd_lat']);
                     $distanceDesc = '距目的地约'.distanceFormat($distance);
+                } else {
+                    $removeCount++;
+                    continue;
                 }
                 $latest_location = $entity->entity_info['lastPosition']??[];
                 if (isset($latest_location['speed'])) {
@@ -214,7 +232,7 @@ class YingyanController extends Controller
             $return['status'] = 0;
             $return['message'] = '成功';
             $return['size'] = count($list);
-            $return['total'] = $entities->total();
+            $return['total'] = $entities->total()-$removeCount;
             return response()->json($return);
         }
 

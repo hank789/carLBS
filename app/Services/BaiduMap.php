@@ -160,7 +160,7 @@ class BaiduMap
             foreach ($params as $key => $v) {
                 $url .="&{$key}=" . urlencode($v);
             }
-            \Log::info('test',[$url]);
+            //\Log::info('test',[$url]);
             $data = $this->_curl($url);
         } else {
             $url = urlencode($this->url . $uri);
