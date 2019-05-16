@@ -10,6 +10,7 @@ use App\Http\Requests\Backend\Transport\StoreMainRequest;
 use App\Jobs\SendPhoneMessage;
 use App\Models\Auth\ApiUser;
 use App\Models\Auth\Company;
+use App\Models\Auth\CompanyRel;
 use App\Models\Transport\TransportEvent;
 use App\Models\Transport\TransportMain;
 use App\Models\Transport\TransportSub;
@@ -31,7 +32,9 @@ class MainController extends Controller
     {
         $filter =  $request->all();
         $user = $request->user();
-        if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
+        if ($user->company_id == 1) {
+            $query = TransportMain::query();
+        } elseif ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
             $query = TransportMain::where('company_id',$user->company_id);
         } else {
             $query = TransportMain::where('vendor_company_id',$user->company_id);
@@ -179,6 +182,11 @@ class MainController extends Controller
 
     public function mark(ManageMainRequest $request, $id, $status)
     {
+        $user = $request->user();
+        $userCompany = $user->company;
+        if ($userCompany->company_type != Company::COMPANY_TYPE_MAIN) {
+            throw new GeneralException('您无权限修改行程');
+        }
         $main = TransportMain::find($id);
 
         \Log::info('test',[$id,$status]);
@@ -225,7 +233,16 @@ class MainController extends Controller
      */
     public function create(ManageMainRequest $request)
     {
-        return view('backend.transport.main.create');
+        $user = $request->user();
+        $userCompany = $user->company;
+        $vendors = [];
+        if ($userCompany->company_type == Company::COMPANY_TYPE_MAIN) {
+            $vendors = CompanyRel::where('company_id',$userCompany->id)->get();
+        } else {
+            throw new GeneralException('您无权限创建行程');
+        }
+
+        return view('backend.transport.main.create')->with('vendors',$vendors);
     }
 
     /**
@@ -262,10 +279,36 @@ class MainController extends Controller
                 throw new GeneralException('请选择公司');
             }
         }
+        $vendor_company_id = $request->input('vendor_company_id',0);
+        if (!$vendor_company_id) {
+            throw new GeneralException('请选择供应商');
+        }
+        if (is_numeric($vendor_company_id)) {
+            $vendor = Company::find($vendor_company_id);
+            if (!$vendor) {
+                throw new GeneralException('该供应商不存在');
+            }
+        } else {
+            $vendor = Company::where('company_name',$vendor_company_id)->first();
+            if ($vendor) {
+                $vendor_company_id = $vendor->id;
+            } else {
+                $vendor = Company::create([
+                    'company_name' => $vendor_company_id,
+                    'company_type' => Company::COMPANY_TYPE_VENDOR
+                ]);
+                CompanyRel::create([
+                    'company_id' => $company_id,
+                    'vendor_id'  => $vendor->id
+                ]);
+                $vendor_company_id = $vendor->id;
+            }
+        }
+
         $main = TransportMain::create([
             'user_id' => $request->user()->id,
             'company_id' => $company_id,
-            'vendor_company_id' => $request->input('vendor_company_id',0),
+            'vendor_company_id' => $vendor_company_id,
             'transport_number' => $transportNumber,
             'transport_start_place' => $request->input('transport_start_place'),
             'transport_end_place' => $request->input('transport_end_place'),
@@ -280,7 +323,7 @@ class MainController extends Controller
                 'transport_end_place_latitude'=> $coordinate['gg_lat'],
                 'transport_end_place_coordsType' => 'gcj02',
                 'transport_phone_list' => $phoneList,
-                'transport_vendor_company' => $request->input('transport_vendor_company','')
+                'transport_vendor_company' => $vendor->company_name
             ],
             'transport_status' => $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING)
         ]);
@@ -295,8 +338,16 @@ class MainController extends Controller
     public function edit(ManageMainRequest $request,$id)
     {
         $main = TransportMain::find($id);
+        $user = $request->user();
+        $userCompany = $user->company;
+        $vendors = [];
+        if ($userCompany->company_type == Company::COMPANY_TYPE_MAIN) {
+            $vendors = CompanyRel::where('company_id',$userCompany->id)->get();
+        } else {
+            throw new GeneralException('您无权限修改行程');
+        }
         return view('backend.transport.main.edit')
-            ->with('main',$main);
+            ->with('main',$main)->with('vendors',$vendors);
     }
 
 
@@ -325,18 +376,34 @@ class MainController extends Controller
         $oldPhoneList = $main->transport_goods['transport_phone_list'];
         $newStatus = $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING);
 
-        if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
-            $company_id = $user->company_id;
+        $vendor_company_id = $request->input('vendor_company_id',0);
+        if (!$vendor_company_id) {
+            throw new GeneralException('请选择供应商');
+        }
+        if (is_numeric($vendor_company_id)) {
+            $vendor = Company::find($vendor_company_id);
+            if (!$vendor) {
+                throw new GeneralException('该供应商不存在');
+            }
         } else {
-            $company_id = $request->input('company_id');
-            if (!$company_id) {
-                throw new GeneralException('请选择公司');
+            $vendor = Company::where('company_name',$vendor_company_id)->first();
+            if ($vendor) {
+                $vendor_company_id = $vendor->id;
+            } else {
+                $vendor = Company::create([
+                    'company_name' => $vendor_company_id,
+                    'company_type' => Company::COMPANY_TYPE_VENDOR
+                ]);
+                CompanyRel::create([
+                    'company_id' => $main->company_id,
+                    'vendor_id'  => $vendor->id
+                ]);
+                $vendor_company_id = $vendor->id;
             }
         }
 
         $main->update([
-            'company_id' => $company_id,
-            'vendor_company_id' => $request->input('vendor_company_id',0),
+            'vendor_company_id' => $vendor_company_id,
             'transport_start_place' => $request->input('transport_start_place'),
             'transport_end_place' => $request->input('transport_end_place'),
             'transport_contact_people' => $request->input('transport_contact_people'),
@@ -350,7 +417,7 @@ class MainController extends Controller
                 'transport_end_place_latitude'=> $coordinate['gg_lat']??$main->transport_goods['transport_end_place_latitude'],
                 'transport_end_place_coordsType' => 'gcj02',
                 'transport_phone_list' => $phoneList,
-                'transport_vendor_company' => $request->input('transport_vendor_company','')
+                'transport_vendor_company' => $vendor->company_name
             ],
             'transport_status' => $newStatus
         ]);

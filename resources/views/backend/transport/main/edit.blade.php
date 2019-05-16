@@ -4,6 +4,8 @@
 
 @section('head-script')
     <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=oOBCAkeREzlDTnhp6MT1BcEiovp51S1l"></script>
+    {{ style(('js/plugins/select2/css/select2.min.css'),[],config('app.use_ssl')) }}
+    {{ style(('js/plugins/select2/css/select2-bootstrap.min.css'),[],config('app.use_ssl')) }}
 @endsection
 
 @section('content')
@@ -74,21 +76,17 @@
                         </div><!--col-->
                     </div><!--form-group-->
 
-                    <div class="form-group row">
-                        {{ html()->label('供应商')
-                            ->class('col-md-2 form-control-label')
-                            ->for('transport_vendor_company') }}
+                    <div class="form-group row" id="select_vendor_company_div">
+                        {{ html()->label('供应商')->class('col-md-2 form-control-label')->for('vendor_company_id') }}
 
                         <div class="col-md-10">
-                            {{ html()->text('transport_vendor_company')
-                                ->class('form-control')
-                                ->placeholder('供应商')
-                                ->attribute('maxlength', 255)
-                                ->required()
-                                ->value($main->transport_goods['transport_vendor_company']??'')
-                            }}
-                        </div><!--col-->
-                    </div><!--form-group-->
+                            <select id="vendor_company_id" name="vendor_company_id" class="form-control">
+                                @foreach($vendors as $vendor)
+                                    <option value="{{ $vendor->vendor_id }}" {{ $vendor->vendor_id == $main->vendor_company_id?'selected':'' }}>{{ $vendor->vendor->company_name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
 
                     <div class="form-group row">
                         {{ html()->label('供应商联系人')
@@ -272,8 +270,14 @@
             z-index: 1051;
         }
     </style>
+    {!! script(('js/plugins/select2/js/select2.min.js'),[],config('app.use_ssl')) !!}
     <script type="text/javascript">
         $(function(){
+            $("#vendor_company_id").select2({
+                theme:'bootstrap',
+                placeholder: "选择供应商",
+                tags:true
+            });
             /*daterange控件*/
             $('#transport_start_time').daterangepicker({
                 timePicker: true,
