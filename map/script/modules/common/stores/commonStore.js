@@ -19,6 +19,11 @@ var CommonStore = Reflux.createStore({
      */
     onSwitchtab: function(index) {
         this.trigger('switchtab', index);
+    },
+    onGetcompanyname: function() {
+        Urls.jsonp(Urls.getCompany, {}, function(data) {
+            this.trigger('companyname', data.company_name);
+        }.bind(this));
     }
 });
 

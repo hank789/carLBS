@@ -16,6 +16,15 @@ use App\Services\GeoHash;
 
 class YingyanController extends Controller
 {
+
+    public function getCompany(ManageYingyanRequest $request) {
+        $user = $request->user();
+        $return = [
+            'company_name' => $user->company->company_name
+        ];
+        return response()->json($return);
+    }
+
     public function searchEntity(ManageYingyanRequest $request) {
         $user = $request->user();
         $filter =  $request->input('filter'); //inactive_time:1551715294
@@ -297,6 +306,9 @@ class YingyanController extends Controller
         unset($params['callback']);
         $location = explode(',',$params['location']);
         $res = BaiduMap::instance()->geocoder($location[0],$location[1]);
+        if ($res['status'] != 0) {
+            $res['result']['formatted_address'] = '解析失败';
+        }
         return response()->json($res);
     }
 

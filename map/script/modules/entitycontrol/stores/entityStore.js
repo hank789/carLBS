@@ -87,7 +87,7 @@ var EntityStore = Reflux.createStore({
                     ['entity_name', item.entity_name],
                     ['entity_desc', item.entity_desc ? item.entity_desc : '无'],
                     ['create_time', item.create_time],
-                    ['local_address', dataGeo.result.formatted_address === '' ? '无' : dataGeo.result.formatted_address,],
+                    ['local_address', (!dataGeo.result || dataGeo.result.formatted_address === '') ? '无' : dataGeo.result.formatted_address,],
                     ['loc_time', Commonfun.getLocalTime(item.latest_location.loc_time)]
                 ].concat(temp));
                 if (that.data.entities.length === that.data.size) {

@@ -4,7 +4,7 @@
  */
 import React, { Component } from 'react'
 import { render } from 'react-dom'
-import TrackStore from '..//stores/trackStore'
+import TrackStore from '../stores/trackStore'
 import TrackAction from '../actions/trackAction'
 
 var Managetitle = React.createClass({

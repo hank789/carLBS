@@ -24,6 +24,8 @@ var urls = {
     getstaypoint: '/admin/map/analysis/staypoint',
     // 获取驾驶行为分析信息
     getBehaviorAnalysis: '/admin/map/analysis/drivingbehavior',
+    // 获取公司信息
+    getCompany: '/admin/map/getCompany',
 
     /**
      * Jquery AJAX GET

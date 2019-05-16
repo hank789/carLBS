@@ -21,4 +21,5 @@ Route::group([
     Route::get('analysis/staypoint', [YingyanController::class, 'getstaypoint'])->name('yingyan.getstaypoint');
     Route::get('analysis/drivingbehavior', [YingyanController::class, 'getBehaviorAnalysis'])->name('yingyan.getBehaviorAnalysis');
     Route::get('getAddress', [YingyanController::class, 'getAddress'])->name('yingyan.getAddress');
+    Route::get('getCompany', [YingyanController::class, 'getCompany'])->name('yingyan.getCompany');
 });
