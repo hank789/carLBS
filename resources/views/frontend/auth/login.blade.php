@@ -9,8 +9,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>@yield('title', app_display_name())</title>
-        <link rel="shortcut icon" href="{{ asset('img/favicon_32.ico',config('app.use_ssl')) }}">
-        <link rel="icon" href="{{ asset('img/favicon_32.ico',config('app.use_ssl')) }}">
+        <link rel="shortcut icon" href="{{ $favicon }}">
+        <link rel="icon" href="{{ $favicon }}">
         <meta name="description" content="@yield('meta_description', app_display_name())">
         <meta name="author" content="@yield('meta_author', app_display_name())">
     @yield('meta')
@@ -75,7 +75,7 @@
                     <div class="card text-white bg-primary py-5 d-md-down-none" style="width:44%">
                         <div class="card-body text-center">
                             <div>
-                                <p><img class="navbar-brand-full" src="{{ asset('img/logo.png') }}" width="150" height="150" alt="CoreUI Logo"></p>
+                                <p><img class="navbar-brand-full" src="{{ $logo }}" width="150" height="150" alt="Logo"></p>
                             </div>
                         </div>
                     </div>

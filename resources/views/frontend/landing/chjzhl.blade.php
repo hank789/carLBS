@@ -18,7 +18,7 @@
         <h1 class="logo"><a href="#">长江智链</a></h1>
         <div class="menu">
             @guest
-            <a href="{{route('frontend.auth.login')}}" class="href-dweb">@lang('navs.frontend.login')</a>
+            <a href="{{route('frontend.auth.login',['from_source'=>'chjzhl'])}}" class="href-dweb">@lang('navs.frontend.login')</a>
             @else
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" id="navbarDropdownMenuUser" data-toggle="dropdown"

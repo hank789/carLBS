@@ -35,10 +35,21 @@ class LoginController extends Controller
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function showLoginForm()
+    public function showLoginForm(Request $request)
     {
+        $from_source = $request->input('from_source');
+        switch ($from_source) {
+            case 'chjzhl':
+                $logo = asset('img/logo.png',config('app.use_ssl'));
+                $favicon = asset('img/favicon_32.ico',config('app.use_ssl'));
+                break;
+            default:
+                $logo = asset('img/chebaixun.png',config('app.use_ssl'));
+                $favicon = asset('img/favicon_32_chebaixun.ico',config('app.use_ssl'));
+                break;
+        }
         return view('frontend.auth.login')
-            ->withSocialiteLinks((new Socialite)->getSocialLinks());
+            ->with('logo',$logo)->with('favicon',$favicon);
     }
 
     //验证码登陆

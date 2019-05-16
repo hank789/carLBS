@@ -17,6 +17,16 @@ trait UserCompanyAttribute
         return $this->belongsTo('App\Models\Auth\Company');
     }
 
+    public function getSiteFavicon() {
+        $favicon = asset('img/favicon_32_chebaixun.ico',config('app.use_ssl'));
+        switch ($this->company_id) {
+            case 2:
+                $favicon = asset('img/favicon_32.ico',config('app.use_ssl'));
+                break;
+        }
+        return $favicon;
+    }
+
     /**
      * @return string
      */
