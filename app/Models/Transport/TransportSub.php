@@ -2,6 +2,7 @@
 
 use App\Models\Relations\BelongsToApiUserTrait;
 use App\Services\BaiduTrace;
+use App\Services\GeoHash;
 use Illuminate\Database\Eloquent\Model;
 /**
  * App\Models\Transport\TransportSub
@@ -97,6 +98,7 @@ class TransportSub extends Model {
 
         $entity_info['lastPosition'] = $transportGoods['lastPosition'];
         $entity->entity_info = $entity_info;
+        $entity->last_geohash = GeoHash::instance()->encode($transportGoods['lastPosition']['latitude'],$transportGoods['lastPosition']['longitude']);
         $entity->save();
     }
 

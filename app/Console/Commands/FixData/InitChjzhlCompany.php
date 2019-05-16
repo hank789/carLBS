@@ -8,6 +8,7 @@ use App\Models\Auth\User;
 use App\Models\Transport\TransportEntity;
 use App\Models\Transport\TransportMain;
 use App\Models\Transport\TransportSub;
+use App\Services\GeoHash;
 use Illuminate\Console\Command;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -110,19 +111,21 @@ class InitChjzhlCompany extends Command
         }
         $cars = TransportEntity::get();
         foreach ($cars as $entity) {
+            if (isset($entity->entity_info['lastPosition'])) {
+                $entity->last_geohash = GeoHash::instance()->encode($entity->entity_info['lastPosition']['latitude'],$entity->entity_info['lastPosition']['longitude']);
+            }
             if (isset($entity->entity_info['lastSub']['sub_id'])) {
                 $sub = TransportSub::find($entity->entity_info['lastSub']['sub_id']);
                 $transportMain = $sub->transportMain;
                 $entity->last_company_id = $transportMain->company_id;
                 $entity->last_vendor_company_id = $transportMain->vendor_company_id;
                 $entity->last_sub_status = $sub->transport_status;
-                $entity->save();
             } else {
                 $entity->last_company_id = $company->id;
                 $entity->last_vendor_company_id = 0;
                 $entity->last_sub_status = 2;
-                $entity->save();
             }
+            $entity->save();
         }
     }
 }

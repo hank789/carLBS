@@ -38,6 +38,7 @@ class CreateCompanyTable extends Migration
             $table->integer('last_company_id')->unsigned()->default(1)->index('transport_entity_last_company_id')->after('last_loc_time')->comment('最近服务的公司id');
             $table->integer('last_vendor_company_id')->unsigned()->default(1)->index('transport_entity_last_vendor_company_id')->after('last_loc_time')->comment('最近服务的供应商id');
             $table->integer('last_sub_status')->default(1)->index('transport_entity_last_sub_status')->after('last_loc_time')->comment('最近行程状态');
+            $table->string('last_geohash',32)->default('')->index('transport_entity_last_geohash')->after('last_loc_time');
         });
     }
 

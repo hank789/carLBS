@@ -6,6 +6,7 @@ use App\Jobs\FinishTransport;
 use App\Jobs\SendPhoneMessage;
 use App\Jobs\StartTransportSub;
 use App\Jobs\UploadFile;
+use App\Models\Auth\Company;
 use App\Models\Transport\TransportEntity;
 use App\Models\Transport\TransportEvent;
 use App\Models\Transport\TransportLbs;
@@ -464,6 +465,20 @@ class TransportController extends Controller {
         $queryModel = TransportEntity::where('entity_status',1);
         $word = $request->input('word'); //苏E885
         $filter =  $request->input('filter'); //inactive_time:1551715294
+        $status = $request->input('status');
+        switch ($status) {
+            case 'process':
+                $queryModel = $queryModel->where('last_sub_status',TransportSub::TRANSPORT_STATUS_PROCESSING);
+                break;
+            case 'finish':
+                $queryModel = $queryModel->where('last_sub_status',TransportSub::TRANSPORT_STATUS_FINISH);
+                break;
+        }
+        if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
+            $queryModel = $queryModel->where('last_company_id',$user->company_id);
+        } else {
+            $queryModel = $queryModel->where('last_vendor_company_id',$user->company_id);
+        }
         if ($word) {
             $queryModel = $queryModel->where('car_number','like','%'.$word.'%');
         }
