@@ -6,6 +6,11 @@
     @include('backend.company.user.includes.breadcrumb-links')
 @endsection
 
+@section('head-script')
+    {{ style(('js/plugins/select2/css/select2.min.css'),[],config('app.use_ssl')) }}
+    {{ style(('js/plugins/select2/css/select2-bootstrap.min.css'),[],config('app.use_ssl')) }}
+@endsection
+
 @section('content')
     {{ html()->form('POST', route('admin.company.user.store'))->class('form-horizontal')->open() }}
         <div class="card">
@@ -71,7 +76,42 @@
                             </div><!--col-->
                         </div><!--form-group-->
 
-                        <div class="form-group row">
+                        <div class="form-group row" id="select_company_div">
+                            {{ html()->label('公司')->class('col-md-2 form-control-label')->for('company_id') }}
+
+                            <div class="col-md-10">
+                                <select id="company_id" name="company_id" class="form-control" {{ $userCompany->id != 1?'readonly':'' }}>
+                                    @foreach($companies as $company)
+                                        <option value="{{ $company->id }}" {{ $userCompany->id == $company->id?'selected':'' }}>{{ $company->company_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" style="{{ $userCompany->company_type == 2?'display:none':'' }}">
+                            {{ html()->label('是否供应商人员')->class('col-md-2 form-control-label')->for('is_vendor') }}
+
+                            <div class="col-md-10">
+                                <label class="switch switch-label switch-pill switch-primary">
+                                    {{ html()->checkbox('is_vendor', false, '1')->class('switch-input') }}
+                                    <span class="switch-slider" data-checked="是" data-unchecked="否"></span>
+                                </label>
+                            </div><!--col-->
+                        </div><!--form-group-->
+
+                        <div class="form-group row" id="select_vendor_company_div" style="display: none;">
+                            {{ html()->label('供应商')->class('col-md-2 form-control-label')->for('vendor_company_id') }}
+
+                                <div class="col-md-10">
+                                    <select id="vendor_company_id" name="vendor_company_id" class="form-control">
+                                        @foreach($vendors as $vendor)
+                                            <option value="{{ $vendor->vendor_id }}">{{ $vendor->vendor->company_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                        </div>
+
+                        <div class="form-group row" style="display: none">
                             {{ html()->label(__('validation.attributes.backend.access.users.confirmed'))->class('col-md-2 form-control-label')->for('confirmed') }}
 
                             <div class="col-md-10">
@@ -181,4 +221,28 @@
             </div><!--card-footer-->
         </div><!--card-->
     {{ html()->form()->close() }}
+@endsection
+
+@section('script')
+    {!! script(('js/plugins/select2/js/select2.min.js'),[],config('app.use_ssl')) !!}
+    <script type="text/javascript">
+        $(function(){
+            $("#vendor_company_id").select2({
+                theme:'bootstrap',
+                placeholder: "选择供应商",
+                tags:false
+            });
+            $('#is_vendor').change(function() {
+                var ischecked = $('#is_vendor').prop('checked');
+                if (ischecked) {
+                    //是供应商
+                    $('#select_vendor_company_div').css('display','');
+                    $('#select_company_div').css('display','none');
+                } else {
+                    $('#select_vendor_company_div').css('display','none');
+                    $('#select_company_div').css('display','');
+                }
+            });
+        });
+    </script>
 @endsection

@@ -13,7 +13,7 @@ Route::group([
     'prefix'     => 'company',
     'as'         => 'company.',
     'namespace'  => 'Company',
-    'middleware' => 'role:'.config('access.users.admin_role'),
+    //'middleware' => 'role:'.config('access.users.admin_role'),
 ], function () {
     /*
      * User Management
@@ -30,7 +30,7 @@ Route::group([
          */
         Route::get('user', [UserController::class, 'index'])->name('user.index');
         Route::get('user/create', [UserController::class, 'create'])->name('user.create');
-        Route::post('user', [UserController::class, 'store'])->name('user.store');
+        Route::post('user/store', [UserController::class, 'store'])->name('user.store');
     });
 
     /*

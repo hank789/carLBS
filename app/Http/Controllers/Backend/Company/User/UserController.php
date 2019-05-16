@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Backend\Company\User;
 
+use App\Exceptions\GeneralException;
+use App\Models\Auth\Company;
 use App\Models\Auth\CompanyRel;
 use App\Models\Auth\User;
 use App\Http\Controllers\Controller;
@@ -62,20 +64,30 @@ class UserController extends Controller
      */
     public function create(ManageUserRequest $request, RoleRepository $roleRepository, PermissionRepository $permissionRepository)
     {
+        $user = $request->user();
+        $userCompany = $user->company;
+        $vendors = [];
+        if ($userCompany->company_type == Company::COMPANY_TYPE_MAIN) {
+            $vendors = CompanyRel::where('company_id',$userCompany->id)->get();
+        }
+        $companies = Company::where('company_type',Company::COMPANY_TYPE_MAIN)->get();
         return view('backend.company.user.create')
+            ->with('userCompany',$userCompany)
+            ->with('companies',$companies)
+            ->with('vendors',$vendors)
             ->withRoles($roleRepository->with('permissions')->get(['id', 'name']))
             ->withPermissions($permissionRepository->get(['id', 'name']));
     }
 
     /**
-     * @param StoreUserRequest $request
+     * @param ManageUserRequest $request
      *
      * @return mixed
      * @throws \Throwable
      */
     public function store(ManageUserRequest $request)
     {
-        $this->userRepository->create($request->only(
+        $newUser = $this->userRepository->create($request->only(
             'first_name',
             'last_name',
             'mobile',
@@ -86,7 +98,17 @@ class UserController extends Controller
             'roles',
             'permissions'
         ));
-
+        $newUser->company_id = $request->input('company_id');
+        $is_vendor = $request->input('is_vendor',0);
+        if ($is_vendor) {
+            $vendor_company_id = $request->input('vendor_company_id');
+            $vendor = Company::find($vendor_company_id);
+            if (!$vendor) {
+                throw new GeneralException('该供应商不存在');
+            }
+            $newUser->company_id = $vendor->id;
+        }
+        $newUser->save();
         return redirect()->route('admin.company.user.index')->withFlashSuccess(__('alerts.backend.users.created'));
     }
 
@@ -112,8 +134,19 @@ class UserController extends Controller
      */
     public function edit(ManageUserRequest $request, RoleRepository $roleRepository, PermissionRepository $permissionRepository, User $user)
     {
+        $loginUser = $request->user();
+        $userCompany = $loginUser->company;
+        $vendors = [];
+        if ($userCompany->company_type == Company::COMPANY_TYPE_MAIN) {
+            $vendors = CompanyRel::where('company_id',$userCompany->id)->get();
+        }
+        $companies = Company::where('company_type',Company::COMPANY_TYPE_MAIN)->get();
+
         return view('backend.company.user.edit')
             ->withUser($user)
+            ->with('companies',$companies)
+            ->with('userCompany',$userCompany)
+            ->with('vendors',$vendors)
             ->withRoles($roleRepository->get())
             ->withUserRoles($user->roles->pluck('name')->all())
             ->withPermissions($permissionRepository->get(['id', 'name']))
@@ -130,13 +163,26 @@ class UserController extends Controller
      */
     public function update(ManageUserRequest $request, User $user)
     {
-        $this->userRepository->update($user, $request->only(
+        $loginUser = $request->user();
+        $newUser = $this->userRepository->update($user, $request->only(
             'first_name',
             'last_name',
             'mobile',
             'roles',
             'permissions'
         ));
+
+        $is_vendor = $request->input('is_vendor',0);
+        $newUser->company_id = $request->input('company_id');
+        if ($is_vendor) {
+            $vendor_company_id = $request->input('vendor_company_id');
+            $vendor = Company::find($vendor_company_id);
+            if (!$vendor) {
+                throw new GeneralException('该供应商不存在');
+            }
+            $newUser->company_id = $vendor->id;
+        }
+        $newUser->save();
 
         return redirect()->route('admin.company.user.index')->withFlashSuccess(__('alerts.backend.users.updated'));
     }

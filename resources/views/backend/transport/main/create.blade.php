@@ -245,137 +245,139 @@
         }
     </style>
     <script type="text/javascript">
-        /*daterange控件*/
-        $('#transport_start_time').daterangepicker({
-            timePicker: true,
-            singleDatePicker: true,
-            timePicker24Hour: true,
-            locale: {
-                applyLabel: '确认',
-                cancelLabel: '取消',
-                fromLabel: '从',
-                toLabel: '到',
-                weekLabel: '星期',
-                customRangeLabel: '自定义范围',
-                daysOfWeek: '日_一_二_三_四_五_六'.split('_'),
-                monthNames: '1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月'.split('_'),
-                firstDay: 1,
-                format: 'YYYY-MM-DD HH:mm'
-            }
-        });
-
-        function G(id) {
-            return document.getElementById(id);
-        }
-
-        var map = new BMap.Map("allmap");
-        var geoc = new BMap.Geocoder();   //地址解析对象
-        var markersArray = [];
-        var geolocation = new BMap.Geolocation();
-
-
-        var point = new BMap.Point(116.404412, 39.914714);
-        map.centerAndZoom(point, 12); // 中心点
-        map.enableScrollWheelZoom();
-        geolocation.getCurrentPosition(function (r) {
-            if (this.getStatus() == BMAP_STATUS_SUCCESS) {
-                var mk = new BMap.Marker(r.point);
-                map.addOverlay(mk);
-                map.panTo(r.point);
-                map.enableScrollWheelZoom(true);
-            }
-        }, {enableHighAccuracy: true});
-
-
-        var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
-            {"input" : "suggestId"
-                ,"location" : map
-            });
-        ac.addEventListener("onhighlight", function(e) {  //鼠标放在下拉列表上的事件
-            var str = "";
-            var _value = e.fromitem.value;
-            var value = "";
-            if (e.fromitem.index > -1) {
-                value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
-            }
-            str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
-
-            value = "";
-            if (e.toitem.index > -1) {
-                _value = e.toitem.value;
-                value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
-            }
-            str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
-            G("searchResultPanel").innerHTML = str;
-        });
-
-        var myValue;
-        ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
-            var _value = e.item.value;
-            myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
-            G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
-            document.getElementById('transport_end_place').value = myValue;
-            setPlace();
-        });
-
-        $('#suggestId').bind('keydown',function(event){
-            if(event.keyCode == "13") {
-                map.clearOverlays();    //清除地图上所有覆盖物
-                var local = new BMap.LocalSearch(map, { //智能搜索
-                    onInfoHtmlSet: function(poi,html) {
-                        html.addEventListener("click", function(e) {
-                            if (confirm("确定选取该地址？")) {
-                                var pp = poi.marker.getPosition();
-                                console.log(JSON.stringify(pp));
-                                if (pp.lng) {
-                                    document.getElementById('transport_end_place_longitude').value = pp.lng;
-                                    document.getElementById('transport_end_place_latitude').value = pp.lat;
-
-                                    //alert("marker2的位置是" + poi.marker.getPosition().lng + "," + poi.marker.getPosition().lat);
-                                    document.getElementById('transport_end_place').value = html.getElementsByTagName('td')[1].innerHTML.replace('&nbsp;','');
-                                    //alert(html.getElementsByTagName('td')[1].innerHTML.replace('&nbsp;',''));
-                                } else {
-                                    alert("未能获取到地址，请刷新当前页面后再试~");
-                                }
-                            }
-                        });
-                    },
-                    renderOptions: {map: map, panel: "rr-result"}
-                });
-                local.search($('#suggestId').val());
-            }
-        });
-
-        function setPlace(){
-            map.clearOverlays();    //清除地图上所有覆盖物
-            function myFun(){
-                var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
-                map.centerAndZoom(pp, 18);
-                map.addOverlay(new BMap.Marker(pp));    //添加标注
-                document.getElementById('transport_end_place_longitude').value = pp.lng;
-                document.getElementById('transport_end_place_latitude').value = pp.lat;
-
-                console.log(JSON.stringify(pp));
-            }
-            var local = new BMap.LocalSearch(map, { //智能搜索
-                onSearchComplete: myFun
-            });
-            local.search(myValue);
-        }
-
-
-        //点击地图时间处理
-        function showInfo(e) {
-            //document.getElementById('lng').value = e.point.lng;
-            //document.getElementById('lat').value =  e.point.lat;
-            geoc.getLocation(e.point, function (rs) {
-                var addComp = rs.addressComponents;
-                var address = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
-                if (confirm("确定要地址是" + address + "?")) {
-                    document.getElementById('transport_end_place').value = address;
+        $(function(){
+            /*daterange控件*/
+            $('#transport_start_time').daterangepicker({
+                timePicker: true,
+                singleDatePicker: true,
+                timePicker24Hour: true,
+                locale: {
+                    applyLabel: '确认',
+                    cancelLabel: '取消',
+                    fromLabel: '从',
+                    toLabel: '到',
+                    weekLabel: '星期',
+                    customRangeLabel: '自定义范围',
+                    daysOfWeek: '日_一_二_三_四_五_六'.split('_'),
+                    monthNames: '1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月'.split('_'),
+                    firstDay: 1,
+                    format: 'YYYY-MM-DD HH:mm'
                 }
             });
-            addMarker(e.point);
-        }
+
+            function G(id) {
+                return document.getElementById(id);
+            }
+
+            var map = new BMap.Map("allmap");
+            var geoc = new BMap.Geocoder();   //地址解析对象
+            var markersArray = [];
+            var geolocation = new BMap.Geolocation();
+
+
+            var point = new BMap.Point(116.404412, 39.914714);
+            map.centerAndZoom(point, 12); // 中心点
+            map.enableScrollWheelZoom();
+            geolocation.getCurrentPosition(function (r) {
+                if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                    var mk = new BMap.Marker(r.point);
+                    map.addOverlay(mk);
+                    map.panTo(r.point);
+                    map.enableScrollWheelZoom(true);
+                }
+            }, {enableHighAccuracy: true});
+
+
+            var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
+                {"input" : "suggestId"
+                    ,"location" : map
+                });
+            ac.addEventListener("onhighlight", function(e) {  //鼠标放在下拉列表上的事件
+                var str = "";
+                var _value = e.fromitem.value;
+                var value = "";
+                if (e.fromitem.index > -1) {
+                    value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+                }
+                str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+
+                value = "";
+                if (e.toitem.index > -1) {
+                    _value = e.toitem.value;
+                    value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+                }
+                str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+                G("searchResultPanel").innerHTML = str;
+            });
+
+            var myValue;
+            ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+                var _value = e.item.value;
+                myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+                G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+                document.getElementById('transport_end_place').value = myValue;
+                setPlace();
+            });
+
+            $('#suggestId').bind('keydown',function(event){
+                if(event.keyCode == "13") {
+                    map.clearOverlays();    //清除地图上所有覆盖物
+                    var local = new BMap.LocalSearch(map, { //智能搜索
+                        onInfoHtmlSet: function(poi,html) {
+                            html.addEventListener("click", function(e) {
+                                if (confirm("确定选取该地址？")) {
+                                    var pp = poi.marker.getPosition();
+                                    console.log(JSON.stringify(pp));
+                                    if (pp.lng) {
+                                        document.getElementById('transport_end_place_longitude').value = pp.lng;
+                                        document.getElementById('transport_end_place_latitude').value = pp.lat;
+
+                                        //alert("marker2的位置是" + poi.marker.getPosition().lng + "," + poi.marker.getPosition().lat);
+                                        document.getElementById('transport_end_place').value = html.getElementsByTagName('td')[1].innerHTML.replace('&nbsp;','');
+                                        //alert(html.getElementsByTagName('td')[1].innerHTML.replace('&nbsp;',''));
+                                    } else {
+                                        alert("未能获取到地址，请刷新当前页面后再试~");
+                                    }
+                                }
+                            });
+                        },
+                        renderOptions: {map: map, panel: "rr-result"}
+                    });
+                    local.search($('#suggestId').val());
+                }
+            });
+
+            function setPlace(){
+                map.clearOverlays();    //清除地图上所有覆盖物
+                function myFun(){
+                    var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+                    map.centerAndZoom(pp, 18);
+                    map.addOverlay(new BMap.Marker(pp));    //添加标注
+                    document.getElementById('transport_end_place_longitude').value = pp.lng;
+                    document.getElementById('transport_end_place_latitude').value = pp.lat;
+
+                    console.log(JSON.stringify(pp));
+                }
+                var local = new BMap.LocalSearch(map, { //智能搜索
+                    onSearchComplete: myFun
+                });
+                local.search(myValue);
+            }
+
+
+            //点击地图时间处理
+            function showInfo(e) {
+                //document.getElementById('lng').value = e.point.lng;
+                //document.getElementById('lat').value =  e.point.lat;
+                geoc.getLocation(e.point, function (rs) {
+                    var addComp = rs.addressComponents;
+                    var address = addComp.province + addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+                    if (confirm("确定要地址是" + address + "?")) {
+                        document.getElementById('transport_end_place').value = address;
+                    }
+                });
+                addMarker(e.point);
+            }
+        });
     </script>
 @endsection

@@ -100,6 +100,10 @@ class UserRepository extends BaseRepository
     public function create(array $data) : User
     {
         return DB::transaction(function () use ($data) {
+            $exist = User::where('mobile',$data['mobile'])->first();
+            if ($exist) {
+                throw new GeneralException('手机号已存在');
+            }
             $user = parent::create([
                 'first_name' => $data['first_name'],
                 'last_name' => $data['last_name'],
