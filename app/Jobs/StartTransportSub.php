@@ -50,6 +50,7 @@ class StartTransportSub implements ShouldQueue
             return;
         }
         $entity = $sub->transportEntity;
+        $main = $sub->transportMain;
         $entity_name = $entity->car_number;
         $entity_custom_fields = [
             'transport_main_id' => $sub->transport_main_id,
@@ -88,6 +89,9 @@ class StartTransportSub implements ShouldQueue
             'goods_info' => $sub->transport_goods['transport_goods']
         ];
         $entity->entity_info = $entity_info;
+        $entity->last_company_id = $main->company_id;
+        $entity->last_vendor_company_id = $main->vendor_company_id;
+        $entity->last_sub_status = $sub->transport_status;
         $entity->save();
         if (!isset($this->data['address']['city'])) {
             //$address_province = $this->data['address']['city'].' '.$this->data['address']['district'];

@@ -140,7 +140,7 @@ class SaveBatchLocation implements ShouldQueue
                     'description' => '系统自动判定行程结束'
                 ]
             ]);
-            (new FinishTransport($main->id))->handle();
+            (new FinishTransport($sub->id))->handle();
         }
     }
 }

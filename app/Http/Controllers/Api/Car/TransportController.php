@@ -143,6 +143,9 @@ class TransportController extends Controller {
             'goods_info' => $request->input('transport_goods')
         ];
         $entity->entity_info = $entity_info;
+        $entity->last_company_id = $main->company_id;
+        $entity->last_vendor_company_id = $main->vendor_company_id;
+        $entity->last_sub_status = $sub->transport_status;
         $entity->save();
         $timeDiff = strtotime($sub->transport_start_time) - time();
         if ($timeDiff >= 60) {
@@ -344,7 +347,7 @@ class TransportController extends Controller {
         if ($xiehuo_type == TransportXiehuo::XIEHUO_TYPE_END) {
             $sub->transport_status = TransportSub::TRANSPORT_STATUS_FINISH;
             $sub->save();
-            $this->dispatch(new FinishTransport($sub->transport_main_id));
+            $this->dispatch(new FinishTransport($sub->id));
         }
         return self::createJsonData(true);
     }

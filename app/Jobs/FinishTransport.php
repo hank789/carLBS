@@ -24,13 +24,12 @@ class FinishTransport implements ShouldQueue
     public $tries = 2;
 
 
-    public $main_id;
+    public $sub_id;
 
 
-
-    public function __construct($main_id)
+    public function __construct($sub_id)
     {
-        $this->main_id = $main_id;
+        $this->sub_id = $sub_id;
     }
 
     /**
@@ -40,7 +39,8 @@ class FinishTransport implements ShouldQueue
      */
     public function handle()
     {
-        $main = TransportMain::find($this->main_id);
+        $sub = TransportSub::find($this->sub_id);
+        $main = $sub->transportMain;
         $phoneList = $main->transport_goods['transport_phone_list']??'';
         $phoneArr = [];
         if ($phoneList) {
@@ -64,5 +64,11 @@ class FinishTransport implements ShouldQueue
             $main->transport_status = TransportMain::TRANSPORT_STATUS_FINISH;
             $main->save();
         }
+
+        $entity = $sub->transportEntity;
+        $entity->last_company_id = $main->company_id;
+        $entity->last_vendor_company_id = $main->vendor_company_id;
+        $entity->last_sub_status = $sub->transport_status;
+        $entity->save();
     }
 }
