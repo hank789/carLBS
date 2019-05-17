@@ -40,6 +40,9 @@ class CreateCompanyTable extends Migration
             $table->integer('last_sub_status')->default(1)->index('transport_entity_last_sub_status')->after('last_loc_time')->comment('最近行程状态');
             $table->string('last_geohash',32)->default('')->index('transport_entity_last_geohash')->after('last_loc_time');
         });
+        Schema::table('app_version', function (Blueprint $table) {
+            $table->integer('app_name')->unsigned()->default(1)->index('app_version_app_name')->after('user_id')->comment('app名字');
+        });
     }
 
     /**

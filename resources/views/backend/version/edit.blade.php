@@ -20,6 +20,19 @@
 
             <div class="row mt-4">
                 <div class="col">
+
+                    <div class="form-group row" id="select_vendor_company_div">
+                        {{ html()->label('App')->class('col-md-2 form-control-label')->for('app_name') }}
+
+                        <div class="col-md-10">
+                            <select id="app_name" name="app_name" class="form-control">
+                                @foreach($appNames as $name)
+                                    <option value="{{ $name['key'] }}" {{ $version->app_name == $name['key']?'selected':'' }}>{{ $name['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="form-group row">
                         {{ html()->label('版本号')
                             ->class('col-md-2 form-control-label')

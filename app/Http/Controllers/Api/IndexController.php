@@ -16,8 +16,18 @@ class IndexController extends Controller {
 
     public function checkUpdate(Request $request){
         $app_uuid = $request->input('app_uuid');
+        $app_name = $request->input('﻿appname');
         $current_version = $request->input('current_version');
-        $last = AppVersion::where('status',1)->orderBy('app_version','desc')->first();
+        $app_name_type = 1;
+        foreach (AppVersion::$appNames as $key=>$name) {
+            if ($name['name'] == $app_name) {
+                $app_name_type = $name['key'];
+                $ios_force_update_url = $name['ios_url'];
+                $android_force_update_url = $name['android_url'];
+
+            }
+        }
+        $last = AppVersion::where('status',1)->where('app_name',$app_name_type)->orderBy('app_version','desc')->first();
         if(!$last || ($app_uuid && RateLimiter::instance()->increase('system:getAppVersionLimit',$app_uuid,5,1)) || ($app_uuid && RateLimiter::instance()->increase('system:getAppVersion',$app_uuid,60 * 60 * 2,1) && $current_version==$last->app_version)){
             return self::createJsonData(true,[
                 'app_version'           => 0,
@@ -30,16 +40,6 @@ class IndexController extends Controller {
             ]);
         }
 
-
-        $ios_force_update_url = 'https://www.pgyer.com/FLBT';
-        $android_force_update_url = 'https://www.pgyer.com/mpKs';
-
-        if(config('app.env') == 'production'){
-            $ios_force_update_url = 'itms-apps://itunes.apple.com/cn/app/长江智链/id1457673059?l=zh&ls=1&mt=8';//正式环境换成苹果商店的地址
-            //https://a.app.qq.com/o/simple.jsp?pkgname=com.inwehub.InwehubApp
-            //market://details?id=com.inwehub.InwehubApp
-            $android_force_update_url = 'https://www.pgyer.com/c8n3';//正式环境换成android商店的地址
-        }
         $app_version = $last->app_version??'1.0.0';
         $is_ios_force = $last->is_ios_force??0;
         $is_android_force = $last->is_android_force??0;

@@ -25,6 +25,7 @@
                         <thead>
                         <tr>
                             <th>版本号</th>
+                            <th>App</th>
                             <th>是否ios强更</th>
                             <th>是否android强更</th>
                             <th>时间</th>
@@ -38,6 +39,7 @@
                         @foreach($versions as $version)
                             <tr>
                                 <td>{{ $version->app_version }}</td>
+                                <td>{{ $version->getAppName() }}</td>
                                 <td>{{ $version->is_ios_force }}</td>
                                 <td>{{ $version->is_android_force }}</td>
                                 <td>{{ ($version->created_at) }}</td>

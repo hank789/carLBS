@@ -40,7 +40,22 @@ class AppVersion extends Model
      */
     protected $table = 'app_version';
 
-    protected $fillable = ['id','user_id', 'app_version','package_url','is_ios_force','is_android_force','update_msg','status'];
+    protected $fillable = ['id','user_id', 'app_version','app_name','package_url','is_ios_force','is_android_force','update_msg','status'];
+
+    public static $appNames = [
+        1 => [
+            'name'=>'长江智链',
+            'ios_url' => 'itms-apps://itunes.apple.com/cn/app/长江智链/id1457673059?l=zh&ls=1&mt=8',
+            'android_url' => 'https://www.pgyer.com/c8n3',
+            'key' => 1
+        ],
+        2 => [
+            'name'=>'车百讯',
+            'ios_url' => 'itms-apps://itunes.apple.com/cn/app/长江智链/id1457673059?l=zh&ls=1&mt=8',
+            'android_url' => 'https://www.pgyer.com/c8n3',
+            'key' => 2
+        ]
+    ];
 
     /**
      * @return string
@@ -60,5 +75,14 @@ class AppVersion extends Model
             default:
                 break;
         }
+    }
+
+    public function getAppName() {
+        foreach (self::$appNames as $name) {
+            if ($this->app_name == $name['key']) {
+                return $name['name'];
+            }
+        }
+        return '';
     }
 }

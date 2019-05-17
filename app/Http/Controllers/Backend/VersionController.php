@@ -39,7 +39,7 @@ class VersionController extends Controller
 
     public function create()
     {
-        return view("backend.version.create");
+        return view("backend.version.create")->with('appNames',AppVersion::$appNames);
     }
 
     public function store(ManageVersionRequest $request)
@@ -54,6 +54,7 @@ class VersionController extends Controller
 
         $data = [
             'user_id'      => $loginUser->id,
+            'app_name' => $request->input('app_name'),
             'app_version'        => trim($request->input('app_version')),
             'package_url'  =>$request->input('package_url'),
             'is_ios_force' => $request->input('is_ios_force'),
@@ -86,7 +87,7 @@ class VersionController extends Controller
             abort(404);
         }
 
-        return view("backend.version.edit")->with(compact('version'));
+        return view("backend.version.edit")->with(compact('version'))->with('appNames',AppVersion::$appNames);
 
     }
 
@@ -103,6 +104,7 @@ class VersionController extends Controller
 
         $this->validate($request,$this->validateRules);
 
+        $version->app_name = $request->input('app_name');
         $version->app_version = trim($request->input('app_version'));
         $version->package_url = trim($request->input('package_url'));
         $version->is_ios_force = trim($request->input('is_ios_force'));
