@@ -38,6 +38,7 @@
                         <div class="card-body">
 
                             {{ html()->form('POST', route('frontend.auth.login.codeLogin'))->open() }}
+                            <input type="hidden" id="appname" name="appname" value="{{ $appname }}">
                             <h1>登陆</h1>
                             <p class="text-muted">{{app_display_name()}}管理后台</p>
                             <div class="input-group mb-3">
@@ -100,7 +101,7 @@
                 $('#mobile').removeClass('is-invalid');
                 $('#mobile_invalid').html('');
             }
-            $.post('/api/auth/sendPhoneCode/',{mobile: phone,type: 'backend_login'},function(msg){
+            $.post('/api/auth/sendPhoneCode/',{mobile: phone,type: 'backend_login', appname: $('#appname').val()},function(msg){
                 console.log(msg);
                 if (msg.code !== 1000) {
                     $('#mobile').addClass('is-invalid');

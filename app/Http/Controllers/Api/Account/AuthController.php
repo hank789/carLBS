@@ -33,6 +33,8 @@ class AuthController extends Controller
         $this->validate($request,$validateRules);
         $mobile = $request->input('mobile');
         $type   = $request->input('type');
+        $app_name = $request->input('﻿appname','长江智链');
+
         if(RateLimiter::instance()->increase('sendPhoneCode:'.$type,$mobile,60,1)){
             throw new ApiException(ApiException::VISIT_LIMIT);
         }
@@ -55,7 +57,7 @@ class AuthController extends Controller
         if ($mobile == '15050368286') {
             $code = 6666;
         }
-        $this->dispatch(new SendPhoneMessage($mobile,['code' => $code],$type));
+        $this->dispatch(new SendPhoneMessage($mobile,['code' => $code],$type,$app_name));
         Cache::put(SendPhoneMessage::getCacheKey($type,$mobile), $code, 6);
         return self::createJsonData(true);
     }

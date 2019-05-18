@@ -42,14 +42,16 @@ class LoginController extends Controller
             case 'chjzhl':
                 $logo = asset('img/logo.png',config('app.use_ssl'));
                 $favicon = asset('img/favicon_32.ico',config('app.use_ssl'));
+                $appname = '长江智链';
                 break;
             default:
                 $logo = asset('img/chebaixun.png',config('app.use_ssl'));
                 $favicon = asset('img/favicon_32_chebaixun.ico',config('app.use_ssl'));
+                $appname = '车百讯';
                 break;
         }
         return view('frontend.auth.login')
-            ->with('logo',$logo)->with('favicon',$favicon);
+            ->with('logo',$logo)->with('favicon',$favicon)->with('appname',$appname);
     }
 
     //验证码登陆

@@ -29,18 +29,21 @@ class SendPhoneMessage implements ShouldQueue
     protected $type;
     protected $phone;
     protected $params;
+    protected $app_name;
 
     /**
      * SendPhoneMessage constructor.
      * @param $phone
      * @param $params
      * @param string $type
+     * @param $app_name
      */
-    public function __construct($phone,array $params,$type='register')
+    public function __construct($phone,array $params,$type='register',$app_name)
     {
         $this->phone = $phone;
         $this->params = $params;
         $this->type = $type;
+        $this->app_name = $app_name;
     }
 
     /**
@@ -50,27 +53,55 @@ class SendPhoneMessage implements ShouldQueue
      */
     public function handle()
     {
-        switch($this->type){
-            case 'login':
-            case 'backend_login':
-                $templateId = 'SMS_160200656';
-                //$params = ['name' => $code]
-                break;
-            case 'notify_transport_start':
-                $templateId = 'SMS_164826085';
-                break;
-            case 'notify_app_download':
-                $templateId = 'SMS_162733414';
-                break;
-            case 'notify_transport_cancel':
-                $templateId = 'SMS_163040048';
-                break;
-            case 'notify_transport_start_soon':
-                $templateId = 'SMS_163035174';
+        switch ($this->app_name) {
+            case '车百讯':
+                switch($this->type){
+                    case 'login':
+                    case 'backend_login':
+                        $templateId = 'SMS_160200656';
+                        //$params = ['name' => $code]
+                        break;
+                    case 'notify_transport_start':
+                        $templateId = 'SMS_164826085';
+                        break;
+                    case 'notify_app_download':
+                        $templateId = 'SMS_162733414';
+                        break;
+                    case 'notify_transport_cancel':
+                        $templateId = 'SMS_163040048';
+                        break;
+                    case 'notify_transport_start_soon':
+                        $templateId = 'SMS_163035174';
+                        break;
+                    default:
+                        break;
+                }
                 break;
             default:
+                switch($this->type){
+                    case 'login':
+                    case 'backend_login':
+                        $templateId = 'SMS_160200656';
+                        //$params = ['name' => $code]
+                        break;
+                    case 'notify_transport_start':
+                        $templateId = 'SMS_164826085';
+                        break;
+                    case 'notify_app_download':
+                        $templateId = 'SMS_162733414';
+                        break;
+                    case 'notify_transport_cancel':
+                        $templateId = 'SMS_163040048';
+                        break;
+                    case 'notify_transport_start_soon':
+                        $templateId = 'SMS_163035174';
+                        break;
+                    default:
+                        break;
+                }
                 break;
         }
+
         AlibabaCloud::accessKeyClient(config('aliyun.accessKeyId'), config('aliyun.accessSecret'))
             ->regionId(config('aliyun.region')) // replace regionId as you need
             ->asGlobalClient();
