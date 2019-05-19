@@ -23,6 +23,10 @@ class HomeController extends Controller
             case '长江智链':
                 return view('frontend.landing.chjzhl')->with('appSchema','');
                 break;
+            case 'chbx':
+            case '车百讯':
+                return view('frontend.landing.chbx')->with('appSchema','');
+                break;
         }
         return 'welcome';
     }
@@ -32,6 +36,10 @@ class HomeController extends Controller
             case 'chjzhl':
             case '长江智链':
                 return view('frontend.landing.chjzhl')->with('appSchema','carlbschjzhlapp://abc');
+                break;
+            case 'chbx':
+            case '车百讯':
+                return view('frontend.landing.chbx')->with('appSchema','carlbschbxapp://abc');
                 break;
         }
         return 'welcome';
