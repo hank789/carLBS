@@ -69,14 +69,25 @@ class UserController extends Controller
         $vendors = [];
         if ($userCompany->company_type == Company::COMPANY_TYPE_MAIN) {
             $vendors = CompanyRel::where('company_id',$userCompany->id)->get();
+            $roles = $roleRepository->with('permissions')->get(['id', 'name']);
+            $permissions = $permissionRepository->get(['id', 'name']);
+        } else {
+            $vendors = CompanyRel::where('vendor_id',$user->company_id)->get();
+            $roles = $roleRepository->whereIn('name',['供应商人员','User'])->with('permissions')->get(['id', 'name']);
+            $permissions = $permissionRepository->whereIn('name',['后台登陆','行程管理','在线车辆'])->get(['id', 'name']);
         }
-        $companies = Company::where('company_type',Company::COMPANY_TYPE_MAIN)->get();
+        if ($user->company_id == 1) {
+            $companies = Company::where('company_type',Company::COMPANY_TYPE_MAIN)->get();
+        } else {
+            $companies = Company::where('company_type',Company::COMPANY_TYPE_MAIN)->where('id',$user->company_id)->get();
+        }
+
         return view('backend.company.user.create')
             ->with('userCompany',$userCompany)
             ->with('companies',$companies)
             ->with('vendors',$vendors)
-            ->withRoles($roleRepository->with('permissions')->get(['id', 'name']))
-            ->withPermissions($permissionRepository->get(['id', 'name']));
+            ->withRoles($roles)
+            ->withPermissions($permissions);
     }
 
     /**
@@ -139,17 +150,28 @@ class UserController extends Controller
         $vendors = [];
         if ($userCompany->company_type == Company::COMPANY_TYPE_MAIN) {
             $vendors = CompanyRel::where('company_id',$userCompany->id)->get();
+            $roles = $roleRepository->with('permissions')->get(['id', 'name']);
+            $permissions = $permissionRepository->get(['id', 'name']);
+        } else {
+            $vendors = CompanyRel::where('vendor_id',$user->company_id)->get();
+            $roles = $roleRepository->whereIn('name',['供应商人员','User'])->with('permissions')->get(['id', 'name']);
+            $permissions = $permissionRepository->whereIn('name',['后台登陆','行程管理','在线车辆'])->get(['id', 'name']);
         }
-        $companies = Company::where('company_type',Company::COMPANY_TYPE_MAIN)->get();
+
+        if ($loginUser->company_id == 1) {
+            $companies = Company::where('company_type',Company::COMPANY_TYPE_MAIN)->get();
+        } else {
+            $companies = Company::where('company_type',Company::COMPANY_TYPE_MAIN)->where('id',$loginUser->company_id)->get();
+        }
 
         return view('backend.company.user.edit')
             ->withUser($user)
             ->with('companies',$companies)
             ->with('userCompany',$userCompany)
             ->with('vendors',$vendors)
-            ->withRoles($roleRepository->get())
+            ->withRoles($roles)
             ->withUserRoles($user->roles->pluck('name')->all())
-            ->withPermissions($permissionRepository->get(['id', 'name']))
+            ->withPermissions($permissions)
             ->withUserPermissions($user->permissions->pluck('name')->all());
     }
 

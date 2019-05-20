@@ -76,11 +76,11 @@
                             </div><!--col-->
                         </div><!--form-group-->
 
-                        <div class="form-group row" id="select_company_div">
+                        <div class="form-group row" id="select_company_div" style="{{ $userCompany->company_type == 2?'display:none':'' }}">
                             {{ html()->label('公司')->class('col-md-2 form-control-label')->for('company_id') }}
 
                             <div class="col-md-10">
-                                <select id="company_id" name="company_id" class="form-control" {{ $userCompany->id != 1?'readonly':'' }}>
+                                <select id="company_id" name="company_id" class="form-control">
                                     @foreach($companies as $company)
                                         <option value="{{ $company->id }}" {{ $userCompany->id == $company->id?'selected':'' }}>{{ $company->company_name }}</option>
                                     @endforeach
@@ -93,13 +93,13 @@
 
                             <div class="col-md-10">
                                 <label class="switch switch-label switch-pill switch-primary">
-                                    {{ html()->checkbox('is_vendor', false, '1')->class('switch-input') }}
+                                    {{ html()->checkbox('is_vendor', $userCompany->company_type == 2?true:false, '1')->class('switch-input') }}
                                     <span class="switch-slider" data-checked="是" data-unchecked="否"></span>
                                 </label>
                             </div><!--col-->
                         </div><!--form-group-->
 
-                        <div class="form-group row" id="select_vendor_company_div" style="display: none;">
+                        <div class="form-group row" id="select_vendor_company_div" style="{{ $userCompany->company_type == 1?'display:none':'' }}">
                             {{ html()->label('供应商')->class('col-md-2 form-control-label')->for('vendor_company_id') }}
 
                                 <div class="col-md-10">
@@ -152,33 +152,35 @@
                                             <td>
                                                 @if($roles->count())
                                                     @foreach($roles as $role)
-                                                        <div class="card">
-                                                            <div class="card-header">
-                                                                <div class="checkbox d-flex align-items-center">
-                                                                    {{ html()->label(
-                                                                            html()->checkbox('roles[]', old('roles') && in_array($role->name, old('roles')) ? true : false, $role->name)
-                                                                                  ->class('switch-input')
-                                                                                  ->id('role-'.$role->id)
-                                                                            . '<span class="switch-slider" data-checked="是" data-unchecked="否"></span>')
-                                                                        ->class('switch switch-label switch-pill switch-primary mr-2')
-                                                                        ->for('role-'.$role->id) }}
-                                                                    {{ html()->label(ucwords($role->name))->for('role-'.$role->id) }}
+                                                        @if ($role->id !=1)
+                                                            <div class="card">
+                                                                <div class="card-header">
+                                                                    <div class="checkbox d-flex align-items-center">
+                                                                        {{ html()->label(
+                                                                                html()->checkbox('roles[]', old('roles') && in_array($role->name, old('roles')) ? true : false, $role->name)
+                                                                                      ->class('switch-input')
+                                                                                      ->id('role-'.$role->id)
+                                                                                . '<span class="switch-slider" data-checked="是" data-unchecked="否"></span>')
+                                                                            ->class('switch switch-label switch-pill switch-primary mr-2')
+                                                                            ->for('role-'.$role->id) }}
+                                                                        {{ html()->label(ucwords($role->name))->for('role-'.$role->id) }}
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="card-body">
-                                                                @if($role->id != 1)
-                                                                    @if($role->permissions->count())
-                                                                        @foreach($role->permissions as $permission)
-                                                                            <i class="fas fa-dot-circle"></i> {{ ucwords($permission->name) }}
-                                                                        @endforeach
+                                                                <div class="card-body">
+                                                                    @if($role->id != 1)
+                                                                        @if($role->permissions->count())
+                                                                            @foreach($role->permissions as $permission)
+                                                                                <i class="fas fa-dot-circle"></i> {{ ucwords($permission->name) }}
+                                                                            @endforeach
+                                                                        @else
+                                                                            @lang('labels.general.none')
+                                                                        @endif
                                                                     @else
-                                                                        @lang('labels.general.none')
+                                                                        @lang('labels.backend.access.users.all_permissions')
                                                                     @endif
-                                                                @else
-                                                                    @lang('labels.backend.access.users.all_permissions')
-                                                                @endif
-                                                            </div>
-                                                        </div><!--card-->
+                                                                </div>
+                                                            </div><!--card-->
+                                                        @endif
                                                     @endforeach
                                                 @endif
                                             </td>

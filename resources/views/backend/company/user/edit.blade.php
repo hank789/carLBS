@@ -76,7 +76,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    <div class="form-group row" style="{{ $userCompany->company_type == 2?'display:none':'' }}">
                         {{ html()->label('是否供应商人员')->class('col-md-2 form-control-label')->for('is_vendor') }}
 
                         <div class="col-md-10">
