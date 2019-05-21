@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Backend\DashboardRequest;
 use App\Models\Auth\Company;
 use App\Models\Transport\TransportEntity;
 use App\Models\Transport\TransportMain;
 use Carbon\Carbon;
-use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class DashboardController.
@@ -17,7 +17,7 @@ class DashboardController extends Controller
     /**
      * @return \Illuminate\View\View
      */
-    public function index(FormRequest $request)
+    public function index(DashboardRequest $request)
     {
         $user = $request->user();
         //车辆数
