@@ -19,6 +19,8 @@ class IndexController extends Controller {
         $app_name = $request->input('﻿appname');
         $current_version = $request->input('current_version');
         $app_name_type = 1;
+        $ios_force_update_url = 0;
+        $android_force_update_url = 0;
         foreach (AppVersion::$appNames as $key=>$name) {
             if ($name['name'] == $app_name) {
                 $app_name_type = $name['key'];
