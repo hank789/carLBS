@@ -38,7 +38,7 @@ class SendPhoneMessage implements ShouldQueue
      * @param string $type
      * @param $app_name
      */
-    public function __construct($phone,array $params,$type='register',$app_name)
+    public function __construct($phone,array $params,$type='register',$app_name='长江智链')
     {
         $this->phone = $phone;
         $this->params = $params;
