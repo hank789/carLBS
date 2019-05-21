@@ -48,7 +48,7 @@ class FinishTransport implements ShouldQueue
         }
         $count = count($phoneArr);
         $finishCount = 0;
-        $subs = TransportSub::where('transport_main_id',$this->main_id)->get();
+        $subs = TransportSub::where('transport_main_id',$main->id)->get();
         foreach ($subs as $sub) {
             if ($sub->transport_status == TransportSub::TRANSPORT_STATUS_FINISH) {
                 $finishCount = $finishCount + 1;
