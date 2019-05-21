@@ -16,7 +16,7 @@ class IndexController extends Controller {
 
     public function checkUpdate(Request $request){
         $app_uuid = $request->input('app_uuid');
-        $app_name = $request->input('﻿appname');
+        $app_name = $request->input('﻿appname','长江智链');
         $current_version = $request->input('current_version');
         $app_name_type = 1;
         $ios_force_update_url = 0;
