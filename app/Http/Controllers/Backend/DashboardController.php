@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Auth\Company;
 use App\Models\Transport\TransportEntity;
 use App\Models\Transport\TransportMain;
 use Carbon\Carbon;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class DashboardController.
@@ -15,23 +17,44 @@ class DashboardController extends Controller
     /**
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(FormRequest $request)
     {
+        $user = $request->user();
         //车辆数
-        $carsCount = TransportEntity::count();
+        if ($user->company_id == 1) {
+            $carsCount = TransportEntity::count();
+        } else {
+            if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
+                $carsCount = TransportEntity::where('last_company_id',$user->company_id)->count();
+            } else {
+                $carsCount = TransportEntity::where('last_vendor_company_id',$user->company_id)->count();
+            }
+        }
         //行程总数
-        $mainCount = TransportMain::count();
-        //行程已完成数
-        $mainFinishedCount = TransportMain::where('transport_status',TransportMain::TRANSPORT_STATUS_FINISH)->count();
+        if ($user->company_id == 1) {
+            $mainCount = TransportMain::count();
+            //行程已完成数
+            $mainFinishedCount = TransportMain::where('transport_status',TransportMain::TRANSPORT_STATUS_FINISH)->count();
+        } else {
+            if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
+                $mainCount = TransportMain::where('company_id',$user->company_id)->count();
+                //行程已完成数
+                $mainFinishedCount = TransportMain::where('company_id',$user->company_id)->where('transport_status',TransportMain::TRANSPORT_STATUS_FINISH)->count();
+            } else {
+                $mainCount = TransportMain::where('vendor_company_id',$user->company_id)->count();
+                $mainFinishedCount = TransportMain::where('vendor_company_id',$user->company_id)->where('transport_status',TransportMain::TRANSPORT_STATUS_FINISH)->count();
+            }
+        }
+
         //行程未完成数
         $mainUnFinishedCount = $mainCount - $mainFinishedCount;
 
-        $transportChart = $this->drawTransportChart();
+        $transportChart = $this->drawTransportChart($user);
 
         return view('backend.dashboard')->with(compact('carsCount','mainCount','mainFinishedCount','mainUnFinishedCount','transportChart'));
     }
 
-    private function drawTransportChart()
+    private function drawTransportChart($user)
     {
 
         /*生成Labels*/
@@ -43,8 +66,15 @@ class DashboardController extends Controller
         }
 
         $nowTime = Carbon::now();
-
-        $mainList = TransportMain::where('transport_start_time','>',$labelTimes[0])->where('transport_start_time','<',$nowTime)->get();
+        if ($user->company_id == 1) {
+            $mainList = TransportMain::where('transport_start_time','>',$labelTimes[0])->where('transport_start_time','<',$nowTime)->get();
+        } else {
+            if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
+                $mainList = TransportMain::where('company_id',$user->company_id)->where('transport_start_time','>',$labelTimes[0])->where('transport_start_time','<',$nowTime)->get();
+            } else {
+                $mainList = TransportMain::where('vendor_company_id',$user->company_id)->where('transport_start_time','>',$labelTimes[0])->where('transport_start_time','<',$nowTime)->get();
+            }
+        }
 
         $totalRange = $unFinishedRange = $finishedRange = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 

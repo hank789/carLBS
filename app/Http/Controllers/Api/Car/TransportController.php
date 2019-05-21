@@ -474,11 +474,14 @@ class TransportController extends Controller {
                 $queryModel = $queryModel->where('last_sub_status',TransportSub::TRANSPORT_STATUS_FINISH);
                 break;
         }
-        if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
-            $queryModel = $queryModel->where('last_company_id',$user->company_id);
-        } else {
-            $queryModel = $queryModel->where('last_vendor_company_id',$user->company_id);
+        if ($user->company_id != 1) {
+            if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
+                $queryModel = $queryModel->where('last_company_id',$user->company_id);
+            } else {
+                $queryModel = $queryModel->where('last_vendor_company_id',$user->company_id);
+            }
         }
+
         if ($word) {
             $queryModel = $queryModel->where('car_number','like','%'.$word.'%');
         }
