@@ -35,6 +35,18 @@
                         </div><!--col-->
                     </div><!--form-group-->
 
+                    <div class="form-group row" id="select_vendor_company_div">
+                        {{ html()->label('App')->class('col-md-2 form-control-label')->for('app_name') }}
+
+                        <div class="col-md-10">
+                            <select id="app_name" name="app_name" class="form-control">
+                                @foreach($appNames as $name)
+                                    <option value="{{ $name['key'] }}" {{ $company->appname == $name['key']?'selected':'' }}>{{ $name['name'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="form-group row">
                         {{ html()->label(__('validation.attributes.backend.access.users.active'))->class('col-md-2 form-control-label')->for('active') }}
 

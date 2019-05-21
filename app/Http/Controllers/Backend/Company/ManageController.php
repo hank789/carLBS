@@ -9,6 +9,7 @@ use App\Exceptions\GeneralException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Backend\Auth\Company\ManageRequest;
 use App\Models\Auth\Company;
+use App\Models\System\AppVersion;
 
 class ManageController extends Controller
 {
@@ -49,7 +50,7 @@ class ManageController extends Controller
      */
     public function create(ManageRequest $request)
     {
-        return view('backend.company.manage.create');
+        return view('backend.company.manage.create')->with('appNames',AppVersion::$appNames);
     }
 
     /**
@@ -69,7 +70,8 @@ class ManageController extends Controller
         Company::create([
             'company_name' => $company_name,
             'company_type' => Company::COMPANY_TYPE_MAIN,
-            'status' => $status
+            'status' => $status,
+            'appname' => $request->input('app_name')
         ]);
         return redirect()->route('admin.company.manage.index')->withFlashSuccess('公司添加成功');
     }
@@ -78,7 +80,7 @@ class ManageController extends Controller
     {
         $company = Company::find($id);
         return view('backend.company.manage.edit')
-            ->with('company',$company);
+            ->with('company',$company)->with('appNames',AppVersion::$appNames);
     }
 
 
@@ -88,6 +90,7 @@ class ManageController extends Controller
         $company = Company::find($id);
         $company->company_name = $request->input('company_name');
         $company->status = $request->input('active',0);
+        $company->appname = $request->input('app_name');
         $company->save();
         return redirect()->route('admin.company.manage.index')->withFlashSuccess('公司修改成功');
     }

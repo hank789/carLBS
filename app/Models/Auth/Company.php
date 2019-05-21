@@ -6,6 +6,7 @@
  */
 
 
+use App\Models\System\AppVersion;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -44,7 +45,7 @@ use Illuminate\Database\Eloquent\Model;
 class Company extends Model {
 
     protected $table = 'company';
-    protected $fillable = ['company_name','company_type','status'];
+    protected $fillable = ['company_name','company_type','status','appname'];
 
     const COMPANY_STATUS_PENDING = 0;
     const COMPANY_STATUS_VALID = 1;
@@ -55,6 +56,20 @@ class Company extends Model {
 
     public function countUsers() {
         return User::where('company_id',$this->id)->count();
+    }
+
+    public function getAppname() {
+        $key = 1;
+        switch ($this->company_type) {
+            case self::COMPANY_TYPE_MAIN:
+                $key = $this->appname;
+                break;
+            case self::COMPANY_TYPE_VENDOR:
+                break;
+        }
+        foreach (AppVersion::$appNames as $name) {
+            if ($name['key'] == $key) return $name['name'];
+        }
     }
 
     /**

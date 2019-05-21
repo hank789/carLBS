@@ -191,7 +191,8 @@ class MainController extends Controller
 
         \Log::info('test',[$id,$status]);
         $main->transport_status = $status;
-
+        $company = Company::find($main->company_id);
+        $appName = $company->getAppname();
         //todo 进行中的行程如果要取消，需要判断是否有在途的司机
         switch ($status) {
             case TransportMain::TRANSPORT_STATUS_PENDING:
@@ -201,7 +202,7 @@ class MainController extends Controller
                 if ($phoneList) {
                     $phoneArr = explode(',',$phoneList);
                     foreach ($phoneArr as $phone) {
-                        $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start'));
+                        $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start',$appName));
                     }
                 }
                 break;
@@ -217,7 +218,7 @@ class MainController extends Controller
                 }
                 $phoneArr = array_unique($phoneArr);
                 foreach ($phoneArr as $phone) {
-                    $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number,'phone' => $main->transport_contact_vendor_phone],'notify_transport_cancel'));
+                    $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number,'phone' => $main->transport_contact_vendor_phone],'notify_transport_cancel',$appName));
                 }
                 break;
         }
@@ -327,9 +328,12 @@ class MainController extends Controller
             ],
             'transport_status' => $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING)
         ]);
+        $company = Company::find($main->company_id);
+        $appName = $company->getAppname();
+
         if ($phoneList && $main->transport_status == TransportMain::TRANSPORT_STATUS_PROCESSING) {
             foreach ($phoneArr as $phone) {
-                $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start'));
+                $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start',$appName));
             }
         }
         return redirect()->route('admin.transport.main.index')->withFlashSuccess('行程添加成功');
@@ -421,9 +425,13 @@ class MainController extends Controller
             ],
             'transport_status' => $newStatus
         ]);
+
+        $company = Company::find($main->company_id);
+        $appName = $company->getAppname();
+
         if ($phoneList && (in_array($oldStatus,[TransportMain::TRANSPORT_STATUS_PENDING,TransportMain::TRANSPORT_STATUS_CANCEL]) || $oldPhoneList != $phoneList) && $newStatus == TransportMain::TRANSPORT_STATUS_PROCESSING) {
             foreach ($phoneArr as $phone) {
-                $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start'));
+                $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start',$appName));
             }
         }
         if ($newStatus == TransportMain::TRANSPORT_STATUS_CANCEL) {
@@ -438,7 +446,7 @@ class MainController extends Controller
             }
             $phoneArr = array_unique($phoneArr);
             foreach ($phoneArr as $phone) {
-                $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number,'phone' => $main->transport_contact_vendor_phone],'notify_transport_cancel'));
+                $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number,'phone' => $main->transport_contact_vendor_phone],'notify_transport_cancel',$appName));
             }
         }
         return redirect()->route('admin.transport.main.index')->withFlashSuccess('行程修改成功');

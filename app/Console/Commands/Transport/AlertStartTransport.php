@@ -3,6 +3,7 @@
 namespace App\Console\Commands\Transport;
 
 use App\Jobs\SendPhoneMessage;
+use App\Models\Auth\Company;
 use App\Models\Transport\TransportMain;
 use App\Models\Transport\TransportSub;
 use Illuminate\Console\Command;
@@ -47,6 +48,8 @@ class AlertStartTransport extends Command
             } else {
                 $phoneArr = [];
             }
+            $company = Company::find($main->company_id);
+            $appName = $company->getAppname();
             $subs = TransportSub::where('transport_main_id',$main->id)->get();
             if (strtotime($main->transport_start_time) <= strtotime('-14 days')) {
                 if (count($phoneArr) <= $subs->count()) {
@@ -63,7 +66,7 @@ class AlertStartTransport extends Command
                 }
                 foreach ($phoneArr as $phone) {
                     if (in_array($phone,$subPhoneArr)) continue;
-                    dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start'));
+                    dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start',$appName));
                 }
             }
         }

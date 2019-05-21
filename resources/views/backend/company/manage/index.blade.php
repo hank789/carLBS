@@ -37,6 +37,7 @@
                         <tr>
                             <th>名称</th>
                             <th>人数</th>
+                            <th>App</th>
                             <th>添加时间</th>
                             <th>状态</th>
                             <th>@lang('labels.general.actions')</th>
@@ -47,6 +48,7 @@
                             <tr>
                                 <td>{{ $company->company_name }}</td>
                                 <td>{{ $company->countUsers() }}</td>
+                                <td>{{ $company->getAppname() }}</td>
                                 <td>{{ ($company->created_at) }}</td>
                                 <td>{!! $company->status_label !!}</td>
                                 <td>
