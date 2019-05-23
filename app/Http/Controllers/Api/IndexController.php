@@ -18,6 +18,7 @@ class IndexController extends Controller {
         $app_uuid = $request->input('app_uuid');
         $app_name = $request->input('﻿appname','长江智链');
         $current_version = $request->input('current_version');
+        \Log::info('checkUpdate',[$app_name]);
         $app_name_type = 1;
         $ios_force_update_url = 0;
         $android_force_update_url = 0;
