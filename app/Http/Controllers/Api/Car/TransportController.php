@@ -7,6 +7,7 @@ use App\Jobs\SendPhoneMessage;
 use App\Jobs\StartTransportSub;
 use App\Jobs\UploadFile;
 use App\Models\Auth\Company;
+use App\Models\Auth\User;
 use App\Models\Transport\TransportEntity;
 use App\Models\Transport\TransportEvent;
 use App\Models\Transport\TransportLbs;
@@ -474,11 +475,13 @@ class TransportController extends Controller {
                 $queryModel = $queryModel->where('last_sub_status',TransportSub::TRANSPORT_STATUS_FINISH);
                 break;
         }
-        if ($user->company_id != 1) {
-            if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
-                $queryModel = $queryModel->where('last_company_id',$user->company_id);
+        $systemUser = User::where('mobile',$user->mobile)->first();
+
+        if ($systemUser->company_id != 1) {
+            if ($systemUser->company->company_type == Company::COMPANY_TYPE_MAIN) {
+                $queryModel = $queryModel->where('last_company_id',$systemUser->company_id);
             } else {
-                $queryModel = $queryModel->where('last_vendor_company_id',$user->company_id);
+                $queryModel = $queryModel->where('last_vendor_company_id',$systemUser->company_id);
             }
         }
 
