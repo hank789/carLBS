@@ -62,7 +62,7 @@ class SaveBatchLocation implements ShouldQueue
             $last_lat = $lastLbs->address_detail['coords']['latitude'];
             $lastDate = strtotime($lastLbs->created_at);
         } else {
-            $last_lng = $lastDate = $last_lat = '';
+            $last_lng = $lastDate = $last_lat = 0;
         }
 
         if (count($this->data) >= 1) {
