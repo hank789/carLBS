@@ -62,16 +62,16 @@ class SendPhoneMessage implements ShouldQueue
                         //$params = ['name' => $code]
                         break;
                     case 'notify_transport_start':
-                        $templateId = 'SMS_164826085';
+                        $templateId = 'SMS_166485429';
                         break;
                     case 'notify_app_download':
                         $templateId = 'SMS_162733414';
                         break;
                     case 'notify_transport_cancel':
-                        $templateId = 'SMS_163040048';
+                        $templateId = 'SMS_166475502';
                         break;
                     case 'notify_transport_start_soon':
-                        $templateId = 'SMS_163035174';
+                        $templateId = 'SMS_166475490';
                         break;
                     default:
                         break;
