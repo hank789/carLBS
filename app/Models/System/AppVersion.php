@@ -51,7 +51,7 @@ class AppVersion extends Model
         ],
         2 => [
             'name'=>'车百讯',
-            'ios_url' => 'itms-apps://itunes.apple.com/cn/app/长江智链/id1457673059?l=zh&ls=1&mt=8',
+            'ios_url' => 'itms-apps://itunes.apple.com/cn/app/%E8%BD%A6%E7%99%BE%E8%AE%AF/id1464699576?l=zh&ls=1&mt=8',
             'android_url' => 'https://www.pgyer.com/Nwmq',
             'key' => 2
         ]
