@@ -83,6 +83,7 @@ class TransportController extends Controller {
             }
         }
         $data['car_number'] = $sub->transportEntity->car_number;
+        $data['transport_goods']['transport_goods'] = $main->transport_goods['transport_goods'];
 
         return self::createJsonData(true,$data);
     }
