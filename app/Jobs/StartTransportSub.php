@@ -60,8 +60,7 @@ class StartTransportSub implements ShouldQueue
         ];
         $apiUser = $sub->apiUser;
         if ($entity->entity_status != 1) {
-            $entity_desc = trim($apiUser->name);
-            $entity_desc = trim($entity_desc,'〈');
+            $entity_desc = formatBaiduEntityDesc($apiUser->name);
             $res = BaiduTrace::instance()->addEntity($entity_name,$entity_desc,$entity_custom_fields);
             if (!$res) {
                 $res = BaiduTrace::instance()->addEntity($entity_name,$entity_desc,$entity_custom_fields);

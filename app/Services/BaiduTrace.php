@@ -59,7 +59,7 @@ class BaiduTrace
             if ($res['status'] == 3005) {
                 return true;
             }
-            event(new ExceptionNotify('设备注册失败:'.$res['message']));
+            event(new ExceptionNotify('设备注册失败['.$entity_desc.']:'.$res['message']));
             return false;
         }
         return true;

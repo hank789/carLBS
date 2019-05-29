@@ -259,3 +259,57 @@ if (!function_exists('distanceFormat')) {
         }
     }
 }
+
+if (!function_exists('formatBaiduEntityDesc')) {
+    function formatBaiduEntityDesc($desc) {
+        $entity_desc = trim($desc);
+        $entity_desc = str_replace(',','',$entity_desc);
+        $entity_desc = str_replace('.','',$entity_desc);
+        $entity_desc = str_replace('/','',$entity_desc);
+        $entity_desc = str_replace(';','',$entity_desc);
+        $entity_desc = str_replace('<','',$entity_desc);
+        $entity_desc = str_replace('>','',$entity_desc);
+        $entity_desc = str_replace('?','',$entity_desc);
+        $entity_desc = str_replace(':','',$entity_desc);
+        $entity_desc = str_replace('"','',$entity_desc);
+        $entity_desc = str_replace("'",'',$entity_desc);
+        $entity_desc = str_replace('[','',$entity_desc);
+        $entity_desc = str_replace(']','',$entity_desc);
+        $entity_desc = str_replace('{','',$entity_desc);
+        $entity_desc = str_replace('}','',$entity_desc);
+        $entity_desc = str_replace('|','',$entity_desc);
+        $entity_desc = str_replace("\\",'',$entity_desc);
+        $entity_desc = str_replace('`','',$entity_desc);
+        $entity_desc = str_replace('~','',$entity_desc);
+        $entity_desc = str_replace('!','',$entity_desc);
+        $entity_desc = str_replace('@','',$entity_desc);
+        $entity_desc = str_replace('#','',$entity_desc);
+        $entity_desc = str_replace('$','',$entity_desc);
+        $entity_desc = str_replace('%','',$entity_desc);
+        $entity_desc = str_replace('^','',$entity_desc);
+        $entity_desc = str_replace('&','',$entity_desc);
+        $entity_desc = str_replace('*','',$entity_desc);
+        $entity_desc = str_replace('(','',$entity_desc);
+        $entity_desc = str_replace(')','',$entity_desc);
+        $entity_desc = str_replace('+','',$entity_desc);
+        $entity_desc = str_replace('=','',$entity_desc);
+        $entity_desc = str_replace('','',$entity_desc);
+        $entity_desc = str_replace('（','',$entity_desc);
+        $entity_desc = str_replace('）','',$entity_desc);
+        $entity_desc = str_replace('！','',$entity_desc);
+        $entity_desc = str_replace('￥','',$entity_desc);
+        $entity_desc = str_replace('？','',$entity_desc);
+        $entity_desc = str_replace('！','',$entity_desc);
+        $entity_desc = str_replace('，','',$entity_desc);
+        $entity_desc = str_replace('。','',$entity_desc);
+        $entity_desc = str_replace('；','',$entity_desc);
+        $entity_desc = str_replace('：','',$entity_desc);
+        $entity_desc = str_replace('【','',$entity_desc);
+        $entity_desc = str_replace('】','',$entity_desc);
+        $entity_desc = str_replace('「','',$entity_desc);
+        $entity_desc = str_replace('」','',$entity_desc);
+        $entity_desc = str_replace('、','',$entity_desc);
+        $entity_desc = str_replace('','',$entity_desc);
+        return $entity_desc;
+    }
+}
