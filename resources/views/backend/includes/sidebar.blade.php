@@ -19,6 +19,11 @@
                     <i class="nav-icon icon-people"></i> 司机管理
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {{ active_class(Active::checkUriPattern('admin/transport/car*')) }}" href="{{ route('admin.transport.car.index') }}">
+                    <i class="nav-icon fa fa-car"></i> 车辆管理
+                </a>
+            </li>
             @endcan
             @can('行程管理')
             <li class="nav-item">

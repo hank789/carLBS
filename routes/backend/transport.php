@@ -3,7 +3,7 @@
 use App\Http\Controllers\Backend\Transport\UserController;
 use App\Http\Controllers\Backend\Transport\MainController;
 use App\Http\Controllers\Backend\Transport\SubController;
-
+use App\Http\Controllers\Backend\Transport\CarController;
 
 /*
  * All route names are prefixed with 'admin.auth'.
@@ -34,6 +34,8 @@ Route::group([
             Route::get('mark/{status}', [UserController::class, 'mark'])->name('user.mark')->where(['status' => '[0,1]']);
         });
     });
+
+    Route::get('car', [CarController::class, 'index'])->name('car.index');
 
     //主行程信息
     Route::get('main', [MainController::class, 'index'])->name('main.index');

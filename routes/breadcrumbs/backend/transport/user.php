@@ -9,3 +9,9 @@ Breadcrumbs::for('admin.transport.user.show', function ($trail, $id) {
     $trail->parent('admin.transport.user.index');
     $trail->push(__('menus.backend.access.users.view'), route('admin.transport.user.show', $id));
 });
+
+
+Breadcrumbs::for('admin.transport.car.index', function ($trail) {
+    $trail->parent('admin.transport');
+    $trail->push('车辆管理', route('admin.transport.car.index'));
+});
