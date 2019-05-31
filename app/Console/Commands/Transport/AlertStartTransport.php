@@ -51,7 +51,7 @@ class AlertStartTransport extends Command
             $company = Company::find($main->company_id);
             $appName = $company->getAppname();
             $subs = TransportSub::where('transport_main_id',$main->id)->get();
-            if (strtotime($main->transport_start_time) <= strtotime('-14 days')) {
+            if (strtotime($main->transport_start_time) <= strtotime('-7 days')) {
                 if (count($phoneArr) <= $subs->count()) {
                     $main->transport_status = TransportMain::TRANSPORT_STATUS_FINISH;
                 } else {
