@@ -149,7 +149,7 @@
                                     </dl>
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right"> <dt>出发时间:</dt></div>
-                                        <div class="col-sm-8 text-sm-left"> <dd class="mb-1">{{ $sub->transport_start_time }}</dd></div>
+                                        <div class="col-sm-8 text-sm-left"> <dd class="mb-1">{{ $sub->transport_goods['transport_start_real_time']??'' }}</dd></div>
                                     </dl>
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">

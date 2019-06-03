@@ -102,7 +102,7 @@ class MainController extends Controller
                 $item->apiUser->name,
                 $item->apiUser->mobile,
                 $item->transportEntity->car_number,
-                $item->transport_start_time,
+                $item->transport_goods['transport_start_real_time']??'',
                 $item->getTransportEventCount(),
                 $item->getTransportXiehuoCount(),
                 $item->transport_goods['lastPosition']['formatted_address']??'',
