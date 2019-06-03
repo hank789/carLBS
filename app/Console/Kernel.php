@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\Test::class,
         Commands\Transport\AlertStartTransport::class,
+        Commands\Transport\AlertEndTransport::class,
         Commands\FixData\InitChjzhlCompany::class
     ];
 
@@ -33,6 +34,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('backup:clean')->daily()->at('01:00');
         $schedule->command('backup:run')->daily()->at('02:00');
         $schedule->command('alert:transport:start')->cron('55 7,9,11,12,14,15,16,17,18 * * *');
+        $schedule->command('alert:transport:end')->cron('0 19 * * *');
 
     }
 

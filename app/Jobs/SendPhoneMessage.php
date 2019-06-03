@@ -73,6 +73,9 @@ class SendPhoneMessage implements ShouldQueue
                     case 'notify_transport_start_soon':
                         $templateId = 'SMS_166475490';
                         break;
+                    case 'notify_transport_end':
+                        $templateId = 'SMS_166779444';
+                        break;
                     default:
                         break;
                 }
@@ -95,6 +98,9 @@ class SendPhoneMessage implements ShouldQueue
                         break;
                     case 'notify_transport_start_soon':
                         $templateId = 'SMS_163035174';
+                        break;
+                    case 'notify_transport_end':
+                        $templateId = 'SMS_166867830';
                         break;
                     default:
                         break;
