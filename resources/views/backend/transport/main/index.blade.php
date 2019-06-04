@@ -21,18 +21,20 @@
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="filter" value="{{ $filter['filter']??'' }}">
                     <div class="form-group row">
-                        <div class="col-2">
+                        <div class="col-3">
                             <input type="text" class="form-control" name="transport_number" placeholder="行程ID" value="{{ $filter['transport_number']??'' }}"/>
                         </div>
                         <div class="col-3">
                             <input type="text" class="form-control" name="transport_end_place" placeholder="目的地" value="{{ $filter['transport_end_place']??'' }}"/>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                             <input type="text" class="form-control" id="date_range" name="transport_start_time" placeholder="出发时间" value="{{ $filter['transport_start_time']??null }}"/>
                         </div>
                         <div class="col-3">
-                            <button type="submit" class="btn btn-primary">搜索</button>
-                            <a href="{{ route('admin.transport.main.create') }}" class="btn btn-success ml-1" data-toggle="tooltip" title="@lang('labels.general.create_new')"><i class="fas fa-plus-circle"></i></a>
+                            <div class="btn-toolbar float-right" role="toolbar">
+                                <button type="submit" class="btn btn-primary">搜索</button>
+                                <a href="{{ route('admin.transport.main.create') }}" class="btn btn-success ml-2" data-toggle="tooltip" title="@lang('labels.general.create_new')"><i class="fas fa-plus-circle"></i></a>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -47,13 +49,11 @@
                         <tr>
                             <th>行程ID</th>
                             <th>目的地</th>
-                            <th>目的地联系人</th>
                             <th>供应商</th>
-                            <th>供应商联系人</th>
-                            <th>车辆数</th>
-                            <th>开始时间</th>
                             <th>货物</th>
+                            <th>车辆数</th>
                             <th>创建者</th>
+                            <th>开始时间</th>
                             <th>创建时间</th>
                             <th>状态</th>
                             <th>@lang('labels.general.actions')</th>
@@ -63,14 +63,12 @@
                         @foreach($list as $item)
                             <tr>
                                 <td>{{ $item->transport_number }}</td>
-                                <td>{{ $item->transport_end_place }}</td>
-                                <td>{{ $item->transport_contact_people.'('.$item->transport_contact_phone.')' }}</td>
-                                <td>{{ $item->transport_goods['transport_vendor_company']??'' }}</td>
-                                <td>{{ $item->transport_contact_vendor_people.'('.$item->transport_contact_vendor_phone.')' }}</td>
-                                <td>{{ $item->getTransportSubCount() }}</td>
-                                <td>{{ $item->transport_start_time }}</td>
+                                <td>{{ $item->transport_end_place }}<br>{{ $item->transport_contact_people.'('.$item->transport_contact_phone.')' }}</td>
+                                <td>{{ $item->transport_goods['transport_vendor_company']??'' }}<br>{{ $item->transport_contact_vendor_people.'('.$item->transport_contact_vendor_phone.')' }}</td>
                                 <td>{{ str_limit($item->transport_goods['transport_goods'],50) }}</td>
+                                <td>{{ $item->getTransportSubCount() }}</td>
                                 <td>{{ $item->systemUser->fullname }}</td>
+                                <td>{{ $item->transport_start_time }}</td>
                                 <td>{{ $item->created_at }}</td>
                                 <td>{!! $item->status_label !!}</td>
                                 <td>{!! $item->action_buttons !!}</td>
