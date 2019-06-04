@@ -30,19 +30,27 @@ class DashboardController extends Controller
                 $carsCount = TransportEntity::where('last_vendor_company_id',$user->company_id)->count();
             }
         }
+        $today = date('Y-m-d 00:00:00');
         //行程总数
         if ($user->company_id == 1) {
             $mainCount = TransportMain::count();
             //行程已完成数
             $mainFinishedCount = TransportMain::where('transport_status',TransportMain::TRANSPORT_STATUS_FINISH)->count();
+            $mainTodayCount = TransportMain::where('transport_start_time','>=',$today)->count();
+            $mainTodayFinishedCount = TransportMain::where('transport_status',TransportMain::TRANSPORT_STATUS_FINISH)->where('transport_start_time','>=',$today)->count();
         } else {
             if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
                 $mainCount = TransportMain::where('company_id',$user->company_id)->count();
                 //行程已完成数
                 $mainFinishedCount = TransportMain::where('company_id',$user->company_id)->where('transport_status',TransportMain::TRANSPORT_STATUS_FINISH)->count();
+                $mainTodayCount = TransportMain::where('company_id',$user->company_id)->where('transport_start_time','>=',$today)->count();
+                $mainTodayFinishedCount = TransportMain::where('company_id',$user->company_id)->where('transport_status',TransportMain::TRANSPORT_STATUS_FINISH)->where('transport_start_time','>=',$today)->count();
+
             } else {
                 $mainCount = TransportMain::where('vendor_company_id',$user->company_id)->count();
                 $mainFinishedCount = TransportMain::where('vendor_company_id',$user->company_id)->where('transport_status',TransportMain::TRANSPORT_STATUS_FINISH)->count();
+                $mainTodayCount = TransportMain::where('vendor_company_id',$user->company_id)->where('transport_start_time','>=',$today)->count();
+                $mainTodayFinishedCount = TransportMain::where('vendor_company_id',$user->company_id)->where('transport_status',TransportMain::TRANSPORT_STATUS_FINISH)->where('transport_start_time','>=',$today)->count();
             }
         }
 
@@ -51,7 +59,7 @@ class DashboardController extends Controller
 
         $transportChart = $this->drawTransportChart($user);
 
-        return view('backend.dashboard')->with(compact('carsCount','mainCount','mainFinishedCount','mainUnFinishedCount','transportChart'));
+        return view('backend.dashboard')->with(compact('carsCount','mainCount','mainFinishedCount','mainUnFinishedCount','transportChart','mainTodayCount','mainTodayFinishedCount'));
     }
 
     private function drawTransportChart($user)

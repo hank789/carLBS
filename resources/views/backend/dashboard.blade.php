@@ -52,6 +52,44 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+
+                                <div class="col-md-3">
+                                    <div class="callout callout-info">
+                                        <small class="text-muted">今日行程数</small>
+                                        <br>
+                                        <strong class="h4">{{ $mainTodayCount }}</strong>
+                                        <div class="chart-wrapper">
+                                            <canvas id="sparkline-chart-1" width="100" height="30"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="callout callout-success">
+                                        <small class="text-muted">今日已完成行程数</small>
+                                        <br>
+                                        <strong class="h4">{{ $mainTodayFinishedCount }}</strong>
+                                        <div class="chart-wrapper">
+                                            <canvas id="sparkline-chart-1" width="100" height="30"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="callout callout-danger">
+                                        <small class="text-muted">今日未完成行程数</small>
+                                        <br>
+                                        <strong class="h4">{{ $mainTodayCount - $mainTodayFinishedCount }}</strong>
+                                        <div class="chart-wrapper">
+                                            <canvas id="sparkline-chart-1" width="100" height="30"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                     <hr class="mt-0">
                     <div class="row">
                         <div class="col-md-12">
