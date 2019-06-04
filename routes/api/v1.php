@@ -9,6 +9,9 @@ Route::get('home','IndexController@home');
 
 Route::get('checkUpdate', 'IndexController@checkUpdate');
 
+Route::post('getContactInfo', 'IndexController@getContactInfo');
+
+
 //登陆注册认证类
 Route::group(['prefix' => 'auth','namespace'=>'Account'], function() {
     Route::post('register', 'AuthController@register');

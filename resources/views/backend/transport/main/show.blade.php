@@ -51,13 +51,12 @@
 
                                 </div>
                                 <div class="col-lg-6" id="cluster_info">
-
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right">
-                                            <dt>目的地联系人:</dt>
+                                            <dt>供应商:</dt>
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
-                                            <dd class="mb-1">{{ $main->transport_contact_people.'('.$main->transport_contact_phone.')' }}</dd>
+                                            <dd class="mb-1">{{ $main->transport_goods['transport_vendor_company'] }}</dd>
                                         </div>
                                     </dl>
                                     <dl class="row mb-0">
@@ -66,6 +65,14 @@
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
                                             <dd class="mb-1">{{ $main->transport_contact_vendor_people.'('.$main->transport_contact_vendor_phone.')' }}</dd>
+                                        </div>
+                                    </dl>
+                                    <dl class="row mb-0">
+                                        <div class="col-sm-4 text-sm-right">
+                                            <dt>目的地联系人:</dt>
+                                        </div>
+                                        <div class="col-sm-8 text-sm-left">
+                                            <dd class="mb-1">{{ $main->transport_contact_people.'('.$main->transport_contact_phone.')' }}</dd>
                                         </div>
                                     </dl>
                                     <dl class="row mb-0">

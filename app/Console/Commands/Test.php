@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Auth\Company;
 use App\Models\Auth\VendorCompany;
 use App\Models\Transport\TransportMain;
+use App\Services\RateLimiter;
 use App\Services\Registrar;
 use Illuminate\Console\Command;
 use Spatie\Permission\Models\Permission;
@@ -43,8 +44,11 @@ class Test extends Command
      */
     public function handle()
     {
-        $admin = Role::find(1);
-        $admin->givePermissionTo(Permission::all());
+        $list = TransportMain::orderBy('id','asc')->get();
+        foreach ($list as $main) {
+            RateLimiter::instance()->hSet('vendor_company_info',$main->vendor_company_id,$main->transport_contact_vendor_people.';'.$main->transport_contact_vendor_phone);
+            RateLimiter::instance()->hSet('contact_people_info',$main->transport_contact_people,$main->transport_contact_phone);
+        }
         return;
         $permissions = ['账户管理'];
         foreach ($permissions as $permission) {

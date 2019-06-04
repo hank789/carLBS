@@ -251,6 +251,19 @@
                 placeholder: "选择供应商",
                 tags:true
             });
+            $("#vendor_company_id").change(function(){
+                $.post('/api/getContactInfo/',{type: 'vendor', key: $('#vendor_company_id').val()},function(msg){
+                    console.log(msg);
+                    $("#transport_contact_vendor_people").val(msg.name);
+                    $("#transport_contact_vendor_phone").val(msg.phone);
+                });
+            });
+            $("#transport_contact_people").blur(function(){
+                $.post('/api/getContactInfo/',{type: 'contact', key: $("#transport_contact_people").val()},function(msg){
+                    console.log(msg);
+                    $("#transport_contact_phone").val(msg.phone);
+                });
+            });
             /*daterange控件*/
             $('#transport_start_time').daterangepicker({
                 timePicker: true,

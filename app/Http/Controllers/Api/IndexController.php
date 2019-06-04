@@ -61,4 +61,24 @@ class IndexController extends Controller {
         ]);
     }
 
+    public function getContactInfo(Request $request) {
+        $type = $request->input('type');
+        $key = $request->input('key');
+        switch ($type) {
+            case 'vendor':
+                $value = RateLimiter::instance()->hGet('vendor_company_info',$key);
+                $value = explode(';',$value);
+                $data = [
+                    'name' => $value[0]??'',
+                    'phone' => $value[1]??''
+                ];
+                break;
+            default:
+                $value = RateLimiter::instance()->hGet('contact_people_info',$key);
+                $data = ['phone'=>$value];
+                break;
+        }
+        return response()->json($data);
+    }
+
 }

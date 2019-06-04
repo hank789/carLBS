@@ -16,6 +16,7 @@ use App\Models\Transport\TransportMain;
 use App\Models\Transport\TransportSub;
 use App\Models\Transport\TransportXiehuo;
 use App\Services\NumberUuid;
+use App\Services\RateLimiter;
 
 /**
  * Class UserController.
@@ -336,6 +337,9 @@ class MainController extends Controller
                 $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start',$appName));
             }
         }
+        RateLimiter::instance()->hSet('vendor_company_info',$vendor_company_id,$main->transport_contact_vendor_people.';'.$main->transport_contact_vendor_phone);
+        RateLimiter::instance()->hSet('contact_people_info',$main->transport_contact_people,$main->transport_contact_phone);
+
         return redirect()->route('admin.transport.main.index')->withFlashSuccess('行程添加成功');
     }
 
