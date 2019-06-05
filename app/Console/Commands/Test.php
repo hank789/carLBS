@@ -46,7 +46,7 @@ class Test extends Command
     public function handle()
     {
         $appName = '车百讯';
-        (new SendPhoneMessage('15050368286',['code' => '846770047'],'notify_transport_start',$appName))->handle();
+        (new SendPhoneMessage('15050368286',['code' => '846770047','minutes'=>10],'notify_transport_start_soon',$appName))->handle();
         return;
         $list = TransportMain::orderBy('id','asc')->get();
         foreach ($list as $main) {
