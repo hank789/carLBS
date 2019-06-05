@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\SendPhoneMessage;
 use App\Models\Auth\Company;
 use App\Models\Auth\VendorCompany;
 use App\Models\Transport\TransportMain;
@@ -44,6 +45,9 @@ class Test extends Command
      */
     public function handle()
     {
+        $appName = '车百讯';
+        (new SendPhoneMessage('15050368286',['code' => '846770047'],'notify_transport_start',$appName))->handle();
+        return;
         $list = TransportMain::orderBy('id','asc')->get();
         foreach ($list as $main) {
             RateLimiter::instance()->hSet('vendor_company_info',$main->vendor_company_id,$main->transport_contact_vendor_people.';'.$main->transport_contact_vendor_phone);
