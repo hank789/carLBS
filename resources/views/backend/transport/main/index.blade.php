@@ -51,10 +51,10 @@
                             <th>目的地</th>
                             <th>供应商</th>
                             <th>货物</th>
-                            <th>车辆数</th>
-                            <th>创建者</th>
+                            <th>司机手机号</th>
                             <th>开始时间</th>
                             <th>创建时间</th>
+                            <th>创建者</th>
                             <th>状态</th>
                             <th>@lang('labels.general.actions')</th>
                         </tr>
@@ -66,10 +66,10 @@
                                 <td>{{ $item->transport_end_place }}<br>{{ $item->transport_contact_people.'('.$item->transport_contact_phone.')' }}</td>
                                 <td>{{ $item->transport_goods['transport_vendor_company']??'' }}<br>{{ $item->transport_contact_vendor_people.'('.$item->transport_contact_vendor_phone.')' }}</td>
                                 <td>{{ str_limit($item->transport_goods['transport_goods'],50) }}</td>
-                                <td>{{ $item->getTransportSubCount() }}</td>
-                                <td>{{ $item->systemUser->fullname }}</td>
+                                <td>{{ $item->transport_goods['transport_phone_list'] }}</td>
                                 <td>{{ $item->transport_start_time }}</td>
                                 <td>{{ $item->created_at }}</td>
+                                <td>{{ $item->systemUser->fullname }}</td>
                                 <td>{!! $item->status_label !!}</td>
                                 <td>{!! $item->action_buttons !!}</td>
                             </tr>

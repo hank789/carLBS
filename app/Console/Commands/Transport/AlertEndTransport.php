@@ -46,7 +46,7 @@ class AlertEndTransport extends Command
             $main = $sub->transportMain;
             $company = Company::find($main->company_id);
             $appName = $company->getAppname();
-            if (strtotime($sub->transport_goods['transport_start_real_time']) <= strtotime('-2 days') && strtotime($sub->transport_goods['transport_start_real_time']) >= strtotime('-7 days')) {
+            if (strtotime($sub->transport_goods['transport_start_real_time']) <= strtotime('-36 hours') && strtotime($sub->transport_goods['transport_start_real_time']) >= strtotime('-4 days')) {
                 dispatch(new SendPhoneMessage($sub->apiUser->mobile,['code' => $main->transport_number],'notify_transport_end',$appName));
             }
         }
