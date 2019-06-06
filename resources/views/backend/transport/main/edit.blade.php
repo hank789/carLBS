@@ -10,8 +10,8 @@
 
 @section('content')
 {{ html()->form('PATCH', route('admin.transport.main.update',['id'=>$main->id]))->class('form-horizontal')->open() }}
-    <input type="hidden" id="transport_end_place_longitude" name="transport_end_place_longitude" value="{{ $main->transport_goods['transport_end_place_longitude'] }}" />
-    <input type="hidden" id="transport_end_place_latitude" name="transport_end_place_latitude" value="{{ $main->transport_goods['transport_end_place_latitude'] }}" />
+    <input type="hidden" id="transport_end_place_longitude" name="transport_end_place_longitude" value="{{ old('transport_end_place_longitude',$main->transport_goods['transport_end_place_longitude']) }}" />
+    <input type="hidden" id="transport_end_place_latitude" name="transport_end_place_latitude" value="{{ old('transport_end_place_latitude',$main->transport_goods['transport_end_place_latitude']) }}" />
     <div class="card">
         <div class="card-body">
             <div class="row">
