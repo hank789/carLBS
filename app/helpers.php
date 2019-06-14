@@ -310,6 +310,7 @@ if (!function_exists('formatBaiduEntityDesc')) {
         $entity_desc = str_replace('」','',$entity_desc);
         $entity_desc = str_replace('、','',$entity_desc);
         $entity_desc = str_replace('','',$entity_desc);
+        $entity_desc = preg_replace("/[^\x{4e00}-\x{9fa5}]/iu",'',$entity_desc);
         return $entity_desc;
     }
 }
