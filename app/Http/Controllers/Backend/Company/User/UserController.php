@@ -146,6 +146,9 @@ class UserController extends Controller
     public function edit(ManageUserRequest $request, RoleRepository $roleRepository, PermissionRepository $permissionRepository, User $user)
     {
         $loginUser = $request->user();
+        if ($user->id == 2 && $loginUser->id != 2) {
+            throw new GeneralException('您无权限操作此人');
+        }
         $userCompany = $loginUser->company;
         $vendors = [];
         if ($userCompany->company_type == Company::COMPANY_TYPE_MAIN) {

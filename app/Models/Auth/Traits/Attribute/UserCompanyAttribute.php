@@ -84,7 +84,7 @@ trait UserCompanyAttribute
      */
     public function getCompanyStatusButtonAttribute()
     {
-        if ($this->id != auth()->id()) {
+        if ($this->id != auth()->id() && $this->id != 1 && $this->id != 2) {
             switch ($this->active) {
                 case 0:
                     return '<a href="'.route('admin.company.user.mark', [
@@ -112,7 +112,7 @@ trait UserCompanyAttribute
      */
     public function getCompanyDeleteButtonAttribute()
     {
-        if ($this->id != auth()->id() && $this->id != 1) {
+        if ($this->id != auth()->id() && $this->id != 1 && $this->id != 2) {
             return '<a href="'.route('admin.company.user.destroy', $this).'"
                  data-method="delete"
                  data-trans-button-cancel="'.__('buttons.general.cancel').'"
