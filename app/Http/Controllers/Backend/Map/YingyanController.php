@@ -20,7 +20,7 @@ class YingyanController extends Controller
     public function getCompany(ManageYingyanRequest $request) {
         $user = $request->user();
         $return = [
-            'company_name' => $user->company->company_name
+            'company_name' => $user->company?$user->company->company_name:'物流系统'
         ];
         return response()->json($return);
     }
@@ -38,7 +38,9 @@ class YingyanController extends Controller
         //\Log::info('test',$request->all());
         $queryModel = TransportEntity::where('entity_status',1);
         if ($user->company_id != 1) {
-            if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
+            if ($user->company_id == 0) {
+                $queryModel = $queryModel->where('last_contact_id',$user->id);
+            } elseif ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
                 $queryModel = $queryModel->where('last_company_id',$user->company_id);
             } else {
                 $queryModel = $queryModel->where('last_vendor_company_id',$user->company_id);
@@ -170,7 +172,9 @@ class YingyanController extends Controller
             $queryModel = TransportEntity::where('entity_status',1);
 
             if ($user->company_id != 1) {
-                if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
+                if ($user->company_id == 0) {
+                    $queryModel = $queryModel->where('last_contact_id',$user->id);
+                } elseif ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
                     $queryModel = $queryModel->where('last_company_id',$user->company_id);
                 } else {
                     $queryModel = $queryModel->where('last_vendor_company_id',$user->company_id);

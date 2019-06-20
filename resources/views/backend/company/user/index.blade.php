@@ -42,7 +42,7 @@
                             <tr>
                                 <td>{{ $user->last_name.$user->first_name }}</td>
                                 <td>{{ $user->mobile }}</td>
-                                <td>{{ $user->company->company_name }}</td>
+                                <td>{{ $user->company?$user->company->company_name:'' }}</td>
                                 <td>{!! $user->status_label !!}</td>
                                 <td>{!! $user->roles_label !!}</td>
                                 <td>{!! $user->permissions_label !!}</td>

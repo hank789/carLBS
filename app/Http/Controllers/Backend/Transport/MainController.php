@@ -17,6 +17,7 @@ use App\Models\Transport\TransportSub;
 use App\Models\Transport\TransportXiehuo;
 use App\Services\NumberUuid;
 use App\Services\RateLimiter;
+use App\Repositories\Backend\Auth\UserRepository;
 
 /**
  * Class UserController.
@@ -33,7 +34,9 @@ class MainController extends Controller
     {
         $filter =  $request->all();
         $user = $request->user();
-        if ($user->company_id == 1) {
+        if ($user->company_id == 0) {
+            $query = TransportMain::where('transport_contact_phone',$user->mobile);
+        } elseif ($user->company_id == 1) {
             $query = TransportMain::query();
         } elseif ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
             $query = TransportMain::where('company_id',$user->company_id);
@@ -206,6 +209,36 @@ class MainController extends Controller
                         $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start',$appName));
                     }
                 }
+                try {
+                    $userRepository = new UserRepository();
+                    $vendorUser = $userRepository->create([
+                        'first_name' => $main->transport_contact_vendor_people,
+                        'last_name' => '',
+                        'mobile' => $main->transport_contact_vendor_phone,
+                        'password' => time(),
+                        'active' => 1,
+                        'confirmed' => 1,
+                        'roles' => ['供应商人员'],
+                        'permissions' => []
+                    ]);
+                    $vendorUser->company_id = $main->vendor_company_id;
+                    $vendorUser->save();
+
+                    $distanceUser = $userRepository->create([
+                        'first_name' => $main->transport_contact_people,
+                        'last_name' => '',
+                        'mobile' => $main->transport_contact_phone,
+                        'password' => time(),
+                        'active' => 1,
+                        'confirmed' => 1,
+                        'roles' => ['收货人员'],
+                        'permissions' => []
+                    ]);
+                    $distanceUser->company_id = 0;
+                    $distanceUser->save();
+                } catch (\Exception $e) {
+
+                }
                 break;
             case TransportMain::TRANSPORT_STATUS_CANCEL:
                 $phoneList = $main->transport_goods['transport_phone_list']??'';
@@ -238,7 +271,7 @@ class MainController extends Controller
         $user = $request->user();
         $userCompany = $user->company;
         $vendors = [];
-        if ($userCompany->company_type == Company::COMPANY_TYPE_MAIN) {
+        if ($userCompany && $userCompany->company_type == Company::COMPANY_TYPE_MAIN) {
             $vendors = CompanyRel::where('company_id',$userCompany->id)->get();
         } else {
             throw new GeneralException('您无权限创建行程');
@@ -332,9 +365,41 @@ class MainController extends Controller
         $company = Company::find($main->company_id);
         $appName = $company->getAppname();
 
-        if ($phoneList && $main->transport_status == TransportMain::TRANSPORT_STATUS_PROCESSING) {
-            foreach ($phoneArr as $phone) {
-                $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start',$appName));
+        if ($main->transport_status == TransportMain::TRANSPORT_STATUS_PROCESSING) {
+            if ($phoneList) {
+                foreach ($phoneArr as $phone) {
+                    $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start',$appName));
+                }
+            }
+            try {
+                $userRepository = new UserRepository();
+                $vendorUser = $userRepository->create([
+                    'first_name' => $main->transport_contact_vendor_people,
+                    'last_name' => '',
+                    'mobile' => $main->transport_contact_vendor_phone,
+                    'password' => time(),
+                    'active' => 1,
+                    'confirmed' => 1,
+                    'roles' => ['供应商人员'],
+                    'permissions' => []
+                ]);
+                $vendorUser->company_id = $vendor_company_id;
+                $vendorUser->save();
+
+                $distanceUser = $userRepository->create([
+                    'first_name' => $main->transport_contact_people,
+                    'last_name' => '',
+                    'mobile' => $main->transport_contact_phone,
+                    'password' => time(),
+                    'active' => 1,
+                    'confirmed' => 1,
+                    'roles' => ['收货人员'],
+                    'permissions' => []
+                ]);
+                $distanceUser->company_id = 0;
+                $distanceUser->save();
+            } catch (\Exception $e) {
+
             }
         }
         RateLimiter::instance()->hSet('vendor_company_info',$vendor_company_id,$main->transport_contact_vendor_people.';'.$main->transport_contact_vendor_phone);
@@ -349,7 +414,7 @@ class MainController extends Controller
         $user = $request->user();
         $userCompany = $user->company;
         $vendors = [];
-        if ($userCompany->company_type == Company::COMPANY_TYPE_MAIN) {
+        if ($userCompany && $userCompany->company_type == Company::COMPANY_TYPE_MAIN) {
             $vendors = CompanyRel::where('company_id',$userCompany->id)->get();
         } else {
             throw new GeneralException('您无权限修改行程');

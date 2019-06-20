@@ -3,7 +3,7 @@
 @section('title', app_display_name() . ' | ' . __('strings.backend.dashboard.title'))
 
 @section('content')
-    @can('供应商管理')
+    @can('行程管理')
             <div class="card">
                 <div class="card-body">
                     <div class="row">

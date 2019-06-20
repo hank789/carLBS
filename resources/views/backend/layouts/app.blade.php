@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', $logged_in_user->company->company_name)</title>
+    <title>@yield('title', $logged_in_user->company?$logged_in_user->company->company_name:'物流系统')</title>
     <meta name="description" content="@yield('meta_description', app_display_name())">
     <meta name="author" content="@yield('meta_author', app_display_name())">
     <link rel="shortcut icon" href="{{ $logged_in_user->getSiteFavicon() }}">

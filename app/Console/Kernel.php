@@ -19,7 +19,8 @@ class Kernel extends ConsoleKernel
         Commands\Test::class,
         Commands\Transport\AlertStartTransport::class,
         Commands\Transport\AlertEndTransport::class,
-        Commands\FixData\InitChjzhlCompany::class
+        Commands\FixData\InitChjzhlCompany::class,
+        Commands\FixData\InitContactPeople::class
     ];
 
     /**

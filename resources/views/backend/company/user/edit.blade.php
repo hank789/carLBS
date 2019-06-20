@@ -64,7 +64,7 @@
                         </div><!--col-->
                     </div><!--form-group-->
 
-                    <div class="form-group row" id="select_company_div" style="{{ $user->company->company_type==2?'display:none':'' }}">
+                    <div class="form-group row" id="select_company_div" style="{{ ($user->company&&$user->company->company_type==2)?'display:none':'' }}">
                         {{ html()->label('公司')->class('col-md-2 form-control-label')->for('company_id') }}
 
                         <div class="col-md-10">
@@ -81,13 +81,13 @@
 
                         <div class="col-md-10">
                             <label class="switch switch-label switch-pill switch-primary">
-                                {{ html()->checkbox('is_vendor', $user->company->company_type==2?true:false, '1')->class('switch-input') }}
+                                {{ html()->checkbox('is_vendor', ($user->company&&$user->company->company_type==2)?true:false, '1')->class('switch-input') }}
                                 <span class="switch-slider" data-checked="是" data-unchecked="否"></span>
                             </label>
                         </div><!--col-->
                     </div><!--form-group-->
 
-                    <div class="form-group row" id="select_vendor_company_div" style="{{ $user->company->company_type==1?'display:none':'' }}">
+                    <div class="form-group row" id="select_vendor_company_div" style="{{ ($user->company&&$user->company->company_type==1)?'display:none':'' }}">
                         {{ html()->label('供应商')->class('col-md-2 form-control-label')->for('vendor_company_id') }}
 
                         <div class="col-md-10">

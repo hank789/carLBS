@@ -150,6 +150,8 @@ class TransportController extends Controller {
         $entity->last_company_id = $main->company_id;
         $entity->last_vendor_company_id = $main->vendor_company_id;
         $entity->last_sub_status = $sub->transport_status;
+        $distanceUser = User::where('mobile',$main->transport_contact_phone)->first();
+        $entity->last_contact_id = $distanceUser?$distanceUser->id:0;
         $entity->save();
         $timeDiff = strtotime($sub->transport_start_time) - time();
         if ($timeDiff >= 60) {
@@ -478,9 +480,14 @@ class TransportController extends Controller {
                 break;
         }
         $systemUser = User::where('mobile',$user->mobile)->first();
+        if (!$systemUser) {
+            throw new ApiException(ApiException::BAD_REQUEST);
+        }
 
         if ($systemUser->company_id != 1) {
-            if ($systemUser->company->company_type == Company::COMPANY_TYPE_MAIN) {
+            if ($systemUser->company_id == 0) {
+                $queryModel = $queryModel->where('last_contact_id',$systemUser->id);
+            } elseif ($systemUser->company->company_type == Company::COMPANY_TYPE_MAIN) {
                 $queryModel = $queryModel->where('last_company_id',$systemUser->company_id);
             } else {
                 $queryModel = $queryModel->where('last_vendor_company_id',$systemUser->company_id);

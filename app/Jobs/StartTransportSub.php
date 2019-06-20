@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Events\Api\ExceptionNotify;
+use App\Models\Auth\User;
 use App\Models\Transport\TransportEntity;
 use App\Models\Transport\TransportLbs;
 use App\Models\Transport\TransportSub;
@@ -93,6 +94,8 @@ class StartTransportSub implements ShouldQueue
         $entity->last_company_id = $main->company_id;
         $entity->last_vendor_company_id = $main->vendor_company_id;
         $entity->last_sub_status = $sub->transport_status;
+        $distanceUser = User::where('mobile',$main->transport_contact_phone)->first();
+        $entity->last_contact_id = $distanceUser?$distanceUser->id:0;
         $entity->save();
         if (!isset($this->data['address']['city'])) {
             //$address_province = $this->data['address']['city'].' '.$this->data['address']['district'];

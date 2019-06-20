@@ -24,7 +24,9 @@ class DashboardController extends Controller
         if ($user->company_id == 1) {
             $carsCount = TransportEntity::count();
         } else {
-            if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
+            if ($user->company_id == 0) {
+                $carsCount = TransportEntity::where('last_contact_id',$user->company_id)->count();
+            } elseif ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
                 $carsCount = TransportEntity::where('last_company_id',$user->company_id)->count();
             } else {
                 $carsCount = TransportEntity::where('last_vendor_company_id',$user->company_id)->count();
@@ -39,7 +41,12 @@ class DashboardController extends Controller
             $mainTodayCount = TransportMain::where('transport_start_time','>=',$today)->count();
             $mainTodayFinishedCount = TransportMain::where('transport_status',TransportMain::TRANSPORT_STATUS_FINISH)->where('transport_start_time','>=',$today)->count();
         } else {
-            if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
+            if ($user->company_id == 0) {
+                $mainCount = TransportMain::where('transport_contact_phone',$user->mobile)->count();
+                $mainFinishedCount = TransportMain::where('transport_contact_phone',$user->mobile)->where('transport_status',TransportMain::TRANSPORT_STATUS_FINISH)->count();
+                $mainTodayCount = TransportMain::where('transport_contact_phone',$user->mobile)->where('transport_start_time','>=',$today)->count();
+                $mainTodayFinishedCount = TransportMain::where('transport_contact_phone',$user->mobile)->where('transport_status',TransportMain::TRANSPORT_STATUS_FINISH)->where('transport_start_time','>=',$today)->count();
+            } elseif ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
                 $mainCount = TransportMain::where('company_id',$user->company_id)->count();
                 //行程已完成数
                 $mainFinishedCount = TransportMain::where('company_id',$user->company_id)->where('transport_status',TransportMain::TRANSPORT_STATUS_FINISH)->count();
@@ -77,7 +84,9 @@ class DashboardController extends Controller
         if ($user->company_id == 1) {
             $mainList = TransportMain::where('transport_start_time','>',$labelTimes[0])->where('transport_start_time','<',$nowTime)->get();
         } else {
-            if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
+            if ($user->company_id == 0) {
+                $mainList = TransportMain::where('transport_contact_phone',$user->mobile)->where('transport_start_time','>',$labelTimes[0])->where('transport_start_time','<',$nowTime)->get();
+            } elseif ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
                 $mainList = TransportMain::where('company_id',$user->company_id)->where('transport_start_time','>',$labelTimes[0])->where('transport_start_time','<',$nowTime)->get();
             } else {
                 $mainList = TransportMain::where('vendor_company_id',$user->company_id)->where('transport_start_time','>',$labelTimes[0])->where('transport_start_time','<',$nowTime)->get();
