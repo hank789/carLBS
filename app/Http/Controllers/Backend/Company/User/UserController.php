@@ -41,6 +41,7 @@ class UserController extends Controller
     public function index(ManageUserRequest $request)
     {
         $user = $request->user();
+        $filter =  $request->all();
         $query = User::with('roles', 'permissions', 'providers')
             ->active()
             ->where('id','!=',1);
@@ -48,6 +49,12 @@ class UserController extends Controller
             $companyIds = CompanyRel::where('company_id',$user->company_id)->pluck('vendor_id')->toArray();
             $companyIds[] = $user->company_id;
             $query = $query->whereIn('company_id',$companyIds);
+        }
+        if (isset($filter['name']) && $filter['name']) {
+            $query = $query->where('first_name','like','%'.$filter['name'].'%');
+        }
+        if (isset($filter['mobile']) && $filter['mobile']) {
+            $query = $query->where('mobile','like','%'.$filter['mobile'].'%');
         }
 
         $users = $query->orderBy('id', 'desc')->paginate(25);

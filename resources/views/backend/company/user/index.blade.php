@@ -17,7 +17,25 @@
             </div><!--col-->
 
             <div class="col-sm-7">
-                @include('backend.company.user.includes.header-buttons')
+                <form name="searchForm" class="form-horizontal" action="{{ route('admin.company.user.index') }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="filter" value="{{ $filter['filter']??'' }}">
+                    <div class="form-group row">
+                        <div class="col-4">
+                            <input type="text" class="form-control" name="name" placeholder="姓名" value="{{ $filter['name']??'' }}"/>
+                        </div>
+                        <div class="col-4">
+                            <input type="text" class="form-control" name="mobile" placeholder="手机号" value="{{ $filter['mobile']??'' }}"/>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="btn-toolbar float-right" role="toolbar">
+                                <button type="submit" class="btn btn-primary">搜索</button>
+                                <a href="{{ route('admin.company.user.create') }}" class="btn btn-success ml-1" data-toggle="tooltip" title="@lang('labels.general.create_new')"><i class="fas fa-plus-circle"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div><!--col-->
         </div><!--row-->
 
