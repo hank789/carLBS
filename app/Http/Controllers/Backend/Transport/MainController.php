@@ -188,7 +188,7 @@ class MainController extends Controller
     {
         $user = $request->user();
         $userCompany = $user->company;
-        if ($userCompany->company_type != Company::COMPANY_TYPE_MAIN) {
+        if ($userCompany->company_type != Company::COMPANY_TYPE_MAIN || $user->hasRole('user')) {
             throw new GeneralException('您无权限修改行程');
         }
         $main = TransportMain::find($id);
@@ -271,7 +271,10 @@ class MainController extends Controller
         $user = $request->user();
         $userCompany = $user->company;
         $vendors = [];
-        if ($userCompany && $userCompany->company_type == Company::COMPANY_TYPE_MAIN) {
+        if ($user->hasRole('user')) {
+            throw new GeneralException('您无权限修改行程');
+        }
+        if (($userCompany && $userCompany->company_type == Company::COMPANY_TYPE_MAIN)) {
             $vendors = CompanyRel::where('company_id',$userCompany->id)->get();
         } else {
             throw new GeneralException('您无权限创建行程');
@@ -414,7 +417,10 @@ class MainController extends Controller
         $user = $request->user();
         $userCompany = $user->company;
         $vendors = [];
-        if ($userCompany && $userCompany->company_type == Company::COMPANY_TYPE_MAIN) {
+        if ($user->hasRole('user')) {
+            throw new GeneralException('您无权限修改行程');
+        }
+        if (($userCompany && $userCompany->company_type == Company::COMPANY_TYPE_MAIN)) {
             $vendors = CompanyRel::where('company_id',$userCompany->id)->get();
         } else {
             throw new GeneralException('您无权限修改行程');

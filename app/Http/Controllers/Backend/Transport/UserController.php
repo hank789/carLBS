@@ -66,6 +66,10 @@ class UserController extends Controller
 
     public function mark(ManageUserRequest $request, $id, $status)
     {
+        $loginUser = $request->user();
+        if ($loginUser->hasRole('user')) {
+            throw new GeneralException('您无权限修改行程');
+        }
         $user = ApiUser::find($id);
 
         $user->status = $status;
