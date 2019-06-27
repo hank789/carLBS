@@ -23,7 +23,7 @@ class HomeController extends Controller
                 $user = User::where('mobile',$apiUser->mobile)->first();
                 if ($user) {
                     auth()->login($user,true);
-                    return route('admin.transport.main.index');
+                    return redirect()->intended(route('admin.transport.main.index'));
                 }
             }
         }
