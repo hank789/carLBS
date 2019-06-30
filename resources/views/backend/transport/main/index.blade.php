@@ -80,13 +80,9 @@
             </div><!--col-->
         </div><!--row-->
         <div class="row">
-            <div class="col-4">
-                <div class="float-left">
 
-                </div>
-            </div><!--col-->
 
-            <div class="col-8">
+            <div class="col-12">
                 <div class="float-right">
                     <span class="total-num">共 {{ $list->total() }} 条数据</span>
                     {!! str_replace('/?', '?', $list->appends($filter)->render()) !!}

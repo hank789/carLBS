@@ -74,15 +74,15 @@
             </div><!--col-->
         </div><!--row-->
         <div class="row">
-            <div class="col-7">
+            <div class="col-4">
                 <div class="float-left">
                     {!! $users->total() !!} {{ trans_choice('labels.backend.access.users.table.total', $users->total()) }}
                 </div>
             </div><!--col-->
 
-            <div class="col-5">
+            <div class="col-8">
                 <div class="float-right">
-                    {!! $users->render() !!}
+                    {!! str_replace('/?', '?', $users->appends($filter??[])->render()) !!}
                 </div>
             </div><!--col-->
         </div><!--row-->
