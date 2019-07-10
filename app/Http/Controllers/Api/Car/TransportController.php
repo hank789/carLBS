@@ -262,6 +262,7 @@ class TransportController extends Controller {
         }
         $entity = TransportEntity::findOrCreateByCarNumber($request->input('car_number'));
         $sub->transport_entity_id = $entity->id;
+        $sub->transport_main_id = $main->id;
         $transport_start_place = $request->input('transport_start_place');
         if ($transport_start_place) {
             $sub->transport_start_place = $transport_start_place;
