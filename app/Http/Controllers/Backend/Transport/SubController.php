@@ -6,7 +6,9 @@ use App\Exceptions\GeneralException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Backend\Transport\ManageMainRequest;
 use App\Http\Requests\Backend\Transport\StoreMainRequest;
+use App\Jobs\FinishTransport;
 use App\Models\Auth\ApiUser;
+use App\Models\Auth\Company;
 use App\Models\Transport\TransportEvent;
 use App\Models\Transport\TransportMain;
 use App\Models\Transport\TransportSub;
@@ -72,5 +74,20 @@ class SubController extends Controller
 
         return view('backend.transport.sub.show')
             ->with('main',$main)->with('sub',$sub)->with('timeline',$timeline);
+    }
+
+    public function mark(ManageMainRequest $request, $id, $status) {
+        $user = $request->user();
+        $userCompany = $user->company;
+        if ($userCompany->company_type != Company::COMPANY_TYPE_MAIN || $user->hasRole('user')) {
+            throw new GeneralException('您无权限修改行程');
+        }
+        $sub = TransportSub::find($id);
+        $sub->transport_status = $status;
+        $sub->save();
+        if ($status == TransportSub::TRANSPORT_STATUS_FINISH) {
+            $this->dispatch(new FinishTransport($sub->id));
+        }
+        return response('success');
     }
 }

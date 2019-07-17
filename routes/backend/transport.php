@@ -61,5 +61,5 @@ Route::group([
     });
 
     Route::get('sub/{id}', [SubController::class, 'show'])->name('sub.show');
-
+    Route::get('sub/{id}/mark/{status}', [SubController::class, 'mark'])->name('sub.mark')->where(['status' => '[-1,0,1,2]']);
 });

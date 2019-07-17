@@ -133,7 +133,9 @@
                                 <div class="col-lg-6">
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right"><dt>状态:</dt> </div>
-                                        <div class="col-sm-8 text-sm-left"><dd class="mb-1">{!! $sub->status_label !!}</dd></div>
+                                        <div class="col-sm-8 text-sm-left">
+                                            <dd class="mb-1">{!! $sub->status_label !!}</dd>
+                                        </div>
                                     </dl>
                                     <dl class="row mb-0">
                                         <div class="col-sm-4 text-sm-right"><dt>司机姓名:</dt> </div>
@@ -199,6 +201,14 @@
                                         </div>
                                         <div class="col-sm-8 text-sm-left">
                                             <dd class="mb-1">{{ $sub->transport_goods['lastPosition']['formatted_address']??'' }}</dd>
+                                        </div>
+                                    </dl>
+                                    <dl class="row mb-0">
+                                        <div class="col-sm-4 text-sm-right">
+                                            <dt>操作:</dt>
+                                        </div>
+                                        <div class="col-sm-8 text-sm-left">
+                                            <dd class="mb-1">{!! $sub->action_button !!}</dd>
                                         </div>
                                     </dl>
                                 </div>
@@ -291,4 +301,22 @@
         </div><!--row-->
     </div><!--card-footer-->
 </div><!--card-->
+@endsection
+@section('script')
+        <script type="text/javascript">
+            $(".btn-confirm").click(function(){
+                var msg = $(this).data('source_msg');
+                if(!confirm(msg)){
+                    return false;
+                }
+                $(this).button('loading');
+                var follow_btn = $(this);
+                var source_id = $(this).data('source_id');
+                var status = $(this).data('source_status');
+
+                $.get('/admin/transport/sub/' + source_id + '/mark/' + status,{},function(msg){
+                    window.location.reload();
+                });
+            });
+        </script>
 @endsection

@@ -133,6 +133,18 @@ class TransportSub extends Model {
         }
     }
 
+    public function getActionButtonAttribute()
+    {
+        switch ($this->transport_status) {
+            case self::TRANSPORT_STATUS_PENDING:
+            case self::TRANSPORT_STATUS_PROCESSING:
+                return '<a data-source_id="'.$this->id.'" data-source_msg="确认结束此行程？" data-source_status="'.self::TRANSPORT_STATUS_FINISH.'" class="btn-sm btn-warning btn-confirm">结束行程</a> ';
+                break;
+            default:
+                break;
+        }
+    }
+
     public function getStatusDescName() {
         switch ($this->transport_status) {
             case self::TRANSPORT_STATUS_PENDING:
