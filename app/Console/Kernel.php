@@ -34,7 +34,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('backup:clean')->daily()->at('01:00');
         $schedule->command('backup:run')->daily()->at('02:00');
-        $schedule->command('alert:transport:start')->cron('55 7,11,14,16,18 * * *');
+        $schedule->command('alert:transport:start')->cron('55 16 * * *');
         $schedule->command('alert:transport:end')->cron('0 19 * * *');
 
     }
