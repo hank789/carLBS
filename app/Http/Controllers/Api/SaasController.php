@@ -14,10 +14,12 @@ class SaasController extends Controller
 {
     public function createInstance(Request $request) {
         \Log::info('createInstance',$request->all());
+        \Log::info('createInstanceHeader',$request->header());
     }
 
     public function deleteInstance(Request $request) {
         \Log::info('deleteInstance',$request->all());
+        \Log::info('deleteInstanceHeader',$request->headers);
     }
 
     public function getSSOUrl(Request $request) {
