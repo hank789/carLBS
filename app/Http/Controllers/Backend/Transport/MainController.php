@@ -302,7 +302,7 @@ class MainController extends Controller
         if ($phoneList) {
             $phoneArr = explode(',',$phoneList);
             foreach ($phoneArr as &$phone) {
-                $phone = (int) $phone;
+                $phone = (int) trim($phone);
                 if (!preg_match('/^(\+?0?86\-?)?((13\d|14[57]|15[^4,\D]|17[0123456789]|18\d|19\d|16\d)\d{8}|170[059]\d{7})$/', $phone)) {
                     throw new GeneralException('司机手机号有误，请检查司机手机号是否正确');
                 }
