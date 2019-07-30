@@ -11,6 +11,9 @@ Route::get('checkUpdate', 'IndexController@checkUpdate');
 
 Route::post('getContactInfo', 'IndexController@getContactInfo');
 
+Route::post('saas/createInstance', 'SaasController@createInstance');
+Route::post('saas/deleteInstance', 'SaasController@deleteInstance');
+Route::post('saas/getSSOUrl', 'SaasController@getSSOUrl');
 
 //登陆注册认证类
 Route::group(['prefix' => 'auth','namespace'=>'Account'], function() {
