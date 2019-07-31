@@ -9,6 +9,8 @@ return array(
     // Capture bindings on SQL queries
     'accessSecret' => env('ALIYUN_SECRET'),
 
-    'region' => env('ALIYUN_REGION','cn-hangzhou')
+    'region' => env('ALIYUN_REGION','cn-hangzhou'),
+
+    'lotSecret' => env('ALIYUN_LOT_SECRET')
 
 );
