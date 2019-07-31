@@ -47,15 +47,15 @@ class SignUtil
 			$sb.= $headers[HttpHeader::HTTP_HEADER_ACCEPT];
 		}
 		$sb.= Constants::LF;
-		if (array_key_exists(HttpHeader::HTTP_HEADER_CONTENT_MD5, $headers) && null != $headers[HttpHeader::HTTP_HEADER_ACCEPT]) {
+		if (array_key_exists(HttpHeader::HTTP_HEADER_CONTENT_MD5, $headers) && null != $headers[HttpHeader::HTTP_HEADER_CONTENT_MD5]) {
 			$sb.= $headers[HttpHeader::HTTP_HEADER_CONTENT_MD5];
 		}
 		$sb.= Constants::LF;
-		if (array_key_exists(HttpHeader::HTTP_HEADER_CONTENT_TYPE, $headers) && null != $headers[HttpHeader::HTTP_HEADER_ACCEPT]) {
+		if (array_key_exists(HttpHeader::HTTP_HEADER_CONTENT_TYPE, $headers) && null != $headers[HttpHeader::HTTP_HEADER_CONTENT_TYPE]) {
 			$sb.= $headers[HttpHeader::HTTP_HEADER_CONTENT_TYPE];
 		}
 		$sb.= Constants::LF;
-		if (array_key_exists(HttpHeader::HTTP_HEADER_DATE, $headers) && null != $headers[HttpHeader::HTTP_HEADER_ACCEPT]) {
+		if (array_key_exists(HttpHeader::HTTP_HEADER_DATE, $headers) && null != $headers[HttpHeader::HTTP_HEADER_DATE]) {
 			$sb.= $headers[HttpHeader::HTTP_HEADER_DATE];
 		}
 		$sb.= Constants::LF;		

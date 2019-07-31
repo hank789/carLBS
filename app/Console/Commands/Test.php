@@ -52,7 +52,7 @@ class Test extends Command
         $signature = 'W9SwS3LKCKMMnCZtZ4IVUNsf0VKCt5ltBOTBVIPC0gQ=';
         $headers = [
             HttpHeader::HTTP_HEADER_CONTENT_TYPE => ContentType::CONTENT_TYPE_FORM,
-            HttpHeader::HTTP_HEADER_ACCEPT => ContentType::CONTENT_TYPE_JSON
+            //HttpHeader::HTTP_HEADER_ACCEPT => ContentType::CONTENT_TYPE_JSON
         ];
         $body = [
             'appType' => 'PRODUCTION',

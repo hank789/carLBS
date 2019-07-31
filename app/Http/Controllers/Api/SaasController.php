@@ -37,8 +37,7 @@ class SaasController extends Controller
         $body = $request->all();
         $signHeader = null;
         $headers = [
-            HttpHeader::HTTP_HEADER_CONTENT_TYPE => ContentType::CONTENT_TYPE_FORM,
-            HttpHeader::HTTP_HEADER_ACCEPT => ContentType::CONTENT_TYPE_JSON
+            HttpHeader::HTTP_HEADER_CONTENT_TYPE => ContentType::CONTENT_TYPE_FORM
         ];
         $sign = SignUtil::Sign($path,'POST',config('aliyun.lotSecret'),$headers,[],$body,$signHeader);
         \Log::info('validSign',[$signature,$sign]);
