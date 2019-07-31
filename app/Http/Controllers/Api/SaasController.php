@@ -33,13 +33,10 @@ class SaasController extends Controller
     protected function validSign(Request $request,$path) {
         \Log::info('test',[$path]);
         $signature = $request->header('x-ca-signature');
-        $headers = [
-            HttpHeader::HTTP_HEADER_CONTENT_TYPE => ContentType::CONTENT_TYPE_FORM,
-            HttpHeader::HTTP_HEADER_ACCEPT => ContentType::CONTENT_TYPE_JSON
-        ];
+
         $body = $request->all();
         $signHeader = [];
-        $sign = SignUtil::Sign($path,'POST',config('aliyun.lotSecret'),$headers,[],$body,$signHeader);
+        $sign = SignUtil::Sign($path,'POST',config('aliyun.lotSecret'),$request->header(),[],$body,$signHeader);
         \Log::info('validSign',[$signature,$sign]);
     }
 }
