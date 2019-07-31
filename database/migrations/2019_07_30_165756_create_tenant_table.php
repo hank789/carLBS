@@ -19,11 +19,14 @@ class CreateTenantTable extends Migration
             $table->integer('user_id')->unsigned()->index('tenant_user_id');
             $table->string('app_type',10);
             $table->string('app_id');
-            $table->string('tenant_id');
+            $table->string('tenant_id')->index('tenant_tenant_id');
             $table->tinyInteger('source')->default(1);
             $table->tinyInteger('status')->default(1);
             $table->json('detail')->nullable()->comment('详细信息');
             $table->timestamps();
+        });
+        Schema::table(config('access.table_names.users'), function (Blueprint $table) {
+            $table->integer('tenant_id')->nullable()->default(0)->index('users_tenant_id')->after('uuid');
         });
     }
 

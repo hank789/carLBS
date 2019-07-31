@@ -25,8 +25,6 @@ use App\Third\AliLot\Constant\SystemHeader;
 use App\Third\AliLot\Http\HttpClient;
 use App\Third\AliLot\Http\HttpRequest;
 
-$demo = new Demo();
-$demo->doGet();
 
 /**
 *请求示例
@@ -35,17 +33,49 @@ $demo->doGet();
 *$path为/createobject
 *query为key1=value&key2=value2
 */
-class Demo
+class Service
 {
-	private static $appKey = "appKey";
-    private static $appSecret = "appSecret";
+	private $appKey = "appKey";
+    private $appSecret = "appSecret";
 	//协议(http或https)://域名:端口，注意必须有http://或https://
-    private static $host = "http://test.alicloudapi.com";
+    private $host = "https://api.link.aliyun.com";
 
 
-	
+	public function __construct()
+    {
+        $this->appKey = config('aliyun.lotSecret');
+        $this->appSecret = config('aliyun.lotSecret');
+    }
 
-	/**
+    public function getUserInfo($tenantId,$appId,$userId,$tenantSubUserId='') {
+        //域名后、query前的部分
+        $path = "/app/user/info/get";
+        $request = new HttpRequest($this->host, $path, HttpMethod::POST, $this->appKey, $this->appSecret);
+
+        //设定Content-Type，根据服务器端接受的值来设置
+        $request->setHeader(HttpHeader::HTTP_HEADER_CONTENT_TYPE, ContentType::CONTENT_TYPE_FORM);
+
+        //设定Accept，根据服务器端接受的值来设置
+        $request->setHeader(HttpHeader::HTTP_HEADER_ACCEPT, ContentType::CONTENT_TYPE_JSON);
+        //如果是调用测试环境请设置
+        //$request->setHeader(SystemHeader::X_CA_STAG, "TEST");
+
+        //注意：业务body部分，如果没有则无此行；请不要、不要、不要做UrlEncode处理
+        $request->setBody("tenantId", $tenantId);
+        $request->setBody("appId", $appId);
+        $request->setBody("userId", $userId);
+        if ($tenantSubUserId) {
+            $request->setBody("tenantSubUserId", $tenantSubUserId);
+        }
+
+        //指定参与签名的header
+        $request->setSignHeader(SystemHeader::X_CA_TIMESTAMP);
+
+        $response = HttpClient::execute($request);
+        return json_decode($response->getContent(),true);
+    }
+
+    /**
 	*method=GET请求示例
 	*/
     public function doGet() {

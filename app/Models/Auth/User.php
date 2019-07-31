@@ -129,6 +129,7 @@ class User extends Authenticatable
         'timezone',
         'last_login_at',
         'last_login_ip',
+        'tenant_id'
     ];
 
     /**

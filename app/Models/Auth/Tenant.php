@@ -19,4 +19,11 @@ class Tenant extends Model
     protected $casts = [
         'detail' => 'json'
     ];
+
+    const STATUS_PENDING = 0;
+    const STATUS_SUBSCRIBING = 1;
+    const STATUS_DELETED = 2;
+
+    const SOURCE_ALI = 1;
+
 }
