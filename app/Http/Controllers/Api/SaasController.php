@@ -36,7 +36,8 @@ class SaasController extends Controller
 
         $body = $request->all();
         $signHeader = [];
-        $sign = SignUtil::Sign($path,'POST',config('aliyun.lotSecret'),$request->header(),[],$body,$signHeader);
+        $headers = $request->header();
+        $sign = SignUtil::Sign($path,'POST',config('aliyun.lotSecret'),$headers,[],$body,$signHeader);
         \Log::info('validSign',[$signature,$sign]);
     }
 }
