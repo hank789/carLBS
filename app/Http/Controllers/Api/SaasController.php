@@ -35,8 +35,11 @@ class SaasController extends Controller
         $signature = $request->header('x-ca-signature');
 
         $body = $request->all();
-        $signHeader = [];
-        $headers = $request->header();
+        $signHeader = null;
+        $headers = [
+            HttpHeader::HTTP_HEADER_CONTENT_TYPE => ContentType::CONTENT_TYPE_FORM,
+            HttpHeader::HTTP_HEADER_ACCEPT => ContentType::CONTENT_TYPE_JSON
+        ];
         $sign = SignUtil::Sign($path,'POST',config('aliyun.lotSecret'),$headers,[],$body,$signHeader);
         \Log::info('validSign',[$signature,$sign]);
     }

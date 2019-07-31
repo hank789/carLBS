@@ -1,4 +1,4 @@
-<?php
+<?php namespace App\Third\AliLot;
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -17,7 +17,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-include_once 'Util/Autoloader.php';
+
+use App\Third\AliLot\Constant\ContentType;
+use App\Third\AliLot\Constant\HttpHeader;
+use App\Third\AliLot\Constant\HttpMethod;
+use App\Third\AliLot\Constant\SystemHeader;
+use App\Third\AliLot\Http\HttpClient;
+use App\Third\AliLot\Http\HttpRequest;
 
 $demo = new Demo();
 $demo->doGet();
