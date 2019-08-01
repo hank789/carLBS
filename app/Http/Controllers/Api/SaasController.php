@@ -119,8 +119,17 @@ class SaasController extends Controller
             ]);
         }
         $tenant = Tenant::where('tenant_id',$request->input('tenantId'))->first();
-        $user = User::find($request->input('userId'));
-        $ssoUrl = config('app.url').'/login?from_source=chbx&ssoToken='.$tenant->tenant_id.'&checkToken='.$user->uuid;
+        //$user = User::find($request->input('userId'));
+        $time = time();
+        $body = [
+            'checkToken' => $tenant->tenant_id,
+            'time' => $time
+        ];
+        $headers = [
+            HttpHeader::HTTP_HEADER_CONTENT_TYPE => ContentType::CONTENT_TYPE_FORM
+        ];
+        $sign = SignUtil::Sign('getSSOUrl','POST',config('aliyun.lotSecret'),$headers,[],$body,null);
+        $ssoUrl = 'https://www.jszioe.com/login?from_source=chbx&ssoToken='.$sign.'&checkToken='.$tenant->tenant_id.'&time='.$time;
         return response()->json([
             'code' => 200,
             'message' => 'success',

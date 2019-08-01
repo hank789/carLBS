@@ -4,8 +4,12 @@ namespace App\Http\Controllers\Frontend\Auth;
 
 use App\Helpers\Auth\Auth;
 use App\Jobs\SendPhoneMessage;
+use App\Models\Auth\Tenant;
 use App\Models\Auth\User;
 use App\Services\RateLimiter;
+use App\Third\AliLot\Constant\ContentType;
+use App\Third\AliLot\Constant\HttpHeader;
+use App\Third\AliLot\Util\SignUtil;
 use Illuminate\Http\Request;
 use App\Exceptions\GeneralException;
 use App\Http\Controllers\Controller;
@@ -48,6 +52,30 @@ class LoginController extends Controller
                 $logo = asset('img/chebaixun.png',config('app.use_ssl'));
                 $favicon = asset('img/favicon_32_chebaixun.ico',config('app.use_ssl'));
                 $appname = '车百讯';
+                //saas用户登录
+                $ssoToken = $request->input('ssoToken');
+                $checkToken = $request->input('checkToken');
+                $time = $request->input('time');
+                if ($ssoToken && $checkToken && $time && $time >= strtotime('-90 seconds')) {
+                    $tenant = Tenant::where('tenant_id',$checkToken)->first();
+                    if ($tenant) {
+                        $body = [
+                            'checkToken' => $checkToken,
+                            'time' => $time
+                        ];
+                        $headers = [
+                            HttpHeader::HTTP_HEADER_CONTENT_TYPE => ContentType::CONTENT_TYPE_FORM
+                        ];
+                        $sign = SignUtil::Sign('getSSOUrl','POST',config('aliyun.lotSecret'),$headers,[],$body,null);
+                        if ($sign == $ssoToken) {
+                            $user = User::find($tenant->user_id);
+                            if ($user) {
+                                auth()->login($user,true);
+                                return redirect()->intended($this->redirectPath());
+                            }
+                        }
+                    }
+                }
                 break;
         }
         return view('frontend.auth.login')
