@@ -10,6 +10,7 @@ use App\Services\RateLimiter;
 use App\Third\AliLot\Constant\ContentType;
 use App\Third\AliLot\Constant\HttpHeader;
 use App\Third\AliLot\Util\SignUtil;
+use App\Third\Push\Getui\Igetui\Utils\LogUtils;
 use Illuminate\Http\Request;
 use App\Exceptions\GeneralException;
 use App\Http\Controllers\Controller;
@@ -56,8 +57,10 @@ class LoginController extends Controller
                 $ssoToken = $request->input('ssoToken');
                 $checkToken = $request->input('checkToken');
                 $time = $request->input('time');
+                \Log::info('test',$request->all());
                 if ($ssoToken && $checkToken && $time && $time >= strtotime('-90 seconds')) {
                     $tenant = Tenant::where('tenant_id',$checkToken)->first();
+                    \Log::info('test1',[$tenant->user_id]);
                     if ($tenant) {
                         $body = [
                             'checkToken' => $checkToken,
@@ -68,8 +71,10 @@ class LoginController extends Controller
                         ];
                         $sign = SignUtil::Sign('getSSOUrl','POST',config('aliyun.lotSecret'),$headers,[],$body,null);
                         if ($sign == $ssoToken) {
+                            \Log::info('test2',[$sign]);
                             $user = User::find($tenant->user_id);
                             if ($user) {
+                                \Log::info('test3',[$user->id]);
                                 auth()->login($user,true);
                                 return redirect()->intended($this->redirectPath());
                             }
