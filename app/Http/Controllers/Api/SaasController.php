@@ -51,8 +51,8 @@ class SaasController extends Controller
         $user = User::where('tenant_id',$tenant->id)->first();
         if (!$user) {
             $user = User::create([
-                'first_name' => rand(1000,9999),
-                'last_name' => 'Saas用户',
+                'first_name' => 'Saas用户'.rand(10000,99999),
+                'last_name' => '',
                 'mobile' => time().rand(1000,9999),
                 'password' => $data['password']??time(),
                 'active' => 1,
@@ -110,6 +110,22 @@ class SaasController extends Controller
 
     public function getSSOUrl(Request $request) {
         \Log::info('getSSOUrl',$request->all());
+        $valid = $this->validSign($request,$request->getPathInfo());
+        if (!$valid) {
+            return response()->json([
+                'code' => 203,
+                'message' => '验签失败',
+                'userId' => ''
+            ]);
+        }
+        $tenant = Tenant::where('tenant_id',$request->input('tenantId'))->first();
+        $user = User::find($request->input('userId'));
+        $ssoUrl = config('app.url').'/login?from_source=chbx&ssoToken='.$tenant->tenant_id.'&checkToken='.$user->uuid;
+        return response()->json([
+            'code' => 200,
+            'message' => 'success',
+            'ssoUrl' => $ssoUrl
+        ]);
     }
 
     protected function validSign(Request $request,$path) {

@@ -138,14 +138,15 @@ class HttpUtil
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($curl, CURLOPT_TIMEOUT, $readtimeout);
 		curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, $connectTimeout);
-		curl_setopt($curl, CURLOPT_HEADER, true);
+		//curl_setopt($curl, CURLOPT_HEADER, true);
 
 		if (1 == strpos("$".$host, HttpSchema::HTTPS))
 		{
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         }
-		curl_setopt($curl, CURLOPT_HEADER, true);
+        //var_dump($url);
+		//curl_setopt($curl, CURLOPT_HEADER, true);
         return $curl;
 	}
 

@@ -72,7 +72,7 @@ class Service
         //$request->setSignHeader(SystemHeader::X_CA_TIMESTAMP);
 
         $response = HttpClient::execute($request);
-        var_dump($response->getContent());
+        //var_dump($response->getContent());
         return json_decode($response->getContent(),true);
     }
 

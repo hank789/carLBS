@@ -35,24 +35,27 @@ class UserEventListener implements ShouldQueue
                 \Log::info('saasUserInfo',$res);
                 $phone = $res['data']['phone'];
                 $companyName = '公司'.$phone;
-                $company = Company::where('company_name',$companyName)->first();
-                if (!$company) {
-                    $company = Company::create([
-                        'company_name' => $companyName,
-                        'company_type' => Company::COMPANY_TYPE_MAIN,
-                        'status' => Company::COMPANY_STATUS_VALID,
-                        'appname' => 2
-                    ]);
-                }
-                $user->mobile = $phone;
-                $user->company_id = $company->id;
-                $user->save();
-                $tenant->status = Tenant::STATUS_SUBSCRIBING;
-                $tenant->save();
                 event(new SystemNotify('新saas用户创建成功:'.$user->id));
             } else {
+                $companyName = $user->first_name.'的公司';
+                $phone = $user->mobile;
                 event(new ExceptionNotify('获取saas用户信息失败:'.($res['message']??'')));
             }
+            $company = Company::where('company_name',$companyName)->first();
+            if (!$company) {
+                $company = Company::create([
+                    'company_name' => $companyName,
+                    'company_type' => Company::COMPANY_TYPE_MAIN,
+                    'status' => Company::COMPANY_STATUS_VALID,
+                    'appname' => 2
+                ]);
+            }
+            $user->mobile = $phone;
+            $user->company_id = $company->id;
+            $user->save();
+            $tenant->status = Tenant::STATUS_SUBSCRIBING;
+            $tenant->save();
+
         }
     }
 
