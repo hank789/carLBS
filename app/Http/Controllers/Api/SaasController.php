@@ -58,7 +58,8 @@ class SaasController extends Controller
                 'active' => 1,
                 'confirmation_code' => md5(uniqid(mt_rand(), true)),
                 'confirmed' => 1,
-                'tenant_id' => $tenant->id
+                'tenant_id' => $tenant->id,
+                'company_id' => 0
             ]);
             //给系统管理员的权限
             $user->syncRoles(4);

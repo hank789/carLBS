@@ -158,7 +158,7 @@ class UserController extends Controller
         }
         $userCompany = $loginUser->company;
         $vendors = [];
-        if ($userCompany->company_type == Company::COMPANY_TYPE_MAIN) {
+        if ($userCompany && $userCompany->company_type == Company::COMPANY_TYPE_MAIN) {
             $vendors = CompanyRel::where('company_id',$userCompany->id)->get();
             $roles = $roleRepository->with('permissions')->get(['id', 'name']);
             $permissions = $permissionRepository->get(['id', 'name']);
