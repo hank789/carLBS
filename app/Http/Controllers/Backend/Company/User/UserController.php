@@ -207,7 +207,7 @@ class UserController extends Controller
         ));
 
         $is_vendor = $request->input('is_vendor',0);
-        $newUser->company_id = $request->input('company_id');
+        $newUser->company_id = $request->input('company_id',0);
         if ($is_vendor) {
             $vendor_company_id = $request->input('vendor_company_id');
             $vendor = Company::find($vendor_company_id);
