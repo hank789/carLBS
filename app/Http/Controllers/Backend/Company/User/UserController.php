@@ -45,10 +45,12 @@ class UserController extends Controller
         $query = User::with('roles', 'permissions', 'providers')
             ->active()
             ->where('id','!=',1);
-        if ($user->company_id != 1) {
+        if ($user->company_id != 1 && $user->company_id) {
             $companyIds = CompanyRel::where('company_id',$user->company_id)->pluck('vendor_id')->toArray();
             $companyIds[] = $user->company_id;
             $query = $query->whereIn('company_id',$companyIds);
+        } elseif ($user->company_id == 0) {
+            $query = $query->where('id',$user->id);
         }
         if (isset($filter['name']) && $filter['name']) {
             $query = $query->where('first_name','like','%'.$filter['name'].'%');

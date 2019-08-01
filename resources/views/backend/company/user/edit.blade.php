@@ -68,7 +68,7 @@
                         {{ html()->label('公司')->class('col-md-2 form-control-label')->for('company_id') }}
 
                         <div class="col-md-10">
-                            <select id="company_id" name="company_id" class="form-control" {{ $userCompany->id != 1?'readonly':'' }}>
+                            <select id="company_id" name="company_id" class="form-control" {{ (empty($userCompany) || $userCompany->id != 1)?'readonly':'' }}>
                                 @foreach($companies as $company)
                                     <option value="{{ $company->id }}" {{ $user->company_id == $company->id?'selected':'' }}>{{ $company->company_name }}</option>
                                 @endforeach
