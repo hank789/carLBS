@@ -28,6 +28,10 @@ class PasswordExpires
             }
         }
 
+        if ($user->active == 0) {
+            return redirect()->route('frontend.expiredAlert');
+        }
+
         return $next($request);
     }
 }
