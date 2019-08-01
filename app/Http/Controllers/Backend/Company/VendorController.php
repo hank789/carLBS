@@ -23,7 +23,7 @@ class VendorController extends Controller
         $filter =  $request->all();
         $user = $request->user();
         if ($user->company_id != 1) {
-            $query = CompanyRel::where('company_id',$user->company->id)->leftJoin('company','company_rel.vendor_id','=','company.id');;
+            $query = CompanyRel::where('company_id',$user->company_id)->leftJoin('company','company_rel.vendor_id','=','company.id');;
         } else {
             $query = CompanyRel::leftJoin('company','company_rel.vendor_id','=','company.id');;
         }
