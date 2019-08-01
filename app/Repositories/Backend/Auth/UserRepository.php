@@ -168,7 +168,10 @@ class UserRepository extends BaseRepository
                 'mobile' => $data['mobile'],
             ])) {
                 // Add selected roles/permissions
-                $user->syncRoles($data['roles']);
+                if (isset($data['roles'])) {
+                    $user->syncRoles($data['roles']);
+                }
+
                 $user->syncPermissions($data['permissions']);
 
                 event(new UserUpdated($user));
