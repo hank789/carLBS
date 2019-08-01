@@ -76,12 +76,12 @@
                         </div>
                     </div>
 
-                    <div class="form-group row" style="{{ $userCompany->company_type == 2?'display:none':'' }}">
+                    <div class="form-group row" style="{{ ($userCompany&&$userCompany->company_type == 2)?'display:none':'' }}">
                         {{ html()->label('是否供应商人员')->class('col-md-2 form-control-label')->for('is_vendor') }}
 
                         <div class="col-md-10">
                             <label class="switch switch-label switch-pill switch-primary">
-                                {{ html()->checkbox('is_vendor', ($user->company&&$user->company->company_type==2)?true:false, '1')->class('switch-input') }}
+                                {{ html()->checkbox('is_vendor', ($userCompany&&$user->company->company_type==2)?true:false, '1')->class('switch-input') }}
                                 <span class="switch-slider" data-checked="是" data-unchecked="否"></span>
                             </label>
                         </div><!--col-->
