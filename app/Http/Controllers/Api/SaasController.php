@@ -72,6 +72,7 @@ class SaasController extends Controller
             $tenant->user_id = $user->id;
             $tenant->save();
             User::where('company_id',$user->company_id)->update(['active'=>1]);
+            event(new UserCreated($user));
         }
         return response()->json([
             'code' => 200,
