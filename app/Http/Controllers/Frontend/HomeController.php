@@ -57,4 +57,8 @@ class HomeController extends Controller
         }
         return 'welcome';
     }
+
+    public function expiredAlert() {
+        return '您的账户已过期，请联系管理员申请或前往阿里云续期：';
+    }
 }

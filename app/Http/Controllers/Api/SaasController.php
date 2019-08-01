@@ -101,7 +101,10 @@ class SaasController extends Controller
         if ($user) {
             $user->active = 0;
             $user->save();
-            User::where('company_id',$user->company_id)->update(['active'=>0]);
+            if ($user->company_id) {
+                User::where('company_id',$user->company_id)->update(['active'=>0]);
+            }
+
         }
         return response()->json([
             'code' => 200,

@@ -50,6 +50,7 @@ class Kernel extends HttpKernel
 
         'admin' => [
             'auth',
+            'backend.check',
             'password_expires',
             'permission:后台登陆',
         ],
@@ -76,6 +77,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'ban.user' => \App\Http\Middleware\BanUserCheck::class,
+        'backend.check' => \App\Http\Middleware\BackendUserCheck::class,
 
     ];
 
