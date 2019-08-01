@@ -68,6 +68,8 @@ class SaasController extends Controller
         } else {
             $user->active = 1;
             $user->save();
+            $tenant->user_id = $user->id;
+            $tenant->save();
             User::where('company_id',$user->company_id)->update(['active'=>1]);
         }
         return response()->json([
