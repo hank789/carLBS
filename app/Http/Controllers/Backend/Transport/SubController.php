@@ -28,8 +28,22 @@ class SubController extends Controller
      */
     public function show(ManageMainRequest $request, $id)
     {
+        $user = $request->user();
         $sub = TransportSub::find($id);
         $main = $sub->transportMain;
+        if ($user->company_id == 0) {
+            if ($user->mobile != $main->transport_contact_phone) {
+                throw new GeneralException('您无权限查看此行程');
+            }
+        } elseif ($user->company_id != 1 && $user->company->company_type == Company::COMPANY_TYPE_MAIN) {
+            if ($user->company_id != $main->company_id) {
+                throw new GeneralException('您无权限查看此行程');
+            }
+        } elseif ($user->company->company_type == Company::COMPANY_TYPE_VENDOR) {
+            if ($user->company_id != $main->vendor_company_id) {
+                throw new GeneralException('您无权限查看此行程');
+            }
+        }
         $events = TransportEvent::where('transport_sub_id',$id)->orderBy('id','desc')->get();
         $xiehuos = TransportXiehuo::where('transport_sub_id',$id)->orderBy('id','desc')->get();
         $timeline = [];

@@ -169,7 +169,7 @@ class ApiUser extends Authenticatable implements JWTSubject
     {
         return '
     	<div class="btn-group" role="group" aria-label="'.__('labels.backend.access.users.user_actions').'">
-		  '.$this->show_button.'
+		  '.$this->show_button.(auth()->user()->isAdmin()?'
 
 		  <div class="btn-group btn-group-sm" role="group">
 			<button id="userActions" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -178,7 +178,7 @@ class ApiUser extends Authenticatable implements JWTSubject
 			<div class="dropdown-menu" aria-labelledby="userActions">
 			  '.$this->status_button.'
 			</div>
-		  </div>
+		  </div>':'').'
 		</div>';
     }
 }
