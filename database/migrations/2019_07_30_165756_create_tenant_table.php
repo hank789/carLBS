@@ -38,5 +38,8 @@ class CreateTenantTable extends Migration
     public function down()
     {
         Schema::dropIfExists('tenant');
+        Schema::table(config('access.table_names.users'), function (Blueprint $table) {
+            $table->dropColumn('tenant_id');
+        });
     }
 }
