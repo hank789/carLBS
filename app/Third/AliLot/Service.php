@@ -69,7 +69,7 @@ class Service
         }
 
         //指定参与签名的header
-        $request->setSignHeader(SystemHeader::X_CA_TIMESTAMP);
+        //$request->setSignHeader(SystemHeader::X_CA_TIMESTAMP);
 
         $response = HttpClient::execute($request);
         var_dump($response->getContent());

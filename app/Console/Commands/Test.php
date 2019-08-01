@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Jobs\SendPhoneMessage;
 use App\Models\Auth\Company;
+use App\Models\Auth\Tenant;
 use App\Models\Auth\VendorCompany;
 use App\Models\Transport\TransportMain;
 use App\Services\RateLimiter;
@@ -11,6 +12,7 @@ use App\Services\Registrar;
 use App\Third\AliLot\Constant\ContentType;
 use App\Third\AliLot\Constant\HttpHeader;
 use App\Third\AliLot\Constant\SystemHeader;
+use App\Third\AliLot\Service;
 use App\Third\AliLot\Util\SignUtil;
 use Illuminate\Console\Command;
 use Spatie\Permission\Models\Permission;
@@ -49,21 +51,10 @@ class Test extends Command
      */
     public function handle()
     {
-        $signature = 'W9SwS3LKCKMMnCZtZ4IVUNsf0VKCt5ltBOTBVIPC0gQ=';
-        $headers = [
-            HttpHeader::HTTP_HEADER_CONTENT_TYPE => ContentType::CONTENT_TYPE_FORM,
-            //HttpHeader::HTTP_HEADER_ACCEPT => ContentType::CONTENT_TYPE_JSON
-        ];
-        $body = [
-            'appType' => 'PRODUCTION',
-            'appId' => '2109aaa5da3b47aaa83c97e56ddb5623',
-            'tenantId' => '5D8AB8E01B024D11A5FA9603841034E9',
-            'id' => '7a06e9f9-7e43-4044-93b2-157c8c508afb'
-        ];
-        $signHeader = [SystemHeader::X_CA_TIMESTAMP];
-        //var_dump(config('aliyun.lotSecret'));
-        $d = SignUtil::Sign('/api/saas/createInstance','POST',config('aliyun.lotSecret'),$headers,null,$body,$signHeader);
-        var_dump($d);
+        $tenant = Tenant::find(1);
+        $service = new Service();
+        $res = $service->getUserInfo($tenant->tenant_id,$tenant->app_id,284);
+        var_dump($res);
         return;
         $appName = '车百讯';
         (new SendPhoneMessage('15050368286',['code' => '846770047','minutes'=>10],'notify_transport_start_soon',$appName))->handle();

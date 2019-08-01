@@ -159,10 +159,10 @@ class HttpUtil
 		}
 		$sb = "";
 		//时间戳
-		date_default_timezone_set('PRC');
-		$headers[SystemHeader::X_CA_TIMESTAMP] = strval(time()*1000);
+		//date_default_timezone_set('PRC');
+		//$headers[SystemHeader::X_CA_TIMESTAMP] = strval(time()*1000);
 		//防重放，协议层不能进行重试，否则会报NONCE被使用；如果需要协议层重试，请注释此行
-		$headers[SystemHeader::X_CA_NONCE] = strval(self::NewGuid());
+		//$headers[SystemHeader::X_CA_NONCE] = strval(self::NewGuid());
 
 		$headers[SystemHeader::X_CA_KEY] = $appKey;
 		$headers[SystemHeader::X_CA_SIGNATURE] = SignUtil::Sign($path, $method, $appSecret, $headers, $querys, $bodys, $signHeaderPrefixList);
