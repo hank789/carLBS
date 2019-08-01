@@ -11,6 +11,7 @@ return array(
 
     'region' => env('ALIYUN_REGION','cn-hangzhou'),
 
-    'lotSecret' => env('ALIYUN_LOT_SECRET')
+    'lotSecret' => env('ALIYUN_LOT_SECRET'),
+    'lotKey' => env('ALIYUN_LOT_KEY')
 
 );
