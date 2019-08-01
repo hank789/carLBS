@@ -129,7 +129,7 @@ class SaasController extends Controller
             HttpHeader::HTTP_HEADER_CONTENT_TYPE => ContentType::CONTENT_TYPE_FORM
         ];
         $sign = SignUtil::Sign('getSSOUrl','POST',config('aliyun.lotSecret'),$headers,[],$body,null);
-        $ssoUrl = 'https://www.jszioe.com/login?from_source=chbx&ssoToken='.$sign.'&checkToken='.$tenant->tenant_id.'&time='.$time;
+        $ssoUrl = 'https://www.jszioe.com/login?from_source=chbx&ssoToken='.urlencode($sign).'&checkToken='.urlencode($tenant->tenant_id).'&time='.$time;
         return response()->json([
             'code' => 200,
             'message' => 'success',
