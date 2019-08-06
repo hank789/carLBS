@@ -21,7 +21,7 @@ class HomeController extends Controller
         if ($appToken) {
             $payload = $JWTAuth->setToken($appToken)->getPayload();
             if ($payload) {
-                $id = $payload->offsetGet('id');
+                $id = $payload->offsetGet('sub');
                 //\Log::info('apiUser',$payload->toArray());
                 $apiUser = ApiUser::find($id);
                 \Log::info('apiUser',$apiUser->toArray());
