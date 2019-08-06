@@ -17,6 +17,7 @@ class HomeController extends Controller
     public function index(Request $request, JWTAuth $JWTAuth)
     {
         $appToken = $request->input('app_token');
+        \Log::info('appToken',[$appToken]);
         if ($appToken) {
             $apiUser = $JWTAuth->setToken($appToken)->authenticate();
             if ($apiUser) {
