@@ -19,11 +19,13 @@ class HomeController extends Controller
     {
         $appToken = $request->input('app_token');
         if ($appToken) {
-            $apiUser = $JWTAuth->setToken($appToken)->getPayload();
-            if ($apiUser) {
+            $payload = $JWTAuth->setToken($appToken)->getPayload();
+            if ($payload) {
+                $id = $payload->offsetGet('id');
+                //\Log::info('apiUser',$payload->toArray());
+                $apiUser = ApiUser::find($id);
                 \Log::info('apiUser',$apiUser->toArray());
-                $apiUser2 = ApiUser::find($apiUser->id);
-                $user = User::where('mobile',$apiUser2->mobile)->first();
+                $user = User::where('mobile',$apiUser->mobile)->first();
                 if ($user) {
                     auth()->login($user,true);
                     return redirect()->intended(route('admin.transport.main.index'));
