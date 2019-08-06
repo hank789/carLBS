@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Auth\ApiUser;
 use Tymon\JWTAuth\JWTAuth;
 use Illuminate\Http\Request;
 use App\Models\Auth\User;
@@ -17,12 +18,12 @@ class HomeController extends Controller
     public function index(Request $request, JWTAuth $JWTAuth)
     {
         $appToken = $request->input('app_token');
-        \Log::info('appToken',[$appToken]);
         if ($appToken) {
-            $apiUser = $JWTAuth->setToken($appToken)->authenticate();
+            $apiUser = $JWTAuth->setToken($appToken)->getPayload();
             if ($apiUser) {
                 \Log::info('apiUser',$apiUser->toArray());
-                $user = User::where('mobile',$apiUser->mobile)->first();
+                $apiUser2 = ApiUser::find($apiUser->id);
+                $user = User::where('mobile',$apiUser2->mobile)->first();
                 if ($user) {
                     auth()->login($user,true);
                     return redirect()->intended(route('admin.transport.main.index'));
