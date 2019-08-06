@@ -21,6 +21,7 @@ class HomeController extends Controller
         if ($appToken) {
             $apiUser = $JWTAuth->setToken($appToken)->authenticate();
             if ($apiUser) {
+                \Log::info('apiUser',$apiUser->toArray());
                 $user = User::where('mobile',$apiUser->mobile)->first();
                 if ($user) {
                     auth()->login($user,true);
