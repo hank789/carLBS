@@ -66,7 +66,7 @@
                                 <td>{{ $item->transport_end_place }}<br>{{ $item->transport_contact_people.'('.$item->transport_contact_phone.')' }}</td>
                                 <td>{{ $item->transport_goods['transport_vendor_company']??'' }}<br>{{ $item->transport_contact_vendor_people.'('.$item->transport_contact_vendor_phone.')' }}</td>
                                 <td>{{ str_limit($item->transport_goods['transport_goods'],50) }}</td>
-                                <td>{{ $item->transport_goods['transport_phone_list']??'' }}</td>
+                                <td>{{ $item->transport_goods['transport_phone_list']??'' }}<br>{{ $item->getCarNumbers() }}</td>
                                 <td>{{ $item->transport_start_time }}</td>
                                 <td>{{ $item->created_at }}</td>
                                 <td>{{ $item->systemUser->fullname }}</td>

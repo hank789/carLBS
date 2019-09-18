@@ -160,4 +160,14 @@ class TransportMain extends Model {
         return TransportSub::where('transport_main_id',$this->id)->count();
     }
 
+    public function getCarNumbers() {
+        $subs = TransportSub::where('transport_main_id',$this->id)->select('transport_entity_id')->get()->toArray();
+        if ($subs) {
+            $ids = array_column($subs,'transport_entity_id');
+            $numbers = TransportEntity::whereIn('id',$ids)->select('car_number')->get()->toArray();
+            return implode(',',array_column($numbers,'car_number'));
+        }
+        return '';
+    }
+
 }
