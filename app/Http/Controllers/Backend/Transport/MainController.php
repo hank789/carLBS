@@ -361,7 +361,8 @@ class MainController extends Controller
                 'transport_end_place_latitude'=> $coordinate['gg_lat'],
                 'transport_end_place_coordsType' => 'gcj02',
                 'transport_phone_list' => $phoneList,
-                'transport_vendor_company' => $vendor->company_name
+                'transport_vendor_company' => $vendor->company_name,
+                'note' => $request->input('note','')
             ],
             'transport_status' => $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING)
         ]);
@@ -496,7 +497,8 @@ class MainController extends Controller
                 'transport_end_place_latitude'=> $coordinate['gg_lat']??$main->transport_goods['transport_end_place_latitude'],
                 'transport_end_place_coordsType' => 'gcj02',
                 'transport_phone_list' => $phoneList,
-                'transport_vendor_company' => $vendor->company_name
+                'transport_vendor_company' => $vendor->company_name,
+                'note' => $request->input('note','')
             ],
             'transport_status' => $newStatus
         ]);

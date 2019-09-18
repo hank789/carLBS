@@ -48,6 +48,10 @@
                                         <div class="col-sm-4 text-sm-right"> <dt>行程出发时间:</dt></div>
                                         <div class="col-sm-8 text-sm-left"> <dd class="mb-1">{{ $main->transport_start_time }}</dd></div>
                                     </dl>
+                                    <dl class="row mb-0">
+                                        <div class="col-sm-4 text-sm-right"> <dt>备注信息:</dt></div>
+                                        <div class="col-sm-8 text-sm-left"> <dd class="mb-1">{{ $main->transport_goods['note']??'' }}</dd></div>
+                                    </dl>
 
                                 </div>
                                 <div class="col-lg-6" id="cluster_info">

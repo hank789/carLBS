@@ -55,6 +55,7 @@
                             <th>开始时间</th>
                             <th>创建时间</th>
                             <th>创建者</th>
+                            <th>备注</th>
                             <th>状态</th>
                             <th>@lang('labels.general.actions')</th>
                         </tr>
@@ -70,6 +71,7 @@
                                 <td>{{ $item->transport_start_time }}</td>
                                 <td>{{ $item->created_at }}</td>
                                 <td>{{ $item->systemUser->fullname }}</td>
+                                <td>{{ $item->transport_goods['note']??'' }}</td>
                                 <td>{!! $item->status_label !!}</td>
                                 <td>{!! $item->action_buttons !!}</td>
                             </tr>

@@ -166,6 +166,20 @@
                     </div><!--form-group-->
 
                     <div class="form-group row">
+                        {{ html()->label('备注信息')
+                            ->class('col-md-2 form-control-label')
+                            ->for('note') }}
+
+                        <div class="col-md-10">
+                            {{ html()->text('note')
+                                ->class('form-control')
+                                ->placeholder('备注信息')
+
+                            }}
+                        </div><!--col-->
+                    </div><!--form-group-->
+
+                    <div class="form-group row">
                         {{ html()->label('司机手机号列表(多个以逗号隔开)')
                             ->class('col-md-2 form-control-label')
                             ->for('transport_phone_list') }}
