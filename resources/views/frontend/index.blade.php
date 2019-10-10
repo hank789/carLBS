@@ -50,7 +50,7 @@
             <ul class="protocol">
 
             </ul>
-            <p class="copyright">版权所有©车百讯 &nbsp;中讯智慧物联信息科技(苏州)有限公司&nbsp;&nbsp;<a href="http://www.miitbeian.gov.cn/" target="_blank">苏ICP备19008789号-1</a></p>
+            <p class="copyright">版权所有©车百讯 &nbsp;中讯智慧物联信息科技(苏州)有限公司&nbsp;&nbsp;<a href="http://www.beian.miit.gov.cn/" target="_blank">苏ICP备19008789号-1</a></p>
         </div>
     </div>
 </div>
