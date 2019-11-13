@@ -42,7 +42,7 @@
                 <div class="footer-down">
                     <div class="footer-iphone">
                         <p class="down-txt">下载长江智链 App</p>
-                        <a href="https://carlbs-pro.oss-cn-zhangjiakou.aliyuncs.com/app_version/__UNI__F14E6D5_0628104913.apk" target="_blank"><span class="andriod">安卓版下载</span></a>
+                        <a onclick="isWeiXin()" href="#"><span class="andriod">安卓版下载</span></a>
                         <a href="https://itunes.apple.com/cn/app/长江智链/id1457673059?l=zh&ls=1&mt=8"><span class="ios">iOS 版下载</span></a>
                     </div>
                     <div class="footer-qrcode">
@@ -76,6 +76,14 @@
         @if($appSchema)
             window.location.href = '{{ $appSchema }}';
         @endif
+    }
+    function isWeiXin() {
+        var ua = window.navigator.userAgent.toLowerCase();
+        if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+            alert('请点击右上角使用浏览器打开'); // 是微信端
+        } else {
+            window.location.href = 'https://carlbs-pro.oss-cn-zhangjiakou.aliyuncs.com/app_version/__UNI__F14E6D5_0628104913.apk';
+        }
     }
 </script>
 </body>
