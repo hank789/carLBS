@@ -461,7 +461,6 @@ a {
 .footer-qrcode{
     width: 108px;
     height: 108px;
-    background: #FFFFFF;
     border-radius: 4px;
     margin-top: 96px;
     margin-left: 24px;
@@ -471,6 +470,7 @@ a {
     width: 100px;
     height: 100px;
     margin: 4px;
+    display: none;
 }
 .protocol-con{
     margin-left: 335px;
