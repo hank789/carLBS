@@ -280,7 +280,7 @@ class MainController extends Controller
             throw new GeneralException('您无权限创建行程');
         }
 
-        return view('backend.transport.main.create')->with('vendors',$vendors);
+        return view('backend.transport.main.create')->with('vendors',$vendors)->with('car_number',8);
     }
 
     /**
@@ -292,23 +292,13 @@ class MainController extends Controller
     public function store(StoreMainRequest $request)
     {
         $user = $request->user();
-        $transportNumber = NumberUuid::instance()->get_uuid_number();
+        $car_number = $request->input('car_number',8);
         $coordinate = coordinate_bd_decrypt($request->input('transport_end_place_longitude'),$request->input('transport_end_place_latitude'));
         if ($coordinate['gg_lon'] <=0 || $coordinate['gg_lat'] <= 0) {
             event(new ExceptionNotify('后台创建行程目的地失败:'.$request->input('transport_end_place_longitude').','.$request->input('transport_end_place_latitude')));
             throw new GeneralException('目的地地址有误，请重新选择');
         }
-        $phoneList = str_replace('，',',',$request->input('transport_phone_list'));
-        if ($phoneList) {
-            $phoneArr = explode(',',$phoneList);
-            foreach ($phoneArr as &$phone) {
-                $phone = (int) trim($phone);
-                if (!preg_match('/^(\+?0?86\-?)?((13\d|14[57]|15[^4,\D]|17[0123456789]|18\d|19\d|16\d)\d{8}|170[059]\d{7})$/', $phone)) {
-                    throw new GeneralException('司机手机号有误，请检查司机手机号是否正确');
-                }
-            }
-            $phoneList = implode(',',$phoneArr);
-        }
+
         if ($user->company->company_type == Company::COMPANY_TYPE_MAIN) {
             $company_id = $user->company_id;
         } else {
@@ -343,71 +333,101 @@ class MainController extends Controller
             }
         }
 
-        $main = TransportMain::create([
-            'user_id' => $request->user()->id,
-            'company_id' => $company_id,
-            'vendor_company_id' => $vendor_company_id,
-            'transport_number' => $transportNumber,
-            'transport_start_place' => $request->input('transport_start_place'),
-            'transport_end_place' => $request->input('transport_end_place'),
-            'transport_contact_people' => $request->input('transport_contact_people'),
-            'transport_contact_phone' => $request->input('transport_contact_phone'),
-            'transport_contact_vendor_people' => $request->input('transport_contact_vendor_people'),
-            'transport_contact_vendor_phone' => $request->input('transport_contact_vendor_phone'),
-            'transport_start_time' => $request->input('transport_start_time'),
-            'transport_goods' => [
-                'transport_goods'=>$request->input('transport_goods'),
-                'transport_end_place_longitude'=> $coordinate['gg_lon'],
-                'transport_end_place_latitude'=> $coordinate['gg_lat'],
-                'transport_end_place_coordsType' => 'gcj02',
-                'transport_phone_list' => $phoneList,
-                'transport_vendor_company' => $vendor->company_name,
-                'note' => $request->input('note','')
-            ],
-            'transport_status' => $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING)
-        ]);
-        $company = Company::find($main->company_id);
-        $appName = $company->getAppname();
-
-        if ($main->transport_status == TransportMain::TRANSPORT_STATUS_PROCESSING) {
+        $phoneListArr = [];
+        for ($i=1;$i<=$car_number;$i++) {
+            $phoneList = str_replace('，',',',$request->input('transport_phone_list_'.$i));
+            $transport_goods = $request->input('transport_goods_'.$i);
             if ($phoneList) {
-                foreach ($phoneArr as $phone) {
-                    $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start',$appName));
+                $phoneArr = explode(',',$phoneList);
+                foreach ($phoneArr as &$phone) {
+                    $phone = (int) trim($phone);
+                    if (!preg_match('/^(\+?0?86\-?)?((13\d|14[57]|15[^4,\D]|17[0123456789]|18\d|19\d|16\d)\d{8}|170[059]\d{7})$/', $phone)) {
+                        throw new GeneralException('司机手机号有误，请检查司机手机号是否正确');
+                    }
                 }
-            }
-            try {
-                $userRepository = new UserRepository();
-                $vendorUser = $userRepository->create([
-                    'first_name' => $main->transport_contact_vendor_people,
-                    'last_name' => '',
-                    'mobile' => $main->transport_contact_vendor_phone,
-                    'password' => time(),
-                    'active' => 1,
-                    'confirmed' => 1,
-                    'roles' => ['供应商人员'],
-                    'permissions' => []
-                ]);
-                $vendorUser->company_id = $vendor_company_id;
-                $vendorUser->save();
-
-                $distanceUser = $userRepository->create([
-                    'first_name' => $main->transport_contact_people,
-                    'last_name' => '',
-                    'mobile' => $main->transport_contact_phone,
-                    'password' => time(),
-                    'active' => 1,
-                    'confirmed' => 1,
-                    'roles' => ['收货人员'],
-                    'permissions' => []
-                ]);
-                $distanceUser->company_id = 0;
-                $distanceUser->save();
-            } catch (\Exception $e) {
-
+                if ($phoneArr && empty($transport_goods)) {
+                    throw new GeneralException('请填写对应司机运输的货物信息');
+                }
+                $phoneListArr[] = [
+                    'phone' => implode(',',$phoneArr),
+                    'transport_goods' => $transport_goods
+                ];
             }
         }
-        RateLimiter::instance()->hSet('vendor_company_info',$vendor_company_id,$main->transport_contact_vendor_people.';'.$main->transport_contact_vendor_phone);
-        RateLimiter::instance()->hSet('contact_people_info',$main->transport_contact_people,$main->transport_contact_phone);
+        if (count($phoneListArr) <= 0) {
+            throw new GeneralException('必须填写一组司机手机号和货物');
+        }
+        $company = Company::find($company_id);
+        $appName = $company->getAppname();
+
+        foreach ($phoneListArr as $key=>$item) {
+            $main = TransportMain::create([
+                'user_id' => $request->user()->id,
+                'company_id' => $company_id,
+                'vendor_company_id' => $vendor_company_id,
+                'transport_number' => NumberUuid::instance()->get_uuid_number(),
+                'transport_start_place' => $request->input('transport_start_place'),
+                'transport_end_place' => $request->input('transport_end_place'),
+                'transport_contact_people' => $request->input('transport_contact_people'),
+                'transport_contact_phone' => $request->input('transport_contact_phone'),
+                'transport_contact_vendor_people' => $request->input('transport_contact_vendor_people'),
+                'transport_contact_vendor_phone' => $request->input('transport_contact_vendor_phone'),
+                'transport_start_time' => $request->input('transport_start_time'),
+                'transport_goods' => [
+                    'transport_goods'=>$item['transport_goods'],
+                    'transport_end_place_longitude'=> $coordinate['gg_lon'],
+                    'transport_end_place_latitude'=> $coordinate['gg_lat'],
+                    'transport_end_place_coordsType' => 'gcj02',
+                    'transport_phone_list' => $item['phone'],
+                    'transport_vendor_company' => $vendor->company_name,
+                    'note' => $request->input('note','')
+                ],
+                'transport_status' => $request->input('transport_status',TransportMain::TRANSPORT_STATUS_PROCESSING)
+            ]);
+
+
+            if ($main->transport_status == TransportMain::TRANSPORT_STATUS_PROCESSING) {
+                if ($item['phone']) {
+                    $phoneArr = explode(',',$item['phone']);
+                    foreach ($phoneArr as $phone) {
+                        $this->dispatch(new SendPhoneMessage($phone,['code' => $main->transport_number],'notify_transport_start',$appName));
+                    }
+                }
+                if ($key != 0) continue;
+                try {
+                    $userRepository = new UserRepository();
+                    $vendorUser = $userRepository->create([
+                        'first_name' => $main->transport_contact_vendor_people,
+                        'last_name' => '',
+                        'mobile' => $main->transport_contact_vendor_phone,
+                        'password' => time(),
+                        'active' => 1,
+                        'confirmed' => 1,
+                        'roles' => ['供应商人员'],
+                        'permissions' => []
+                    ]);
+                    $vendorUser->company_id = $vendor_company_id;
+                    $vendorUser->save();
+
+                    $distanceUser = $userRepository->create([
+                        'first_name' => $main->transport_contact_people,
+                        'last_name' => '',
+                        'mobile' => $main->transport_contact_phone,
+                        'password' => time(),
+                        'active' => 1,
+                        'confirmed' => 1,
+                        'roles' => ['收货人员'],
+                        'permissions' => []
+                    ]);
+                    $distanceUser->company_id = 0;
+                    $distanceUser->save();
+                } catch (\Exception $e) {
+
+                }
+            }
+            RateLimiter::instance()->hSet('vendor_company_info',$vendor_company_id,$main->transport_contact_vendor_people.';'.$main->transport_contact_vendor_phone);
+            RateLimiter::instance()->hSet('contact_people_info',$main->transport_contact_people,$main->transport_contact_phone);
+        }
 
         return redirect()->route('admin.transport.main.index')->withFlashSuccess('行程添加成功');
     }

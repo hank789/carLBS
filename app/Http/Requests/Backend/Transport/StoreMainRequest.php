@@ -32,7 +32,8 @@ class StoreMainRequest extends FormRequest
             'transport_contact_people'    => ['required', 'max:191'],
             'transport_contact_phone' => ['required','cn_phone'],
             'transport_start_time' => ['required'],
-            'transport_goods' => ['required']
+            'transport_phone_list_1' => ['required'],
+            'transport_goods_1' => ['required']
         ];
     }
 }

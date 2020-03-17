@@ -12,6 +12,8 @@
 {{ html()->form('POST', route('admin.transport.main.store'))->class('form-horizontal')->open() }}
     <input type="hidden" id="transport_end_place_longitude" name="transport_end_place_longitude" value="{{ old('transport_end_place_longitude','') }}" />
     <input type="hidden" id="transport_end_place_latitude" name="transport_end_place_latitude" value="{{ old('transport_end_place_latitude', '') }}" />
+    <input type="hidden" id="car_number" name="car_number" value="{{ $car_number }}" />
+
     <div class="card">
         <div class="card-body">
             <div class="row">
@@ -179,35 +181,34 @@
                         </div><!--col-->
                     </div><!--form-group-->
 
-                    <div class="form-group row">
-                        {{ html()->label('司机手机号列表(多个以逗号隔开)')
-                            ->class('col-md-2 form-control-label')
-                            ->for('transport_phone_list') }}
+                    @for ($i = 1; $i <= $car_number; $i++)
+                        <div class="form-group row">
+                            {{ html()->label('司机手机号'.$i.'(多个以逗号隔开)')
+                                ->class('col-md-2 form-control-label')
+                                ->for('transport_phone_list_'.$i) }}
 
-                        <div class="col-md-10">
-                            {{ html()->textarea('transport_phone_list')
-                                ->class('form-control')
-                                ->attribute('rows',9)
-                                ->placeholder('司机手机号列表，以逗号隔开(如：15050378283,15050458789)，行程开始后会以短信通知司机')
-                                ->required()
-                            }}
-                        </div><!--col-->
-                    </div><!--form-group-->
+                            <div class="col-md-4">
+                                {{ html()->textarea('transport_phone_list_'.$i)
+                                    ->class('form-control')
+                                    ->attribute('rows',4)
+                                    ->placeholder($i==1?'司机手机号列表，以逗号隔开(如：15050378283,15050458789)，行程开始后会以短信通知司机，如要生成多个行程，填写下面的其它司机和货物信息':'')
 
-                    <div class="form-group row">
-                        {{ html()->label('货物信息')
-                            ->class('col-md-2 form-control-label')
-                            ->for('transport_goods') }}
+                                }}
+                            </div><!--col-->
+                            {{ html()->label('货物信息'.$i)
+                                ->class('col-md-2 form-control-label')
+                                ->for('transport_goods_'.$i) }}
 
-                        <div class="col-md-10">
-                            {{ html()->textarea('transport_goods')
-                                ->class('form-control')
-                                ->attribute('rows',9)
-                                ->placeholder('货物信息')
-                                ->required()
-                            }}
-                        </div><!--col-->
-                    </div><!--form-group-->
+                            <div class="col-md-4">
+                                {{ html()->textarea('transport_goods_'.$i)
+                                    ->class('form-control')
+                                    ->attribute('rows',4)
+                                    ->placeholder($i==1?'货物信息':'')
+
+                                }}
+                            </div><!--col-->
+                        </div><!--form-group-->
+                    @endfor
 
                 </div><!--col-->
             </div><!--row-->
