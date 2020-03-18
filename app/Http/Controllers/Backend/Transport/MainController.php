@@ -7,6 +7,7 @@ use App\Exceptions\GeneralException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Backend\Transport\ManageMainRequest;
 use App\Http\Requests\Backend\Transport\StoreMainRequest;
+use App\Http\Requests\Backend\Transport\UpdateMainRequest;
 use App\Jobs\SendPhoneMessage;
 use App\Models\Auth\ApiUser;
 use App\Models\Auth\Company;
@@ -451,7 +452,7 @@ class MainController extends Controller
     }
 
 
-    public function update(StoreMainRequest $request, $id)
+    public function update(UpdateMainRequest $request, $id)
     {
         $main = TransportMain::find($id);
         $user = $request->user();
