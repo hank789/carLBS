@@ -67,7 +67,7 @@
             <ul class="protocol">
 
             </ul>
-            <p class="copyright">版权所有©长江智链 &nbsp;中讯智慧物联信息科技(苏州)有限公司&nbsp;&nbsp;<a href="http://www.miitbeian.gov.cn/" target="_blank">苏ICP备19008789号-1</a></p>
+            <p class="copyright">版权所有©长江智链 &nbsp;常熟市盈联智能化工程有限公司&nbsp;&nbsp;<a href="http://www.miitbeian.gov.cn/" target="_blank">苏ICP备19008789号-1</a></p>
         </div>
     </div>
 </div>

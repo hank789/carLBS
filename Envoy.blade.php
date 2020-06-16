@@ -10,7 +10,7 @@ php artisan opcache:clear
 php artisan queue:restart
 @endtask
 
-@task('pro-m',['on' => ['web-pro1','web-pro2']])
+@task('pro-m',['on' => ['web-pro1']])
 su - web
 cd /home/web/carLBS
 git pull origin master
