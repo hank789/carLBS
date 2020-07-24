@@ -2,9 +2,9 @@
 <!-- saved from url=(0021)https://www.zsxq.com/ -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <title>常熟市盈联智能化工程有限公司</title>
-    <meta name="description" content="常熟市盈联智能化工程有限公司">
-    <meta name="keywords" content="常熟市盈联智能化工程有限公司">
+    <title>中讯智慧物联信息科技</title>
+    <meta name="description" content="中讯智慧物联信息科技">
+    <meta name="keywords" content="中讯智慧物联信息科技">
     <link rel="shortcut icon" href="{{ asset('img/favicon_32_chebaixun.ico',config('app.use_ssl')) }}">
     <link rel="icon" href="{{ asset('img/favicon_32_chebaixun.ico',config('app.use_ssl')) }}">
     <link rel="stylesheet" href="{{ asset('css/landing.css?v=1',config('app.use_ssl')) }}">
@@ -14,7 +14,7 @@
 <body>
 <div class="header">
     <div class="header-con">
-        <h1 class="logoHome"><a href="#">常熟市盈联智能化工程有限公司</a></h1>
+        <h1 class="logoHome"><a href="#">中讯智慧物联信息科技</a></h1>
         <div class="menu">
             @guest
             <a href="{{route('frontend.auth.login')}}" class="href-dweb">@lang('navs.frontend.login')</a>
@@ -50,7 +50,7 @@
             <ul class="protocol">
 
             </ul>
-            <p class="copyright">版权所有©车百讯 &nbsp;常熟市盈联智能化工程有限公司&nbsp;&nbsp;<a href="http://www.beian.miit.gov.cn/" target="_blank">苏ICP备19008789号-1</a></p>
+            <p class="copyright">版权所有©车百讯 &nbsp;中讯智慧物联信息科技(苏州)有限公司&nbsp;&nbsp;<a href="http://www.beian.miit.gov.cn/" target="_blank">苏ICP备19008789号-1</a></p>
         </div>
     </div>
 </div>
