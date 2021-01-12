@@ -14,6 +14,7 @@ use App\Third\AliLot\Constant\HttpHeader;
 use App\Third\AliLot\Constant\SystemHeader;
 use App\Third\AliLot\Service;
 use App\Third\AliLot\Util\SignUtil;
+use Goutte\Client;
 use Illuminate\Console\Command;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -51,6 +52,14 @@ class Test extends Command
      */
     public function handle()
     {
+        $client = new Client();
+        $crawler = $client->request('GET', 'https://github.com/');
+        $crawler = $client->click($crawler->filter('.HeaderMenu-link.no-underline.mr-3')->link());
+        $form = $crawler->selectButton('Sign in')->form();
+        $crawler = $client->submit($form, array('login' => 'hank789', 'password' => 'Hank8831'));
+        var_dump($crawler->filter('.Header-link > img.avatar')->eq(0)->attr('src'));
+
+        return;
         $tenant = Tenant::find(1);
         $service = new Service();
         $res = $service->getUserInfo($tenant->tenant_id,$tenant->app_id,284);
